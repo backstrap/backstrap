@@ -6,8 +6,8 @@
  * @license MIT
  * 
  */
-define('backstrap/BasicNavbar', [ 'backstrap', 'backbone' ],
-function ($$, Backbone)
+
+(function ()
 {
 	var NavItemView = Backbone.View.extend({
 		tagName: 'a',
@@ -72,5 +72,4 @@ function ($$, Backbone)
 	});
 	
 	return $$.BasicNavbar;
-});
-
+})();

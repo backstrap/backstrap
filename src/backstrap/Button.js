@@ -6,8 +6,7 @@
  * @license MIT
  * 
  */
-define('backstrap/Button', [ 'backstrap', 'backbone' ],
-function ($$, Backbone)
+(function ()
 {
 	// TODO Extend BB.UI.Button instead of reproducing code? (opts & init() diff)
 	$$.Button = Backbone.View.extend({
@@ -96,4 +95,4 @@ function ($$, Backbone)
 	});
 
 	return $$.Button;
-});
+})();

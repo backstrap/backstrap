@@ -6,8 +6,7 @@
  * @license MIT
  * 
  */
-define('backstrap/NavPills', [ 'backstrap', 'backbone' ],
-function ($$, Backbone)
+(function()
 {
 	var NavItemView = Backbone.View.extend({
 		tagName: 'a',
@@ -34,5 +33,5 @@ function ($$, Backbone)
 	});
 	
 	return $$.NavPills;
-});
+})();
 

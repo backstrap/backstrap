@@ -6,8 +6,7 @@
  * @license MIT
  * 
  */
-define('backstrap/Table', [ 'backstrap', 'backbone' ],
-function ($$, Backbone)
+(function()
 {
 	$$.Table = Backbone.UI.TableView.extend({
 		options: {
@@ -27,4 +26,4 @@ function ($$, Backbone)
 	});
 	
 	return $$.Table;
-});
+})();

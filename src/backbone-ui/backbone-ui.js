@@ -1,13 +1,8 @@
-// KP Use RequireJS protocol.
-define('backbone-ui', [ 'backbone', 'jquery', 'backstrap' ], function (Backbone, $, $$) {
 
 (function(context) {
   // ensure backbone and jquery are available
   if(typeof Backbone === 'undefined') alert('backbone environment not loaded') ;
   if(typeof $ === 'undefined') alert('jquery environment not loaded');
-
-  // KP Replace vanilla laconic with backstrap.
-  $.el = $$;
 
   // define our Backbone.UI namespace
   Backbone.UI = Backbone.UI || {
@@ -381,7 +376,7 @@ define('backbone-ui', [ 'backbone', 'jquery', 'backstrap' ], function (Backbone,
         });
       }
 
-      var content = $.el.span(labelText);
+      var content = $$.span(labelText);
       
       var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
       var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
@@ -562,28 +557,28 @@ define('backbone-ui', [ 'backbone', 'jquery', 'backstrap' ], function (Backbone,
       var inCurrentMonth = isSameMonth(today, date);
       var inSelectedMonth = !!this.date && isSameMonth(this.date, date);
 
-      var daysRow = $.el.tr({className : 'row days'}); 
+      var daysRow = $$.tr({className : 'row days'}); 
       var names = dayNames.slice(this.options.weekStart).concat(
         dayNames.slice(0, this.options.weekStart));
       for(var i=0; i<names.length; i++) {
-        $.el.td(names[i]).appendTo(daysRow);
+        $$.td(names[i]).appendTo(daysRow);
       }
 
-      var tbody, table = $.el.table(
-        $.el.thead(
-          $.el.th(
-            $.el.a({className : 'go_back', onclick : _(this._renderDate).bind(this, lastMonth, minDate, maxDate)}, '\u2039')),
-          $.el.th({className : 'title', colspan : 5},
-            $.el.div(formatDateHeading(date))),
-          $.el.th(
-            $.el.a({className : 'go_forward', onclick : _(this._renderDate).bind(this, nextMonth, minDate, maxDate)}, '\u203a'))),
-        tbody = $.el.tbody(daysRow));
+      var tbody, table = $$.table(
+        $$.thead(
+          $$.th(
+            $$.a({className : 'go_back', onclick : _(this._renderDate).bind(this, lastMonth, minDate, maxDate)}, '\u2039')),
+          $$.th({className : 'title', colspan : 5},
+            $$.div(formatDateHeading(date))),
+          $$.th(
+            $$.a({className : 'go_forward', onclick : _(this._renderDate).bind(this, nextMonth, minDate, maxDate)}, '\u203a'))),
+        tbody = $$.tbody(daysRow));
 
       var day = inactiveBeforeDays >= 0 ? daysInMonth(lastMonth) - inactiveBeforeDays : 1;
       var daysRendered = 0;
       for(var rowIndex=0; rowIndex<6 ; rowIndex++) {
 
-        var row = $.el.tr({
+        var row = $$.tr({
           className : 'row' + (rowIndex === 0 ? ' first' : rowIndex === 4 ? ' last' : '')
         });
 
@@ -603,10 +598,10 @@ define('backbone-ui', [ 'backbone', 'jquery', 'backstrap' ], function (Backbone,
             (inCurrentMonth && !inactive && day === today.getDate() ? ' today' : '') +
             (inSelectedMonth && !inactive && day === this.date.getDate() ? ' selected' : '');
 
-          $.el.td({ className : className }, 
+          $$.td({ className : className }, 
             inactive || outOfRange ? 
-              $.el.div({ className : 'day' }, day) : 
-              $.el.a({ className : 'day', onClick : callback }, day)).appendTo(row);
+              $$.div({ className : 'day' }, day) : 
+              $$.a({ className : 'day', onClick : callback }, day)).appendTo(row);
 
           day = (rowIndex === 0 && colIndex === inactiveBeforeDays) || 
             (rowIndex > 0 && day === daysInThisMonth) ? 1 : day + 1;
@@ -645,8 +640,8 @@ define('backbone-ui', [ 'backbone', 'jquery', 'backstrap' ], function (Backbone,
       if(this.options.name){
         $(this.el).addClass(this.options.name);
       }
-      this.label = $.el.label();
-      this.input = $.el.input({type : 'checkbox'});
+      this.label = $$.label();
+      this.input = $$.input({type : 'checkbox'});
       $(this.input).change(_(this._updateModel).bind(this));
       $(this.input).click(_(this._updateModel).bind(this));
       this._observeModel(_(this._refreshCheck).bind(this));
@@ -674,9 +669,9 @@ define('backbone-ui', [ 'backbone', 'jquery', 'backstrap' ], function (Backbone,
       var labelText = this.resolveContent(this.model, this.options.labelContent) || this.options.labelContent;
       
       this.label.appendChild(this.input);
-      this._labelText = $.el.span(labelText);
+      this._labelText = $$.span(labelText);
       
-      var parent = $.el.div({className : 'checkbox_wrapper'});
+      var parent = $$.div({className : 'checkbox_wrapper'});
       var content = this._labelText;
       var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
       var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
@@ -1337,16 +1332,16 @@ define('backbone-ui', [ 'backbone', 'jquery', 'backstrap' ], function (Backbone,
       if(message.length > 0) {
         
         if(this.options.errorType !== "disclosure") {
-          this.errorMessage = $.el.span({className : 'error_message ' + 
+          this.errorMessage = $$.span({className : 'error_message ' + 
             this.options.errorPosition}, message);
         }
         else {
-          this.errorMessage = $.el.span({className : 'error_message right with_disclosure'}, "!");
+          this.errorMessage = $$.span({className : 'error_message right with_disclosure'}, "!");
           
-          this._disclosure = $.el.div({className : 'disclosure'},
-            this._disclosureOuter = $.el.div({className: 'disclosure_outer'},
-              this._disclosureInner = $.el.div({className: 'disclosure_inner'}, message),
-                this._disclosureArrow = $.el.div({className: 'disclosure_arrow'})));
+          this._disclosure = $$.div({className : 'disclosure'},
+            this._disclosureOuter = $$.div({className: 'disclosure_outer'},
+              this._disclosureInner = $$.div({className: 'disclosure_inner'}, message),
+                this._disclosureArrow = $$.div({className: 'disclosure_arrow'})));
           
           $(this.errorMessage).click(_(function(e) {
             e.preventDefault();
@@ -1417,13 +1412,13 @@ define('backbone-ui', [ 'backbone', 'jquery', 'backstrap' ], function (Backbone,
   Backbone.UI.HasFormLabel = {
     
     wrapWithFormLabel : function(content) {
-      var wrapped = $.el.label();
+      var wrapped = $$.label();
       
       var formLabelText = this.options.formLabelContent ? 
         this.resolveContent(this.model, this.options.formLabelContent, 
           this.options.formLabelContent) || this.options.formLabelContent : null;
       if(formLabelText) {
-        wrapped.appendChild($.el.span({className : 'form_label'}, formLabelText));
+        wrapped.appendChild($$.span({className : 'form_label'}, formLabelText));
       }
       wrapped.appendChild(content);
       return wrapped;  
@@ -1440,7 +1435,7 @@ define('backbone-ui', [ 'backbone', 'jquery', 'backstrap' ], function (Backbone,
 
       // append left glyph
       if(glyphLeftClassName) {
-        var glyphLeft = $.el.span({
+        var glyphLeft = $$.span({
           className : 'glyph left ' + glyphLeftClassName
         });
         parent.appendChild(glyphLeft);
@@ -1453,7 +1448,7 @@ define('backbone-ui', [ 'backbone', 'jquery', 'backstrap' ], function (Backbone,
       
       // append right glyph
       if(glyphRightClassName) {
-        var glyphRight = $.el.span({
+        var glyphRight = $$.span({
           className : 'glyph right ' + glyphRightClassName
         });
         parent.appendChild(glyphRight);
@@ -1735,7 +1730,7 @@ if(window.jQuery) {
 
       $(this.el).empty();
       
-      var content = $.el.span(labelText);
+      var content = $$.span(labelText);
       
       var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
       var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
@@ -1774,13 +1769,13 @@ if(window.jQuery) {
       $(this.el).empty();
       this.itemViews = {};
 
-      this.collectionEl = $.el.ul();
+      this.collectionEl = $$.ul();
 
       // if the collection is empty, we render the empty content
       if((!_(this.model).exists()  || this.model.length === 0) && this.options.emptyContent) {
         this._emptyContent = _(this.options.emptyContent).isFunction() ? 
           this.options.emptyContent() : this.options.emptyContent;
-        this._emptyContent = $.el.li(this._emptyContent);
+        this._emptyContent = $$.li(this._emptyContent);
 
         if(!!this._emptyContent) {
           this.collectionEl.appendChild(this._emptyContent);
@@ -1818,7 +1813,7 @@ if(window.jQuery) {
         }
       }
 
-      var item = $.el.li(content);
+      var item = $$.li(content);
 
       // bind the item click callback if given
       if(this.options.onItemClick) {
@@ -1876,7 +1871,7 @@ if(window.jQuery) {
       // || this.selectedItem;
       var selectedValue = this._valueForItem(this.selectedItem);
       
-      this.select = $.el.select({ 
+      this.select = $$.select({ 
         size : this.options.size,
         disabled : this.options.disabled
        });
@@ -1889,7 +1884,7 @@ if(window.jQuery) {
       // append placeholder option if no selectedItem
       this._placeholder = null;
       if(!this.options.emptyItem && (this.options.size === 1) && !selectedValue) {
-        this._placeholder = $.el.option(this.options.placeholder);
+        this._placeholder = $$.option(this.options.placeholder);
         $(this._placeholder).data('value', null);
         $(this._placeholder).attr({ disabled : 'true' });
         this.select.appendChild(this._placeholder);
@@ -1899,7 +1894,7 @@ if(window.jQuery) {
       
       if(this.options.emptyItem) {
         
-        this._emptyItem = $.el.option(this._labelForItem(this.options.emptyItem));
+        this._emptyItem = $$.option(this._labelForItem(this.options.emptyItem));
         $(this._emptyItem).data('value', null);
         this.select.appendChild(this._emptyItem);
         $(this._emptyItem).click(_(function() {
@@ -1923,7 +1918,7 @@ if(window.jQuery) {
           this._selectedIndex = idx;
         }
         
-        var option = $.el.option(this._labelForItem(item));
+        var option = $$.option(this._labelForItem(item));
         $(option).data('value', val);
         $(option).attr({
           selected : this._selectedIndex === idx
@@ -2046,7 +2041,7 @@ if(window.jQuery) {
         disabled : this.options.disabled
       }).render();
       
-      this._parent = $.el.div({className : 'pulldown_wrapper'});
+      this._parent = $$.div({className : 'pulldown_wrapper'});
       var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
       var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
       this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, this._menu.el, this._parent);
@@ -2108,7 +2103,7 @@ if(window.jQuery) {
       
       var selectedValue = this._valueForItem(this.selectedItem);
       
-      this.group = $.el.div({className : 'radio_group_wrapper'});
+      this.group = $$.div({className : 'radio_group_wrapper'});
       
       _(this._collectionArray()).each(function(item, idx) {
 
@@ -2116,7 +2111,7 @@ if(window.jQuery) {
         var selected = selectedValue === val;
         var label = this.resolveContent(item, this.options.altLabelContent);
         
-        var input = $.el.input();
+        var input = $$.input();
         $(input).attr({ 
           type : 'radio',
           name : this.options.content,
@@ -2129,8 +2124,8 @@ if(window.jQuery) {
         $(input).click(_(this._updateModel).bind(this, item));
         
         // resolve left and right glyphs
-        var parent = $.el.div({className : 'radio_group_wrapper'});
-        var content = $.el.span(label);
+        var parent = $$.div({className : 'radio_group_wrapper'});
+        var content = $$.span(label);
         var glyphLeftClassName = this.resolveGlyph(item, this.options.altGlyphLeftClassName);
         glyphLeftClassName = (glyphLeftClassName && (glyphLeftClassName !== this.options.altGlyphLeftClassName)) ? glyphLeftClassName : 
           this.resolveGlyph(null, this.options.glyphLeftClassName);
@@ -2141,7 +2136,7 @@ if(window.jQuery) {
         
         // create a new label/input pair and insert into the group
         this.group.appendChild(
-          $.el.label({className : _(this._collectionArray()).nameForIndex(idx++) + 
+          $$.label({className : _(this._collectionArray()).nameForIndex(idx++) + 
             ' ' + (idx % 2 === 0 ? 'even' : 'odd')}, input, parent));
         
       }, this);
@@ -2197,8 +2192,8 @@ if(window.jQuery) {
       this._tabs = [];
       this._contents = [];
       this._callbacks = [];
-      this._tabBar = $.el.div({className : 'tab_bar'});
-      this._contentContainer = $.el.div({className : 'content_container'});
+      this._tabBar = $$.div({className : 'tab_bar'});
+      this._contentContainer = $$.div({className : 'content_container'});
       this.el.appendChild(this._tabBar);
       this.el.appendChild(this._contentContainer);
 
@@ -2217,7 +2212,7 @@ if(window.jQuery) {
     },
 
     addTab : function(tabOptions) {
-      var tab = $.el.a({href : '#', className : 'tab'});
+      var tab = $$.a({href : '#', className : 'tab'});
       if(tabOptions.className) $(tab).addClass(tabOptions.className);
       
       var label = this.resolveContent(null, tabOptions.label);
@@ -2228,7 +2223,7 @@ if(window.jQuery) {
 
       var content = !!tabOptions.content && !!tabOptions.content.nodeType ? 
         tabOptions.content : 
-        $.el.div(tabOptions.content);
+        $$.div(tabOptions.content);
       this._contents.push(content);
       $(content).hide();
       this._contentContainer.appendChild(content);
@@ -2324,8 +2319,8 @@ if(window.jQuery) {
       this.itemViews = {};
 
       var table;
-      var container = $.el.div({className : 'content'},
-        table = $.el.table({
+      var container = $$.div({className : 'content'},
+        table = $$.table({
           cellPadding : '0',
           cellSpacing : '0'
         }));
@@ -2333,7 +2328,7 @@ if(window.jQuery) {
       $(this.el).toggleClass('clickable', this.options.onItemClick !== Backbone.UI.noop);
 
       // generate a table row for our headings
-      var headingRow = $.el.tr();
+      var headingRow = $$.tr();
       var sortFirstColumn = false;
       var firstHeading = null;
       _(this.options.columns).each(_(function(column, index, list) {
@@ -2349,20 +2344,20 @@ if(window.jQuery) {
         var firstSort = (sortFirstColumn && firstHeading === null);
         var sortHeader = this._sortState.content === column.content || firstSort;
         var sortClass = sortHeader ? (this._sortState.reverse && !firstSort ? ' asc' : ' desc') : '';
-        var sortLabel = $.el.div({className : 'glyph'}, 
+        var sortLabel = $$.div({className : 'glyph'}, 
           sortClass === ' asc' ? '\u25b2 ' : sortClass === ' desc' ? '\u25bc ' : '');
 
         var onclick = this.options.sortable ? (_(this.options.onSort).isFunction() ?
           _(function(e) { this.options.onSort(column); }).bind(this) :
           _(function(e, silent) { this._sort(column, silent); }).bind(this)) : Backbone.UI.noop;
 
-        var th = $.el.th({
+        var th = $$.th({
             className : _(list).nameForIndex(index) + (sortHeader ? ' sorted' : ''), 
             style : style, 
             onclick : onclick
           }, 
-          $.el.div({className : 'wrapper' + (sortHeader ? ' sorted' : '')}, label),
-          sortHeader ? $.el.div({className : 'sort_wrapper' + sortClass}, sortLabel) : null).appendTo(headingRow);  
+          $$.div({className : 'wrapper' + (sortHeader ? ' sorted' : '')}, label),
+          sortHeader ? $$.div({className : 'sort_wrapper' + sortClass}, sortLabel) : null).appendTo(headingRow);  
 
         if (firstHeading === null) firstHeading = th;
       }).bind(this));
@@ -2372,22 +2367,22 @@ if(window.jQuery) {
 
       // Add the heading row to it's very own table so we can allow the
       // actual table to scroll with a fixed heading.
-      this.el.appendChild($.el.table({
+      this.el.appendChild($$.table({
           className : 'heading',
           cellPadding : '0',
           cellSpacing : '0'
-        }, $.el.thead(headingRow)));
+        }, $$.thead(headingRow)));
 
       // now we'll generate the body of the content table, with a row
       // for each model in the bound collection
-      this.collectionEl = $.el.tbody();
+      this.collectionEl = $$.tbody();
       table.appendChild(this.collectionEl);
 
       // if the collection is empty, we render the empty content
       if(!_(this.model).exists()  || this.model.length === 0) {
         this._emptyContent = _(this.options.emptyContent).isFunction() ?
           this.options.emptyContent() : this.options.emptyContent;
-        this._emptyContent = $.el.tr($.el.td(this._emptyContent));
+        this._emptyContent = $$.tr($$.td(this._emptyContent));
 
         if(!!this._emptyContent) {
           this.collectionEl.appendChild(this._emptyContent);
@@ -2411,7 +2406,7 @@ if(window.jQuery) {
       // wrap the list in a scroller
       if(_(this.options.maxHeight).exists()) {
         var style = 'overflow:auto; max-height:' + this.options.maxHeight + 'px';
-        var scroller = $.el.div({style : style}, container);
+        var scroller = $$.div({style : style}, container);
         this.el.appendChild(scroller.el);
       }
       else {
@@ -2424,17 +2419,17 @@ if(window.jQuery) {
     },
 
     _renderItem : function(model, index) {
-      var row = $.el.tr();
+      var row = $$.tr();
 
       // for each model, we walk through each column and generate the content
       _(this.options.columns).each(function(column, index, list) {
         var width = !!column.width ? parseInt(column.width, 10) + 5 : null;
         var style = width ? 'width:' + width + 'px; max-width:' + width + 'px': null;
         var content = this.resolveContent(model, column.content);
-        row.appendChild($.el.td({
+        row.appendChild($$.td({
           className : _(list).nameForIndex(index), 
           style : style
-        }, $.el.div({className : 'wrapper', style : style}, content)));
+        }, $$.div({className : 'wrapper', style : style}, content)));
       }, this);
 
       // bind the item click callback if given
@@ -2501,7 +2496,7 @@ if(window.jQuery) {
 
       $(this.el).empty();
 
-      this.textArea = $.el.textarea({
+      this.textArea = $$.textarea({
         id : this.options.textAreaId,
         tabIndex : this.options.tabIndex, 
         placeholder : this.options.placeholder,
@@ -2509,7 +2504,7 @@ if(window.jQuery) {
 
       this._observeModel(_(this._refreshValue).bind(this));
 
-      this._parent = $.el.div({className : 'textarea_wrapper'}, this.textArea);
+      this._parent = $$.div({className : 'textarea_wrapper'}, this.textArea);
 
       this.el.appendChild(this.wrapWithFormLabel(this._parent));
         
@@ -2597,7 +2592,7 @@ if(window.jQuery) {
         $(this.el).addClass(this.options.name);
       }
 
-      this.input = $.el.input({maxLength : this.options.maxLength});
+      this.input = $$.input({maxLength : this.options.maxLength});
 
       $(this.input).keyup(_(function(e) {
         if(_(this.options.onKeyPress).exists() && _(this.options.onKeyPress).isFunction()) {
@@ -2626,7 +2621,7 @@ if(window.jQuery) {
         value : value});
 
       // insert glyph if exist
-      this._parent = $.el.div({className : 'text_wrapper'});
+      this._parent = $$.div({className : 'text_wrapper'});
       var content = this.input;
       var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
       var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
@@ -2839,7 +2834,3 @@ if(window.jQuery) {
     
   });
 }());
-
-// KP Use RequireJS protocol.
-return Backbone.UI;
-});

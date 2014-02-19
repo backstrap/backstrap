@@ -6,8 +6,7 @@
  * @license MIT
  * 
  */
-define('backstrap/Context', [ 'backstrap', 'backbone' ],
-function ($$, Backbone)
+(function ()
 {
 	$$.Context = Backbone.View.extend({
 		options : {
@@ -34,4 +33,4 @@ function ($$, Backbone)
 	});
 	
 	return $$.Context;
-});
+})();

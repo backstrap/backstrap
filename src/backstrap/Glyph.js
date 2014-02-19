@@ -6,8 +6,7 @@
  * @license MIT
  * 
  */
-define('backstrap/Glyph', [ 'backstrap', 'backbone' ],
-function ($$, Backbone)
+(function ()
 {
 	$$.Glyph = Backbone.View.extend({
 		options : {
@@ -36,4 +35,4 @@ function ($$, Backbone)
 	});
 	
 	return $$.Glyph;
-});
+})();

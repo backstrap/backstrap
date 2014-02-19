@@ -29,7 +29,7 @@
  * @license MIT
  *
  ************************************************************/
-define('backstrap', [ ], function () {
+(function (context) {
 
   // properly-cased attribute names for IE setAttribute support
   var attributeMap = {
@@ -254,6 +254,9 @@ define('backstrap', [ ], function () {
       };
     }
   };
+  
+  // Make a global.
+  context.$$ = context.Backstrap = backstrap;
 
   return backstrap;
-});
+})(this);
