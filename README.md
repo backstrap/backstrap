@@ -1,8 +1,9 @@
 Backstrap
 =========
 
-** UNDER CONSTRUCTION **
-** Just getting started really.  Check back soon! **
+**UNDER CONSTRUCTION**
+
+**Just getting started really.  Check back soon!**
 
 The Backstrap JavaScript library provides a layer of functionality tying together Bootstrap and Backbone.
 
