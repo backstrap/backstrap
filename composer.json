@@ -1,0 +1,42 @@
+{
+    "name": "backstrap/backstrap",
+    "description": "The Backstrap JavaScript library provides a layer of functionality tying together Bootstrap and Backbone.",
+    "keywords": ["bootstrap", "backbone", "client", "browser"],
+    "type": "component",
+    "homepage": "https://github.com/backstrap/backstrap",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/backstrap/backstrap",
+        "source": "https://github.com/backstrap/backstrap"
+    },
+    "authors": [
+        {
+            "name": "Kevin Perry",
+            "email": "perry@princeton.edu"
+        }
+    ],
+    "require": {
+		"components/backbone" : "~1.0",
+		"components/bootstrap": "~3.1"
+    },
+    "extra": {
+        "component": {
+            "scripts": [
+                "src/backbone-ui/backbone-ui.js",
+                "src/backstrap.js",
+                "src/backstrap/BasicNavbar.js",
+                "src/backstrap/Button.js",
+                "src/backstrap/Context.js",
+                "src/backstrap/Glyph.js",
+                "src/backstrap/NavPills.js",
+                "src/backstrap/NavTabs.js",
+                "src/backstrap/Table.js"
+            ],
+            "files": [
+            ],
+            "shim": {
+                "exports": "backstrap"
+            }
+        }
+    }
+}
