@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Backstrap Tester</title>
+    <link href="components/require.css" rel="stylesheet" type="text/css">
+    <link href="components/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <script src="components/require.js?debug="></script>
+    <script>
+function drawme(obj) {
+	$('body').append(obj.render().el, $$.div({style:'padding: .5em;'}));
+}
+
+require(['backstrap'], function(bs) {
+	$('body').append($$.div($$.span({context:'info'}, "Hello World")));
+	
+	drawme(new $$.BasicNavbar({brand: 'Wow!', model: new Backbone.Collection([
+		{ name: 'first', href: '#first', label: 'First' },
+		{ name: 'second', href: '#second', label: 'Second' },
+		{ name: 'third', href: '#third', label: 'Third' }
+	])}));
+	
+	drawme(new $$.Button({size:'lg', context:'info', content: 'Hello'}));
+
+	var list = ['asterisk','plus','euro','minus','cloud','envelope','pencil'];
+	list.forEach(function(name) {
+		drawme(new $$.Glyph({content:name}));
+	});
+
+	var obj = new $$.Context({content:'danger'}).render();
+	obj.$el.append(new $$.Glyph({content:'star'}).render().el);
+	drawme(obj);
+	obj = new $$.Context({content:'danger', background: true}).render();
+	obj.$el.append(new $$.Glyph({content:'star'}).render().el);
+	drawme(obj);
+
+	drawme(new $$.Table({striped: true, bordered: true, hover: true, condensed: true,
+		columns: [
+			{ title: 'Name', content: 'a' },
+			{ title: 'Value', content: 'b' },
+			{ title: 'Detail', content: 'c' }
+		],
+		model: new Backbone.Collection([
+			{ a: 'abcde', b: 'bcdef', c: 'cdefg' },
+			{ a: 'ab123', b: 'b123', c: '123' },
+			{ a: 'ab234', b: 'b3456', c: '34567' },
+			{ a: 'abcde', b: 'bcdef', c: 'cdefg' },
+			{ a: 'uerhiu', b: 'u78dh3', c: 'starwgd' }
+		]
+		)
+	}));
+});
+    </script>
+  </body>
+</html>

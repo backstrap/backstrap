@@ -35,7 +35,13 @@
             "files": [
             ],
             "shim": {
-                "exports": "backstrap"
+                "exports": "Backstrap",
+				"deps": [
+				     "backbone",
+				     "bootstrap",
+				     "underscore",
+				     "jquery"
+				 ]
             }
         }
     }

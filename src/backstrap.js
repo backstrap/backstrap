@@ -180,7 +180,7 @@
           }
         }
         // Add classNames.
-        el.className = classlist.keys().join(' ');
+        el.className = Object.keys(classlist).join(' ');
       }
 
       // if the argument is an array, we append each element

@@ -64,7 +64,7 @@
 				});
 			}
 
-			var content = $.el.span(labelText);
+			var content = $$.span(labelText);
 			
 			// TODO Should use/allow bootstrap glyphicons here!
 			var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);

@@ -49,20 +49,20 @@
 		render: function () {
 			this.$el.empty();
 			this.$el.append(
-				$.el.div({ className: 'container' },
-					$.el.div({ className: 'navbar-header' },
-						$.el.button({
+				$$.div({ className: 'container' },
+					$$.div({ className: 'navbar-header' },
+						$$.button({
 								type: 'button',
 								className: 'navbar-toggle',
 								'data-toggle': 'collapse',
 								'data-target': '.navbar-collapse'
 							},
-							$.el.span({ className: 'sr-only' }, 'Toggle navigation'),
-							$.el.span({ className: 'icon-bar' }),
-							$.el.span({ className: 'icon-bar' }),
-							$.el.span({ className: 'icon-bar' })
+							$$.span({ className: 'sr-only' }, 'Toggle navigation'),
+							$$.span({ className: 'icon-bar' }),
+							$$.span({ className: 'icon-bar' }),
+							$$.span({ className: 'icon-bar' })
 						),
-						$.el.a({ className: 'navbar-brand', href: '#' }, this.brand)
+						$$.a({ className: 'navbar-brand', href: '#' }, this.brand)
 					),
 					this.navList.render().el
 				)
