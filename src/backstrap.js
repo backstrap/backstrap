@@ -184,7 +184,7 @@
 										// The rest are special handling for Bootstrap keys
 									case 'size':
 										if (value in sizeMap) {
-											size = sizeMap[value]];
+											size = sizeMap[value];
 										} else {
 											el.setAttribute('size', value);
 										}
