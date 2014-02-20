@@ -9,7 +9,7 @@
 
 (function ()
 {
-	var NavItemView = Backbone.View.extend({
+	var ItemView = Backbone.View.extend({
 		tagName: 'a',
 		className: 'nav-item',
 		
@@ -43,7 +43,7 @@
 			if ('brand' in options) {
 				this.brand = options.brand;
 			}
-			this.navList = new NavList({ model: options.model, itemView: NavItemView });
+			this.navList = new NavList({ model: options.model, itemView: ItemView });
 		},
 
 		render: function () {

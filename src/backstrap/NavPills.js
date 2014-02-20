@@ -8,14 +8,15 @@
  */
 (function()
 {
-	var NavItemView = Backbone.View.extend({
+	var ItemView = Backbone.View.extend({
 		tagName: 'a',
 		className: 'nav-item',
 		
 		render: function render() {
-			return this.$el.addClass('nav-item-' + this.model.get('name'))
+			(this.$el.addClass('nav-item-' + this.model.get('name'))
 				.attr('href', this.model.get('href'))
-				.text(this.model.get('label'));
+				.text(this.model.get('label')));
+			return this;
 		}
 	});
 	
@@ -23,12 +24,13 @@
 
 		initialize: function () {
 			Backbone.UI.List.prototype.initialize.apply(this, arguments);
-			this.itemView = NavItemView;
+			this.itemView = ItemView;
 		},
 
 		render: function () {
 			Backbone.UI.List.prototype.render.apply(this, arguments);
-			return this.$('> ul').addClass('nav nav-pills');
+			this.$('> ul').addClass('nav nav-pills');
+			return this;
 		}
 	});
 	

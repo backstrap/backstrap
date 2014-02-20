@@ -24,9 +24,11 @@
             "scripts": [
                 "src/backbone-ui/backbone-ui.js",
                 "src/backstrap.js",
+                "src/backstrap/Badge.js",
                 "src/backstrap/BasicNavbar.js",
                 "src/backstrap/Button.js",
                 "src/backstrap/Context.js",
+                "src/backstrap/Dropdown.js",
                 "src/backstrap/Glyph.js",
                 "src/backstrap/NavPills.js",
                 "src/backstrap/NavTabs.js",
