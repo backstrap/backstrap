@@ -212,10 +212,10 @@
 				}
 				// Add classNames.
 				if (size != null && size !== 'text') {
-					classlist[type + '-' + size) = true;
+					classlist[type + '-' + size] = true;
 				}
 				if (context != null) {
-					classlist[type + '-' + context) = true;
+					classlist[type + '-' + context] = true;
 				}
 				el.className = Object.keys(classlist).join(' ');
 			}
@@ -265,9 +265,8 @@
 		var rowdiv = backstrap.div({className: 'row'});
 		this.append(rowdiv);
 		for (var c=0; c<layout.length; c++) {
-			var size = 'md';
 			var cell = layout[c];
-			var cellclass;
+			var cellClass;
 			var content = ('content' in cell) ? cell.content : '';
 			if (cell !== null && typeof cell === 'object') {
 				cellClass = parseCellSpec(cell);
@@ -275,7 +274,7 @@
 				cellClass = 'col col-md-' + cell;
 			}
 			rowdiv.append(backstrap.div({className: cellClass}, content));
-		});
+		}
 	};
 
 	// Some special tags for Bootstrap support.

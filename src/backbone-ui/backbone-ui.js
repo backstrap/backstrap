@@ -135,7 +135,7 @@
     var bDim = {width : anchor.width(), height : anchor.height()};
 
     // Get element dimensions
-    var elbOffset = el.offset();
+    //var elbOffset = el.offset();
     var elbDim = {width : el.width(), height : el.height()};
 
     // Determine align coords (document-relative)
@@ -165,8 +165,8 @@
     }
     
     // Check for constrainment (default true)
-    var constraint = true;
-    if (pos.indexOf('no-constraint') >= 0) constraint = false;
+    //var constraint = true;
+    //if (pos.indexOf('no-constraint') >= 0) constraint = false;
 
     // Add fudge factors
     x += xFudge || 0;
