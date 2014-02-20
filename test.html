@@ -19,6 +19,16 @@ function drawme(obj) {
 require(['backstrap'], function(bs) {
 	$('body').append($$.div($$.span({context:'info'}, 'Hello World')));
 	
+	$('body').append(
+		$$.div(
+				$$.span({context: 'danger'},
+					'Uh-oh! ',
+					$$.glyph('star')
+				), ' ',
+				$$.button({size: 'md'}, 'OK')
+		)
+	);
+	
 	drawme(new $$.BasicNavbar({brand: 'Wow!', model: new Backbone.Collection([
 		{ name: 'first', href: '#first', label: 'First' },
 		{ name: 'second', href: '#second', label: 'Second' },
