@@ -49,7 +49,7 @@
 			});
 			this.button.$el.attr('type', 'button');
 			this.button.$el.attr('data-toggle', 'dropdown');
-			this.button.$el.append($$.span({className: 'caret'});
+			this.button.$el.append($$.span({className: 'caret'}));
 			if ('align' in this.options) {
 				this.align = this.options.align==='right' ? ' dropdown-menu-right' : ' dropdown-menu-left';
 			}
