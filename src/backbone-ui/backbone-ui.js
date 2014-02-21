@@ -1798,7 +1798,7 @@ if(window.jQuery) {
 
     // renders an item for the given model, at the given index
     _renderItem : function(model, index) {
-      var content;
+      var content = null;
       if(_(this.options.itemView).exists()) {
         if(_(this.options.itemView).isString()) {
           content = this.resolveContent(model, this.options.itemView);

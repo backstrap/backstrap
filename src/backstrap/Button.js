@@ -44,7 +44,7 @@
 
 			$(this.el).bind('click', _(function(e) {
 				if(!this.options.disabled && !this.options.active && this.options.onClick) {
-					this.options.onClick(e); 
+					return this.options.onClick(e); 
 				}
 				return false;
 			}).bind(this));

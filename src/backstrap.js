@@ -66,12 +66,13 @@
 	var sizeMap = {
 			'large'        : 'lg',
 			'lg'           : 'lg',
-			'medium'       : 'md',
-			'md'           : 'md',
+			'medium'       : 'md',  // for cols
+			'md'           : 'md',  // for cols
 			'small'        : 'sm',
 			'sm'           : 'sm',
 			'extra-small'  : 'xs',
-			'xs'           : 'xs'
+			'xs'           : 'xs',
+			'block'        : 'block' // for buttons only
 	};
 
 	// The backstrap function serves as a generic method for generating
@@ -93,13 +94,18 @@
 		// handle Bootstrap special tags, context, and sizing.
 		var tag = arguments[0];
 		var size = null;
-		var context = null;
+		var context = 'default';
+		var fluid = false;
 		var type = 'text';
 		var classlist = {};
 		switch (arguments[0]) {
 			case 'badge':
 				tag = 'span';
 				classlist['badge'] = true;
+				break;
+			case 'container':
+				tag = 'div';
+				classlist['container'] = true;
 				break;
 			case 'button':
 				type = 'btn';
@@ -116,6 +122,18 @@
 				break;
 			case 'htmllabel':
 				tag = 'label';
+				break;
+			case 'jumbotron':
+				tag = 'div';
+				classlist['jumbotron'] = true;
+				break;
+			case 'pageHeader':
+				tag = 'div';
+				classlist['page-header'] = true;
+				break;
+			case 'well':
+				tag = 'div';
+				classlist['well'] = true;
 				break;
 		}
 
@@ -189,9 +207,13 @@
 											el.setAttribute('size', value);
 										}
 										break;
-	
+
 									case 'context':
 										context = value;
+										break;
+
+									case 'fluid':
+										fluid = !!value;
 										break;
 	
 									case 'bgcontext':
@@ -202,7 +224,7 @@
 										classlist['glyphicon'] = classlist['glyphicon-' + value] = true;
 										break;
 	
-										// otherwise, we use the standard setAttribute
+									// otherwise, we use the standard setAttribute
 									default:
 										el.setAttribute(key, value);
 								}
@@ -210,14 +232,16 @@
 						}
 					}
 				}
-				// Add classNames.
+				// Add requested classNames.
 				if (size != null && size !== 'text') {
 					classlist[type + '-' + size] = true;
 				}
 				if (context != null) {
 					classlist[type + '-' + context] = true;
 				}
-				el.className = Object.keys(classlist).join(' ');
+				if (fluid && classlist['container']) {
+					classlist['container-fluid'] = true;
+				}
 			}
 
 			// if the argument is an array, we append each element
@@ -230,6 +254,9 @@
 				}
 			}
 		}
+		
+		// Set className from classlist.
+		el.className = Object.keys(classlist).join(' ');
 
 		// Add an appendTo method to the newly created element, which will allow
 		// the DOM insertion to be method chained to the creation.  For example:
@@ -278,7 +305,7 @@
 	};
 
 	// Some special tags for Bootstrap support.
-	var bootstrapTags = ['badge', 'htmllabel', 'spanlabel'];
+	var bootstrapTags = ['badge', 'container', 'htmllabel', 'jumbotron', 'pageHeader', 'spanlabel', 'well'];
 
 	// html 4 tags
 	var deprecatedTags = ['acronym', 'applet', 'basefont', 'big', 'center', 'dir',

@@ -9,27 +9,24 @@
 (function()
 {
 	var ItemView = Backbone.View.extend({
-		tagName: 'a',
-		className: 'menuitem',
-		
-		initialize: function initialize() {
-			if (this.model.get('divider') || this.model.get('header')) {
-				// TODO test
-				this.tagName = 'span';
+		tagName: function () {
+			if (this.model.get('divider') || this.model.get('separator') || this.model.get('header')) {
+				return 'span';
+			} else {
+				return 'a';
 			}
 		},
 
 		render: function render() {
-			this.parent().attr('role', 'presentation');
-			if (this.model.get('divider')) {
-				this.parent().attr('class', 'divider');
+			if (this.model.get('divider') || this.model.get('separator')) {
 			} else if (this.model.get('header')) {
-				this.parent().attr('class', 'dropdown-header');
+				this.$el.text(this.model.get('label'));
 			} else {
-				(this.$el.attr('role', 'menuitem')
+				this.$el.addClass('menuitem')
+					.attr('role', 'menuitem')
 					.attr('tabindex', -1)
 					.attr('href', this.model.get('href'))
-					.text(this.model.get('label')));
+					.text(this.model.get('label'));
 			}
 			return this;
 		}
@@ -39,31 +36,48 @@
 		className: 'dropdown',
 		align: '',
 
-		initialize: function () {
-			Backbone.UI.List.prototype.initialize.apply(this, arguments);
-			this.itemView = ItemView;
+		initialize: function (options) {
+			this.options.itemView = ItemView;
+			Backbone.UI.List.prototype.initialize.call(this, options);
 			this.button = new $$.Button({
-				className: 'dropdown-toggle sr-only',
+				tagName: 'button',
+				className: 'dropdown-toggle',
 				id: this.options.buttonId,
-				content: this.options.buttonLabel
+				content: this.options.buttonLabel + ' ',
+				onClick: function () { return true; } // allow bubble-up to Bootstrap's Dropdown event handler!
 			});
+			this.button.render();
 			this.button.$el.attr('type', 'button');
 			this.button.$el.attr('data-toggle', 'dropdown');
 			this.button.$el.append($$.span({className: 'caret'}));
 			if ('align' in this.options) {
 				this.align = this.options.align==='right' ? ' dropdown-menu-right' : ' dropdown-menu-left';
 			}
+			return this;
 		},
 
 		render: function () {
-			Backbone.UI.List.prototype.render.apply(this, arguments);
-			this.$el.prepend(this.button);
+			Backbone.UI.List.prototype.render.call(this);
+			this.$el.prepend(this.button.el);
 			this.$('> ul').addClass('dropdown-menu' + this.align).attr({
 				role: 'menu',
 				'aria-labelledby': this.options.buttonId
 			});
 			return this;
-		}
+		},
+		
+	    // renders an item for the given model, at the given index
+	    _renderItem : function(model, index) {
+			var li = Backbone.UI.List.prototype._renderItem.call(this, model, index);
+			var $li = $(li);
+			$li.attr('role', 'presentation');
+			if (model.get('divider') || model.get('separator')) {
+				$li.addClass('divider');
+			} else if (model.get('header')) {
+				$li.addClass('dropdown-header');
+			}
+			return li;
+	    }
 	});
 	
 	return $$.Dropdown;

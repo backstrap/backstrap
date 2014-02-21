@@ -13,22 +13,22 @@
 		className: 'nav-item',
 		
 		render: function render() {
-			(this.$el.addClass('nav-item-' + this.model.get('name'))
+			this.$el.addClass('nav-item-' + this.model.get('name'))
 				.attr('href', this.model.get('href'))
-				.text(this.model.get('label')));
+				.text(this.model.get('label'));
 			return this;
 		}
 	});
 	
 	$$.NavTabs = Backbone.UI.List.extend({
 
-		initialize: function () {
-			Backbone.UI.List.prototype.initialize.apply(this, arguments);
-			this.itemView = ItemView;
+		initialize: function (options) {
+			this.options.itemView = ItemView;
+			Backbone.UI.List.prototype.initialize.call(this, options);
 		},
 
 		render: function () {
-			Backbone.UI.List.prototype.render.apply(this, arguments);
+			Backbone.UI.List.prototype.render.call(this);
 			this.$('> ul').addClass('nav nav-tabs');
 			return this;
 		}
