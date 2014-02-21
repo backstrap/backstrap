@@ -50,15 +50,15 @@ which produces the DOM tree represented by this HTML code:
 	  <button class="btn btn-lg">OK</button>
 	</div>
 
-[bootstrap]:  http://getbootstrap.com/ "Bootstrap Homepage"
-[backbone]:   http://backbonejs.org/ "Backbonejs Homepage"
-[coenraets]   http://coenraets.org/blog/2013/04/sample-application-with-backbone-js-and-twitter-bootstrap-updated-and-improved/ "Christophe Coenraets Blog"
-[github]      https://github.com/backstrap/backstrap "Backstrap on GitHub"
-[packagist]   https://packagist.org/packages/backstrap/backstrap "Backstrap on Packagist"
-[laconic]     https://github.com/joestelmach/laconic "Laconic on GitHub"
-[lacLicense]  https://github.com/joestelmach/laconic/blob/master/LICENSE "Laconic License"
-[backbone-ui] https://github.com/perka/backbone-ui "Backbone-UI on GitHub"
-[bbuiLicense] https://github.com/perka/backbone-ui/blob/master/LICENSE "Backbone-UI License"
+[bootstrap]:   http://getbootstrap.com/ "Bootstrap Homepage"
+[backbone]:    http://backbonejs.org/ "Backbonejs Homepage"
+[coenraets]:   http://coenraets.org/blog/2013/04/sample-application-with-backbone-js-and-twitter-bootstrap-updated-and-improved/ "Christophe Coenraets Blog"
+[github]:      https://github.com/backstrap/backstrap "Backstrap on GitHub"
+[packagist]:   https://packagist.org/packages/backstrap/backstrap "Backstrap on Packagist"
+[laconic]:     https://github.com/joestelmach/laconic "Laconic on GitHub"
+[lacLicense]:  https://github.com/joestelmach/laconic/blob/master/LICENSE "Laconic License"
+[backbone-ui]: https://github.com/perka/backbone-ui "Backbone-UI on GitHub"
+[bbuiLicense]: https://github.com/perka/backbone-ui/blob/master/LICENSE "Backbone-UI License"
 
 
 ## Detailed usage
