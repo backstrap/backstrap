@@ -1,0 +1,17 @@
+<section id="text_area" class="example">
+  <h1>Text Area</h1>
+
+  <script type="text/javascript">
+    $(window).load(function() {
+      window.addExample('#text_area', function() {
+        var area = new Backbone.UI.TextArea({
+          model : coffee.get('region'),
+          content : 'name'
+        }).render();
+        return area;
+      });
+    });
+  </script>
+
+  <!-- OPTIONS -->
+</section>

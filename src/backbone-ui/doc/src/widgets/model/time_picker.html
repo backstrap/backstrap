@@ -1,0 +1,17 @@
+<section id="time_picker" class="example">
+  <h1>Time Picker</h1>
+
+  <script type="text/javascript">
+    $(window).load(function() {
+      window.addExample('#time_picker', function() {
+        var picker = new Backbone.UI.TimePicker({
+          model : coffee,
+          content : 'roastedOn'
+        }).render();
+        return picker;
+      });
+    });
+  </script>
+
+  <!-- OPTIONS -->
+</section>

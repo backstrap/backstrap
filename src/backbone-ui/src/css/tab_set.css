@@ -1,0 +1,29 @@
+.tab_set .tab_bar {
+  height:29px;
+  padding-left:20px;
+}
+
+.tab_set .tab {
+  text-decoration:none;
+  color:#222;
+  border:1px solid #222;
+  padding:0 10px;
+  margin:0 5px 0 0;
+  height:28px;
+  line-height:30px;
+  display: inline-block;
+}
+
+.tab_set .tab.selected,
+.tab_set .tab.selected:hover {
+  background-color:#ddd;
+}
+
+.tab_set .tab:hover {
+  background-color:#eee;
+}
+
+.tab_set .content_container {
+  border:1px solid #666;
+  padding:10px;
+}

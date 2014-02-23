@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Backstrap Example App</title>
+	<style>
+		body.loading { margin: 2em auto; font-size: 150%; height: 5em; }
+	</style>
+</head>
+<body class="loading">
+	<div>Page loading...</div>
+	<script src="components/require.js"></script>
+	<script>
+	require(["jquery", "backstrap", "backbone"], function ($, $$, bb) {
+		// Load the main CSS.
+		["components/require.css"].forEach(function (css) {
+			$("head").append($$.link({
+				href: css,
+				rel: "stylesheet",
+				type: "text/css"
+		});
+	
+		// Build some objects.
+		var Router = new bb.Router.extend({
+			routes: {
+				'': 'home'
+			},
+			home: function () {
+				// Typically you'll have a Router on your page.
+				// This one doesn't do anything.
+			}
+		})();
+		var page = $$.container();
+		$$.pageHeader("Hello, No-HTML World!").appendTo(page);
+		$$.jumbotron([
+			'This is an example of a "No-HTML" web page using Backstrap!',
+			'The HTML just puts a simple "Loading..." message on the page,',
+			'including enough CSS to let it immediately draw that content.',
+			'Then JavaScript does the heavy-lifting of',
+			'getting the rest of the JS libraries and CSS loaded',
+			'and building our content with Backstrap, Backbone and jQuery.',
+			'Once everything is ready, we swap out the page contents,',
+			'and our application is up and running!'
+		].join(' ')).appendTo(page);
+	
+		// Display the page and start watching for events.
+		$("body").empty().removeClass("loading").append(page);
+		bb.history.start();
+	});
+	</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+.text_area {
+  position: relative;
+  line-height:20px;
+}
+
+.text_area textarea {
+  border: none;
+  outline:none;
+}
+
+.text_area .textarea_wrapper {
+  border: 1px solid #666;
+  display:inline-block;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  box-sizing:border-box;
+  background-color:#fff;
+}
+
+.text_area .textarea_wrapper.focused {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}

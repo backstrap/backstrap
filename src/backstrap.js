@@ -31,6 +31,9 @@
  ************************************************************/
 (function (context) {
 
+	// Hold onto $$ for noConflict() in case of overwrite.
+	var _$$ = context.$$;
+
 	// properly-cased attribute names for IE setAttribute support
 	var attributeMap = {
 			'acceptcharset'     : 'acceptCharset',
@@ -363,10 +366,10 @@
 		el.appendRows = appendGridRows;
 		el.appendRow = appendGridRow;
 		el.getRow = function () {
-			return $('> *:nth-child('+row+')', el);
+			return $('> *:nth-child('+row+') ', el);
 		};
 		el.getCell = function (row, col) {
-			return $('> *:nth-child('+row+') > *:nth-child(' + cell + ')', el);
+			return $('> *:nth-child('+row+') > *:nth-child(' + cell + ') ', el);
 		};
 		el.appendRows(layout);
 		return el;
@@ -384,8 +387,29 @@
 		}
 	};
 
-	// Make a global.
-	context.$$ = context.Backstrap = backstrap;
+	// Reset context.$$ and return a reference to backstrap.
+	backstrap.noConflict = function() {
+		if ( context.$$ === backstrap ) {
+			context.$$ = _$$;
+		}
+		return backstrap;
+	};
 
-	return backstrap;
-})(this);
+	// If we're in an AMD environment, we register as a named AMD module.
+	if (typeof define === "function" && define.amd) {
+		define("backstrap", ["jquery", "bootstrap", "backbone"], function() {
+			return backstrap;
+		});
+	}
+
+	// If we're in a CommonJS environment, we export ourself.
+	// Otherwise, we attach ourself to the top level $$ namespace.
+	// Call "var altName = $$.noConflict();" to revert definition of $$.
+	if ( typeof module === "object" && typeof module.exports === "object" ) {
+		module.exports = backstrap;
+	} else {
+		context.$$ = backstrap;
+	}
+
+}(this));
+

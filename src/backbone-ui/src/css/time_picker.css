@@ -1,0 +1,17 @@
+.time_picker {
+  position:relative;
+  line-height:20px;
+}
+
+.time_picker .text_field {
+  display:inline-block;
+}
+
+.time_picker .text_field input {
+  width: 80px;
+}
+
+.time_picker_menu {
+  z-index:2000;
+}
+

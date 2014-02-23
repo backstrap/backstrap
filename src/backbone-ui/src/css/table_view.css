@@ -1,0 +1,56 @@
+.table_view {
+  border:1px solid #222;
+  line-height:20px;
+}
+
+.table_view table {
+  text-align:left;
+  width:100%;
+}
+
+.table_view table th {
+  padding:0;
+  margin:0;
+  background-color:#eee;
+  line-height:20px;
+  position:relative
+}
+
+.table_view th.first {
+  padding-left:5px;
+  border-left:none;
+}
+
+.table_view th.last {
+  padding-right:5px;
+}
+
+.table_view .content{
+  background-color:#fff;
+  padding:5px;
+}
+
+.table_view .wrapper {
+  padding:5px;
+}
+
+.table_view .content td {
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+.table_view.clickable .content tr:hover .wrapper {
+  background-color:#ddd;
+  cursor:pointer;
+}
+
+.table_view th .wrapper,
+.table_view th.sorted .sort_wrapper {
+  float:left;
+}
+
+.table_view th.sorted .sort_wrapper .glyph {
+  margin-top:6px;
+  font-size:10px;
+}
+

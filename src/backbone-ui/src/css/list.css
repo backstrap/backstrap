@@ -1,0 +1,9 @@
+.list {
+  line-height:20px;
+}
+
+.list ul {
+  list-style-type:none;
+  margin:0;
+  padding:0;
+}

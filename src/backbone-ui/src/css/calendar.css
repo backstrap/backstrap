@@ -1,0 +1,82 @@
+.calendar {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-transform:capitalize;
+}
+
+.calendar table {
+  border-collapse:collapse;
+  border:1px solid #444;
+}
+
+.calendar thead {
+  border-bottom:1px solid #444;
+  line-height:33px;
+  background-color:#eaeaea;
+}
+
+.calendar .go_forward,
+.calendar .title {
+  border-left:1px solid #444;
+}
+
+.calendar a {
+  display:block;
+  text-decoration:none;
+  color:#222;
+}
+
+.calendar td,
+.calendar th {
+  text-align:center;
+  padding:0;
+  margin:0;
+  font-size:14px;
+}
+
+.calendar .row.days td {
+  line-height:33px;
+  border-right:1px solid #444;
+  background-color:#eaeaea;
+}
+
+.calendar .cell {
+  border:1px solid #444;
+  background-color:#fff;
+}
+
+.calendar .cell.out_of_range {
+  background-color:#ddd;
+  color: #999;
+}
+
+.calendar .cell.inactive {
+  background-color:#eaeaea;
+  color:#999;
+}
+
+.calendar .cell.today {
+  font-weight:bold;
+}
+
+.calendar .cell a,
+.calendar .cell .day {
+  width:33px;
+  line-height:33px;
+}
+
+.calendar .cell a:hover,
+.calendar .cell a:active {
+  background-color:#e9d4c7;
+}
+
+.calendar .cell.selected a, 
+.calendar .cell.selected a:hover {
+  background-color:#ae5317;
+  color:#fff;
+}
+

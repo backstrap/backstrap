@@ -1,0 +1,8 @@
+.radio_group {
+  position: relative;
+  line-height:20px;
+}
+
+.radio_group .radio_group_wrapper {
+  display:inline-block;
+}

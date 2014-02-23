@@ -1,14 +1,16 @@
 /**
- * A model-bound Bootstrap Glyphicon object.
+ * A model-bound Bootstrap badge object.
+ *
+ * Use model and content options to set the content of the badge.
  * 
  * @author Kevin Perry perry@princeton.edu
  * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  * 
  */
-(function ()
+(function(context)
 {
-	$$.Badge = Backbone.View.extend({
+	var Badge = Backbone.View.extend({
 		options : {
 			tagName : 'span',
 		},
@@ -27,6 +29,22 @@
 			return this;
 		}
 	});
-	
-	return $$.Glyph;
-})();
+
+	// If we're in an AMD environment, register it as a named AMD module.
+	if (typeof define === "function" && define.amd) {
+		define("backstrap/Badge", ["backstrap"], function() {
+			return Badge;
+		});
+	}
+
+	// If we're in a CommonJS environment, export the object;
+	// otherwise put it in the $$ namespace.
+	if ( typeof module === "object" && typeof module.exports === "object" ) {
+		module.exports = Badge;
+	} else {
+		if (typeof context.$$ !== "object") {
+			throw new Error("$$ is not set - include backstrap.js before Thing.js.");
+		}
+		context.$$.Badge = Badge;
+	}
+}(this));

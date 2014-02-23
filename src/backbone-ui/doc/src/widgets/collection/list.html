@@ -1,0 +1,26 @@
+<section id="list" class="example">
+  <h1>List View</h1>
+
+  <script type="text/javascript">
+    $(window).load(function() {
+      window.addExample('#list', function() {
+        var Item = Backbone.View.extend({
+          render : function() {
+            $(this.el).empty();
+            $.el.div(this.model.get('name')).appendTo(this.el);
+          }
+        });
+
+        var list = new Backbone.UI.List({
+          model : regions,
+          itemView : Item
+        }).render();
+
+        return list;
+      });
+    });
+  </script>
+
+  <!-- OPTIONS -->
+</section>
+

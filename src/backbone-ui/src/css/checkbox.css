@@ -1,0 +1,12 @@
+.checkbox {
+  position: relative;
+  line-height:20px;
+}
+
+.checkbox .checkbox_wrapper {
+  display:inline-block;
+}
+
+.checkbox .checkbox_wrapper > span {
+  display:inline-block;
+}

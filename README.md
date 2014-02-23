@@ -3,8 +3,9 @@ Backstrap
 
 **UNDER CONSTRUCTION. VERSION 1.0 COMING SOON!**
 
-Need something meaty to go between the backbone of your client-side JS app
-and its UI skin? Look no further, you've found it: Backstrap!
+Need something meaty to go between the MVC backbone of your
+client-side JavaScript app and its UI skin?
+Look no further, you've found it: Backstrap!
 
 The Backstrap JavaScript library provides a layer of functionality
 tying together [Bootstrap][] and [Backbone][].
@@ -17,18 +18,23 @@ and as a Composer component on [packagist.org][packagist].
 
 The core Backstrap object is based heavily on
 Joe Stelmach's nifty [laconic.js][laconic] package.
-"Laconic simplifies the generation of DOM content."
-It also provides an extension of the ideas found in
-[Backbone-UI][].
+("Laconic simplifies the generation of DOM content.")
+It also extends [Backbone-UI][] and enhances
+the Backbone-UI components with Bootstrap-awareness.
 
-To all of that I've added a natural syntax for making
-Bootstrap-aware objects, including Bootstrap's
-sizing and context-coloring features;
+To all of that we've added a natural syntax for making
+basic Bootstrap-aware DOM objects,
+including Bootstrap's sizing and context-coloring features;
 automatic use of Bootstrap class names;
-methods for making standard complex widgets like
+methods for making complex widgets like
 grids, navbars, button-groups, forms.
 
-Backstrap defines the global namespace `$$`.
+In non-CommonJS environments, Backstrap defines the global namespace `$$`.
+It provides a `noConflict()` method to revert the definition of `$$` if needed.
+
+Backstrap was originally forked from
+laconic commit [b7f4861a96][]
+and Backbone-UI commit [ece3ea14d7][].
 
 Sample suggested use:
 
@@ -59,6 +65,8 @@ which produces the DOM tree represented by this HTML code:
 [lacLicense]:  https://github.com/joestelmach/laconic/blob/master/LICENSE "Laconic License"
 [backbone-ui]: https://github.com/perka/backbone-ui "Backbone-UI on GitHub"
 [bbuiLicense]: https://github.com/perka/backbone-ui/blob/master/LICENSE "Backbone-UI License"
+[b7f4861a96]:  https://github.com/joestelmach/laconic/commit/b7f4861a96153c213569ac8aa537e94312c71ce8
+[ece3ea14d7]:  https://github.com/perka/backbone-ui/commit/ece3ea14d71bf1bc8f8a0ce01103d74bfe29a10f
 
 
 ## Detailed usage
@@ -223,6 +231,26 @@ The term "label" is, unfortunaterly, overloaded. The following methods are avail
 #### media
 
 **To Be Implemented**
+
+#### noConflict
+
+Provides a mechanism for reverting the definition of `$$`.
+Backstrap will attempt to register itself as a CommonJS module.
+But when that functionality is not available
+it defines the global `$$` instead.
+It is possible that your app would want to include
+some other package that also uses the global `$$`.
+In this case, load the Backstrap package after the other package;
+you can then use `$$.noConflict()` to define some other variable
+to hold the Backstrap object,
+and revert the definition of `$$` back to the other package.
+For example:
+
+	var Backstrap = $$.noConflict();
+
+Now `$$` is whatever it was before you loaded Backstrap,
+and you can use the variable `Backstrap` to access the Backstrap methods.
+You might want to pick a shorter variable name, like `$b`.
 
 #### pagination
 
@@ -454,10 +482,6 @@ For example:
 	var tabs = new $$.NavTabs({model: items}).render();
 
 creates a set of three tabs.
-
-#### Pulldown
-
-**To Be Implemented**
 
 #### RadioGroup
 

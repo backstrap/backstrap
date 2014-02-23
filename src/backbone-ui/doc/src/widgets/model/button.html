@@ -1,0 +1,19 @@
+<section id="button" class="example">
+  <h1>Button</h1>
+
+  <script type="text/javascript">
+    $(window).load(function() {
+
+      window.addExample('#button', function() {
+
+        var button = new Backbone.UI.Button({
+          model : coffee,
+          content : 'roaster'
+        }).render();
+        return button;
+      });
+    });
+  </script>
+
+  <!-- OPTIONS -->
+</section>

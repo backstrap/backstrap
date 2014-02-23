@@ -1,0 +1,190 @@
+body {
+  padding:120px 0 0 40px;
+  font-family:Georgia, serif;
+  font-size:15px;
+}
+
+section {
+  margin:40px 0 60px 0;
+  width:800px;
+}
+
+section h1 {
+  font-size:20px;
+}
+
+section h2 {
+  font-size:15px;
+}
+
+section p {
+  text-align:justify;
+  line-height:28px;
+}
+
+.components section {
+  padding-left:20px;
+}
+
+.model_bound section {
+  border-left:2px solid #a88e7d;
+}
+
+.model_bound_with_collection section {
+  border-left:2px solid #aa7b5d;
+}
+
+.collection_bound section {
+  border-left:2px solid #ab673a;
+}
+
+.non_bound section {
+  border-left:2px solid #ae5317;
+}
+
+a {
+  color:#ae5317;
+  text-decoration:none;
+}
+
+.backbone_heading {
+  height:100px;
+  position:fixed;
+  top:0;
+  right:0;
+  left:0;
+  z-index:10000;
+  padding-left:37px;
+  background:url(./images/fade.png) bottom left repeat-x;
+  min-width:600px;
+}
+
+.backbone_heading h1 {
+  line-height:80px;
+  font-size:36px;
+  font-weight:bold;
+  position:absolute;
+  top:-20px;
+}
+
+.backbone_heading .container {
+  background-color:#fff;
+  height:80px;
+}
+
+.download {
+  position:absolute;
+  top:40px;
+  right:30px;
+}
+
+.download a {
+  padding-left:20px;
+}
+
+.kb {
+  font-size:12px;
+}
+
+.components .result {
+  width:238px;
+}
+
+.components .code {
+  float:right;
+  width:500px;
+}
+
+.code {
+  padding:0 0 0 20px;
+  background-color:#f3f3f3;
+  border-left:2px solid #666;
+}
+
+#example_data {
+  height:175px;
+  width:350px;
+  position:fixed;
+  left:490px;
+  top:120px;
+  border-radius:8px;
+  background-color:#222;
+  opacity:0.85;
+  filter:alpha(opacity=85);
+  color:#fff;
+}
+
+#example_data .title {
+  line-height:32px;
+  text-align:center;
+  font-style:italic;
+  font-size:14px;
+}
+
+#close_example {
+  float:right;
+  margin-right:15px;
+  color:#fff;
+  font-size:24px;
+  line-height:24px;
+}
+
+#example_state {
+  margin-top:-20px;
+  padding-left:10px;
+}
+
+section .options ul {
+  list-style-type:none;
+  padding:0;
+  margin:0;
+}
+
+section .options li {
+  position:relative;
+}
+
+.options .key {
+  width:110px;
+  padding:3px;
+  text-align:right;
+  background-color:#f3f3f3;
+}
+
+.options .value {
+  margin:-23px 0 0 120px;
+  padding:3px;
+}
+
+.options li {
+  clear:both;
+  margin-bottom:5px;
+}
+
+#task_list_code {
+  padding:2px 15px;
+  margin-top:20px;
+}
+
+#task_list_result {
+  width:300px;
+}
+
+#task_list_result .text_field {
+  width:300px;
+  margin-bottom:10px;
+}
+
+#task_list_result .checkbox {
+  max-width:240px;
+  overflow:hidden;
+}
+
+#task_list_result li {
+  clear:both;
+}
+
+#task_list_result .link {
+  line-height:30px;
+  float:right;
+}

@@ -1,0 +1,18 @@
+<section id="checkbox" class="example">
+  <h1>Checkbox</h1>
+
+  <script type="text/javascript">
+    $(window).load(function() {
+      window.addExample('#checkbox', function() {
+        var checkbox = new Backbone.UI.Checkbox({
+          model : coffee,
+          content : 'acidic',
+          labelContent : 'roaster'
+        }).render();
+        return checkbox;
+      });
+    });
+  </script>
+
+  <!-- OPTIONS -->
+</section>

@@ -1,0 +1,21 @@
+<section id="menu" class="example">
+  <h1>Menu</h1>
+
+  <script type="text/javascript">
+    $(window).load(function() {
+
+      window.addExample('#menu', function() {
+        var menu = new Backbone.UI.Menu({
+          model : coffee,
+          content : 'region',
+          alternatives : regions,
+          altLabelContent : 'name',
+          size : regions.size()
+        }).render();
+        return menu;
+      });
+    });
+  </script>
+
+  <!-- OPTIONS -->
+</section>
