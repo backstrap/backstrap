@@ -207,15 +207,19 @@
 			}
 		}
 		
-		// Add requested classNames.
-		if (bootstrapClass !== null && size != null) {
-			classlist[bootstrapClass + '-' + size] = true;
-		} else if (size != null) {
-			classlist['text-' + size] = true;
-		}
+		// A few special Bootstrap details
 		classlist[(bootstrapClass !== null ? bootstrapClass : 'text') + '-' + context] = true;
+		if (size != null) {
+			classlist[(bootstrapClass !== null ? bootstrapClass : 'text') + '-' + size] = true;
+		}
+		if (bootstrapClass === 'btn-toolbar') {
+			el.setAttribute('role', 'toolbar');
+		}
 		if (bootstrapClass === 'container' && fluid) {
 			classlist['container-fluid'] = true;
+		}
+		if (bootstrapClass === 'input') {
+			classlist['form-control'] = true;
 		}
 		
 		// Set className from classlist.
@@ -287,14 +291,27 @@
 	            'ul', 'var', 'video', 'wbr'].concat(deprecatedTags);
 
 	// Bootstrap component pseudo-tags
-	var bootstrapComponents = ['badge', 'button', 'container', 'input', 'jumbotron', 'label', 'pageHeader', 'spanLabel', 'well'];
+	var bootstrapComponents = ['alert', 'badge', 'breadcrumb', 'button', 'buttonGroup', 'buttonToolbar',
+	                           'container', 'input', 'inputGroup', 'jumbotron', 'label',
+	                           'linkList', 'linkListItem', 'list', 'listItem',
+	                           'pageHeader', 'pagination', 'spanLabel', 'well'];
 	
 	// HTML tags for Bootstrap components
 	var bootstrapTags = {
+			alert: 'div',
 			badge: 'span',
+			breadcrumb: 'ol',
+			buttonGroup: 'div',
+			buttonToolbar: 'div',
 			container: 'div',
+			inputGroup: 'div',
 			jumbotron: 'div',
+			linkList: 'div',
+			linkListItem: 'a',
+			list: 'ul',
+			listItem: 'li',
 			pageHeader: 'div',
+			pagination: 'ul',
 			spanLabel: 'span',
 			well: 'div'
 	};
@@ -302,6 +319,14 @@
 	// HTML class names for Bootstrap components
 	var bootstrapClasses = {
 			button: 'btn',
+			buttonGroup: 'btn-group',
+			buttonToolbar: 'btn-toolbar',
+			input: 'form-control',
+			inputGroup: 'input-group',
+			linkList: 'list-group',
+			linkListItem: 'list-group-item',
+			list: 'list-group',
+			listItem: 'list-group-item',
 			pageHeader: 'page-header',
 			spanLabel: 'label'
 	};

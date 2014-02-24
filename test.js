@@ -17,13 +17,17 @@ require(['backstrap'], function() {
 		append($$.css("components/bootstrap/css/bootstrap.min.css")).
 		append($$.css("components/bootstrap/css/bootstrap-theme.min.css"));
 
+	// tag factories
+	
 	test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
 	
 	test($$.container(
 		$$.jumbotron({bgcontext: 'primary'}, $$.p('Some important content in a jumbotron'))
 	), 'jumbotron');
-	
+
 	test($$.glyph('fullscreen'), 'glyph');
+	
+	test($$.alert({context: 'warning'}, "I'm warning you"), 'alert');
 
 	test($$.span('Hello World'), 'span');
 	
@@ -49,6 +53,56 @@ require(['backstrap'], function() {
 			' ',
 			$$.button('OK')
 	), 'context + badge + glyph + button');
+
+	test($$.breadcrumb(
+			$$.li($$.a({href: '#'}, 'Root')),
+			$$.li($$.a({href: '#folder'}, 'Folder')),
+			$$.li($$.a({href: '#sub'}, 'Sub Folder')),
+			$$.li('Current Item')
+	), 'breadcrumb');
+
+	test($$.buttonGroup(
+			$$.button('Button1'),
+			$$.button('Button2'),
+			$$.button('Button3')
+	), 'button group');
+
+	test($$.buttonToolbar(
+		$$.buttonGroup(
+			$$.button('Button1'),
+			$$.button('Button2')
+		),
+		$$.buttonGroup(
+			$$.button('Button3'),
+			$$.button('Button4')
+		)
+	), 'button toolbar');
+
+	test($$.list(
+			$$.listItem('aaaaa'),
+			$$.listItem('bbbbbbbbb'),
+			$$.listItem('ccc ddd eee'),
+			$$.listItem('F')
+	), 'list, list item');
+
+	test($$.linkList(
+			$$.linkListItem({href: '#a'}, 'aaaaa'),
+			$$.linkListItem({href: '#b'}, 'bbbbbbbbb'),
+			$$.linkListItem({href: '#c'}, 'ccc ddd eee'),
+			$$.linkListItem({href: '#f'}, 'F')
+	), 'link list, link list item');
+
+	test($$.pagination(
+			$$.li($$.a({href: '#1'}, '<<')),
+			$$.li($$.a({href: '#1'}, '1')),
+			$$.li({class: 'active'}, $$.a({href: '#2'}, '2')),
+			$$.li($$.a({href: '#3'}, '3')),
+			$$.li($$.a({href: '#3'}, '>>'))
+	), 'pagination');
+	
+	// need input, input-group tests
+	
+	// Object constructors
 	
 	testObj(new $$.BasicNavbar({brand: 'Wow!', model: new Backbone.Collection([
 		{ name: 'first', href: '#first', label: 'First' },

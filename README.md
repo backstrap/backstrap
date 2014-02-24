@@ -127,7 +127,8 @@ In some cases, there is a Bootstrap component name that is the same as an HTML t
 To work around this conflict, we make all the plain HTML tag methods accessible in the
 `$$.html` namespace.  Thus for instance in the case of "label", `$$.label() will give you
 a fully Bootstrapped `<label class="label">`,
-while `$$.html.label()` will give you a plain HTML `<label>`. 
+while `$$.html.label()` will give you a plain HTML `<label>`.
+Overloaded names: button, input, label.
 
 ### Bootstrap Tags
 
@@ -135,32 +136,35 @@ The special Bootstrap methods are:
 
 #### alert
 
-**To Be Implemented**
+The `$$.alert()` method creates a `div` tag decorated with the Bootstrap "alert" class.
 
 #### badge
 
-The `$$.badge()` method creates a `span` with class "badge".
-
-See also the Badge constructor, below.
+The `$$.badge()` method creates a `span` tag decorated with the Bootstrap "badge" class.
 
 #### breadcrumb
 
-**To Be Implemented**
+The `$$.breadcrumb()` method creates an `ol` tag decorated with the Bootstrap "breadcrumb" class.
 
 #### button
 
 The `$$.button()` method creates an HTML `button` tag decorated with the Bootstrap "btn" class,
-and optionally "btn-*" classes for sizing and context.
+and optionally with "btn-*" classes for sizing and context.
+
 `$$.html.button()` gives you a bare HTML `button` tag.
 
 #### buttonGroup
 
-**To Be Implemented**
+The `$$.buttonGroup()` method creates a `div` decorated with the Bootstrap "btn-group" class.
+
+#### buttonToolbar
+
+The `$$.buttonToolbar()` method creates a `div` tag decorated with the Bootstrap "btn-toolbar" class and "toolbar" role.
 
 #### container
 
-The `$$.container()` method creates an HTML `div` tag decorated with the Bootstrap "container" class,
-and optionally "container-fluid" for fluid layout.
+The `$$.container()` method creates a `div` tag decorated with the Bootstrap "container" class,
+and optionally with the "container-fluid" class for fluid layout.
 
 #### css
 
@@ -177,9 +181,7 @@ Use it to load CSS from within your JS code, thus:
 
 #### glyph
 
-The `$$.glyph(name)` method creates a `span` tag with class "glyphicon glyphicon-<name>".
-
-See also the Glyph constructor, below.
+The `$$.glyph(name)` method creates a `span` tag decorated with the Bootstrap "glyphicon" and "glyphicon-<name>" classes.
 
 #### grid
 
@@ -212,36 +214,49 @@ puts "Hello World" in the middle cell of the second row.
 
 #### input
 
-Creates an HTML `input` tag decorated with the Bootstrap "input" class,
-and optionally "input-*" classes for sizing and context.
+Creates an HTML `input` tag decorated with the Bootstrap "form-control" class,
+and optionally with "input-*" classes for sizing and context.
 
 #### inputGroup
 
-**To Be Implemented**
+The `$$.inputGroup()` method creates a `div` tag decorated with the Bootstrap "input-group" class.
 
 #### jumbotron
 
-The `$$.jumbotron()` method creates a `div` tag with class "jumbotron",
-to make a Bootstrap Jumbotron.
+The `$$.jumbotron()` method creates a `div` tag decorated with the Bootstrap "jumbotron" class.
 
 <span id="label"></span>
 #### label
 
 The term "label" is, unfortunaterly, overloaded. The following methods are available:
 
-- `$$.label()` gives you an HTML `label` tag with Bootstrap class "label".
-- `$$.spanlabel()` gives you an HTML `span` tag with Bootstrap class "label".
+- `$$.label()` gives you an HTML `label` tag decorated with the Bootstrap "label" class.
+- `$$.spanLabel()` gives you an HTML `span` tag decorated with the Bootstrap "label" class.
 - `$$.html.label()` gives you a bare HTML `label` tag.
 
 <span id="attrs"></span>
 
-#### listGroup
+#### linkList
 
-**To Be Implemented**
+The `$$.linkList()` method creates a `div` tag decorated with the Bootstrap "list-group" class,
+to implement a Bootstrap "linked item list group".
+It should be populated with `$$.linkListItem()'s`.
 
-#### listGroupItem
+#### linkListItem
 
-**To Be Implemented**
+The `$$.linkListItem()` method creates an `a` tag decorated with the Bootstrap "list-group-item" class.
+It should be used with `$$.linkList()`.
+
+#### list
+
+The `$$.list()` method creates a `ul` tag decorated with the Bootstrap "list-group" class,
+to implement a Bootstrap "list group".
+It should be populated with `$$.listItem()'s`.
+
+#### listItem
+
+The `$$.listItem()` method creates an `li` tag decorated with the Bootstrap "list-group-item" class.
+It should be used with `$$.list()`.
 
 #### media
 
@@ -269,7 +284,7 @@ You might want to pick a shorter variable name, like `$b`.
 
 #### pagination
 
-**To Be Implemented**
+The `$$.pagination()` method creates a `ul` tag decorated with the Bootstrap "pagination" class.
 
 #### panel
 
@@ -277,8 +292,7 @@ You might want to pick a shorter variable name, like `$b`.
 
 #### pageHeader
 
-The `$$.pageHeader()` method creates a `div` tag with class "page-header",
-to make a Bootstrap page header.
+The `$$.pageHeader()` method creates a `div` tag with class "page-header".
 
 #### progressbar
 
