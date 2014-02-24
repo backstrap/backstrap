@@ -1,8 +1,10 @@
-(function(){
-  window.Backbone.UI.List = Backbone.UI.CollectionView.extend({
+(function(context){
+  var fn = function(backbone_ui){
+		
+  return (backbone_ui.List = backbone_ui.CollectionView.extend({
   
     initialize : function(options) {
-      Backbone.UI.CollectionView.prototype.initialize.call(this, options);
+      backbone_ui.CollectionView.prototype.initialize.call(this, options);
       $(this.el).addClass('list');
     },
 
@@ -64,6 +66,19 @@
 
       return item;
     }
-  });
-}());
 
+  }));
+  };
+  
+	if (typeof define === "function" && define.amd) {
+		define(/* no-name, */["backstrap/backbone_ui"], function (bbui) {
+			return fn(bbui);
+		});
+	}
+	
+	if (typeof module === "object" && typeof module.exports === "object") {
+		module.exports = fn(require("backstrap/backbone_ui"));
+	} else {
+		fn(context.$$.backbone_ui);
+	}
+}(this));

@@ -1,5 +1,7 @@
-(function(){
-  window.Backbone.UI.CollectionView = Backbone.UI.BaseView.extend({
+(function(context){
+  var fn = function(backbone_ui){
+	
+  return (backbone_ui.CollectionView = backbone_ui.BaseView.extend({
     options : {
       // The Backbone.Collection instance the view is bound to
       model : null,
@@ -18,7 +20,7 @@
 
       // A callback to invoke when a row is clicked.  The associated model will be
       // passed as the first argument.
-      onItemClick : Backbone.UI.noop,
+      onItemClick : backbone_ui.noop,
 
       // The maximum height in pixels that this table show grow to.  If the
       // content exceeds this height, it will become scrollable.
@@ -33,10 +35,10 @@
     _emptyContent : null,
 
     // must be over-ridden to describe how an item is rendered
-    _renderItem : Backbone.UI.noop,
+    _renderItem : backbone_ui.noop,
 
     initialize : function(options) {
-      Backbone.UI.BaseView.prototype.initialize.call(this, options);
+      backbone_ui.BaseView.prototype.initialize.call(this, options);
       if(this.model) {
         this.model.bind('add', _.bind(this._onItemAdded, this));
         if(this.options.renderOnChange){
@@ -137,6 +139,21 @@
         }
       }
     }
-  });
-}());
+
+  }));
+  };
+  
+	if (typeof define === "function" && define.amd) {
+		define(/* no-name, */["backstrap/backbone_ui"], function (bbui) {
+			return fn(bbui);
+		});
+	}
+	
+	if (typeof module === "object" && typeof module.exports === "object") {
+		module.exports = fn(require("backstrap/backbone_ui"));
+	} else {
+		fn(context.$$.backbone_ui);
+	}
+}(this));
+
 

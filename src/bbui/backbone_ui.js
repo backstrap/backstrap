@@ -1,11 +1,12 @@
-(function(context) {
+(function(context)
+{
   // ensure backbone and jquery are available
-  if(typeof Backbone === 'undefined') alert('backbone environment not loaded') ;
-  if(typeof $ === 'undefined') alert('jquery environment not loaded');
+  // TODO should use require here if available.
+  if(typeof context.Backbone.View === 'undefined') alert('Backbone environment not loaded') ;
+  if(typeof context.$ === 'undefined') alert('jQuery environment not loaded');
 
-
-  // define our Backbone.UI namespace
-  Backbone.UI = Backbone.UI || {
+  // define our BackboneUI namespace
+  var BackboneUI = {
     KEYS : {
       KEY_BACKSPACE: 8,
       KEY_TAB:       9,
@@ -22,13 +23,15 @@
       KEY_PAGEDOWN: 34,
       KEY_INSERT:   45
     },
+    
+    currentSkin: false,
 
     setSkin : function(skin) {
-      if(!!Backbone.UI.currentSkin) {
-        $(document.body).removeClass('skin_' + Backbone.UI.currentSkin);
+      if(!!BackboneUI.currentSkin) {
+        $(document.body).removeClass('skin_' + BackboneUI.currentSkin);
       }
       $(document.body).addClass('skin_' + skin);
-      Backbone.UI.currentSkin = skin;
+      BackboneUI.currentSkin = skin;
     },
 
     noop : function(){},
@@ -38,7 +41,7 @@
       document.ontouchstart === null,
      
     setMobile : function(mobile) {
-      Backbone.UI.IS_MOBILE = mobile;
+    	BackboneUI.IS_MOBILE = mobile;
     },
 
     // added a BaseView that implements options
@@ -332,5 +335,24 @@
         }
       });
     }
-  });  
+  });
+  
+  // TODO really want to get $$ via require if available and use that.
+	// If we're in an AMD environment, register it as a named AMD module.
+	if (typeof define === "function" && define.amd) {
+		define("backstrap/backbone_ui", ["backstrap"], function() {
+			return BackboneUI;
+		});
+	}
+
+	// If we're in a CommonJS environment, export the object;
+	// otherwise put it in the $$ namespace.
+	if (typeof module === "object" && typeof module.exports === "object") {
+		module.exports = BackboneUI;
+	} else {
+		if (typeof context.$$ !== "function") {
+			throw new Error("$$ is not set - include backstrap.js before backbone_ui.js.");
+		}
+		context.$$.backbone_ui = BackboneUI;
+	}
 }(this));

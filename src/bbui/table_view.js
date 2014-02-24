@@ -1,5 +1,7 @@
-(function(){
-  window.Backbone.UI.TableView = Backbone.UI.CollectionView.extend({
+(function(context){
+  var fn = function(backbone_ui){
+	
+  return (backbone_ui.TableView = backbone_ui.CollectionView.extend({
     options : {
       // Each column should contain a <code>title</code> property to
       // describe the column's heading, a <code>content</code> property to
@@ -15,7 +17,7 @@
 
       // A callback to invoke when a row is clicked.  If this callback
       // is present, the rows will highlight on hover.
-      onItemClick : Backbone.UI.noop,
+      onItemClick : backbone_ui.noop,
 
       // Clicking on the column headers will sort the table. See
       // <code>comparator</code> property description on columns.
@@ -28,7 +30,7 @@
     },
 
     initialize : function(options) {
-      Backbone.UI.CollectionView.prototype.initialize.call(this, options);
+      backbone_ui.CollectionView.prototype.initialize.call(this, options);
       $(this.el).addClass('table_view');
       this._sortState = {reverse : true};
     },
@@ -44,7 +46,7 @@
           cellSpacing : '0'
         }));
 
-      $(this.el).toggleClass('clickable', this.options.onItemClick !== Backbone.UI.noop);
+      $(this.el).toggleClass('clickable', this.options.onItemClick !== backbone_ui.noop);
 
       // generate a table row for our headings
       var headingRow = $$.tr();
@@ -68,7 +70,7 @@
 
         var onclick = this.options.sortable ? (_(this.options.onSort).isFunction() ?
           _(function(e) { this.options.onSort(column); }).bind(this) :
-          _(function(e, silent) { this._sort(column, silent); }).bind(this)) : Backbone.UI.noop;
+          _(function(e, silent) { this._sort(column, silent); }).bind(this)) : backbone_ui.noop;
 
         var th = $$.th({
             className : _(list).nameForIndex(index) + (sortHeader ? ' sorted' : ''), 
@@ -173,6 +175,19 @@
       this.model.comparator = comp;
       this.model.reset(this.model.models, {silent : !!silent});
     }
-  });
-}());
 
+  }));
+  };
+  
+	if (typeof define === "function" && define.amd) {
+		define(/* no-name, */["backstrap/backbone_ui"], function (bbui) {
+			return fn(bbui);
+		});
+	}
+	
+	if (typeof module === "object" && typeof module.exports === "object") {
+		module.exports = fn(require("backstrap/backbone_ui"));
+	} else {
+		fn(context.$$.backbone_ui);
+	}
+}(this));

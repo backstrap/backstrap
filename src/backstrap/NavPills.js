@@ -6,34 +6,52 @@
  * @license MIT
  * 
  */
-(function()
-{
-	var ItemView = Backbone.View.extend({
-		tagName: 'a',
-		className: 'nav-item',
+(function(context) {
+	var fn = function($$)
+	{
+		var ItemView = Backbone.View.extend({
+			tagName: 'a',
+			className: 'nav-item',
+			
+			render: function render() {
+				this.$el.addClass('nav-item-' + this.model.get('name'))
+					.attr('href', this.model.get('href'))
+					.text(this.model.get('label'));
+				return this;
+			}
+		});
 		
-		render: function render() {
-			this.$el.addClass('nav-item-' + this.model.get('name'))
-				.attr('href', this.model.get('href'))
-				.text(this.model.get('label'));
-			return this;
-		}
-	});
+		return ($$.NavPills = $$.backbone_ui.List.extend({
 	
-	$$.NavPills = Backbone.UI.List.extend({
-
-		initialize: function (options) {
-			this.options.itemView = ItemView;
-			Backbone.UI.List.prototype.initialize.call(this, options);
-		},
-
-		render: function () {
-			Backbone.UI.List.prototype.render.call(this);
-			this.$('> ul').addClass('nav nav-pills');
-			return this;
-		}
-	});
+			initialize: function (options) {
+				this.options.itemView = ItemView;
+				$$.backbone_ui.List.prototype.initialize.call(this, options);
+			},
 	
-	return $$.NavPills;
-})();
-
+			render: function () {
+				$$.backbone_ui.List.prototype.render.call(this);
+				this.$('> ul').addClass('nav nav-pills');
+				return this;
+			}
+		}));
+	};
+	
+	// If we're in an AMD environment, register it as a named AMD module.
+	if (typeof define === "function" && define.amd) {
+		define("backstrap/Badge", ["backstrap"], function($$) {
+			return fn($$);
+		});
+	}
+	
+	// If we're in a CommonJS environment, export the object;
+	// otherwise put it in the $$ namespace.
+	if ( typeof module === "object" && typeof module.exports === "object" ) {
+		module.exports = fn(require("backstrap"));
+	} else {
+		if (typeof context.$$ !== "function") {
+			throw new Error("$$ is not set - include backstrap.js before NavPills.js.");
+		}
+		fn(context.$$);
+	}
+	
+}(this));

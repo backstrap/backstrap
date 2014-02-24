@@ -6,48 +6,83 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Backstrap Example App</title>
 	<style>
-		body.loading { margin: 2em auto; font-size: 150%; height: 5em; }
+		body.loading {
+			margin: 2em auto 0; font: 150% sans-serif; text-align: center; height: 2em;
+		}
 	</style>
 </head>
 <body class="loading">
 	<div>Page loading...</div>
 	<script src="components/require.js"></script>
 	<script>
-	require(["jquery", "backstrap", "backbone"], function ($, $$, bb) {
-		// Load the main CSS.
-		["components/require.css"].forEach(function (css) {
-			$("head").append($$.link({
-				href: css,
-				rel: "stylesheet",
-				type: "text/css"
-		});
-	
-		// Build some objects.
-		var Router = new bb.Router.extend({
+	/*
+	 * Normally, your JS would go in a separate file.
+	 * I've chosen to include it for this example page
+	 * so that you can see everything on one page.
+	 */
+	require(["jquery", "backstrap", "backbone"], function ($, $$, BB) {
+		/*
+		 * Load the main CSS.
+		 * We don't want CSS loading to get in the way
+		 * of our "Loading..." page display.
+		 */
+		$("head").append($$.css("components/require.css")).
+			append($$.css("components/bootstrap/css/bootstrap.min.css")).
+			append($$.css("components/bootstrap/css/bootstrap-theme.min.css"));
+		
+		/*
+		 * Build some application objects.
+		 * Typically you'll have a Backbone Router on your page.
+		 * This one doesn't do anything useful.
+		 */
+		new (BB.Router.extend({
 			routes: {
-				'': 'home'
+				'home': 'home',
+				'foo': 'home'
 			},
-			home: function () {
-				// Typically you'll have a Router on your page.
-				// This one doesn't do anything.
-			}
-		})();
-		var page = $$.container();
-		$$.pageHeader("Hello, No-HTML World!").appendTo(page);
-		$$.jumbotron([
-			'This is an example of a "No-HTML" web page using Backstrap!',
-			'The HTML just puts a simple "Loading..." message on the page,',
-			'including enough CSS to let it immediately draw that content.',
-			'Then JavaScript does the heavy-lifting of',
-			'getting the rest of the JS libraries and CSS loaded',
-			'and building our content with Backstrap, Backbone and jQuery.',
-			'Once everything is ready, we swap out the page contents,',
-			'and our application is up and running!'
-		].join(' ')).appendTo(page);
+			home: function () { alert('home button clicked'); }
+		}))();
+		
+		/*
+		 * Build the page contents.
+		 */
+		var page = $$.container(
+			$$.pageHeader(
+				$$.h1("Hello, No-HTML World!")
+			),
+			$$.jumbotron(
+				'This is an example of a "No-HTML" web page using Backstrap! ',
+				'The HTML just puts a simple "Loading..." message on the page, ',
+				'including enough CSS to let it immediately draw that content. ',
+				'Then JavaScript does the heavy lifting of ',
+				'getting the rest of the JS libraries and CSS loaded ',
+				'and building our content with Backstrap, Backbone, Bootstrap and jQuery. ',
+				'Once everything is ready, we swap out the page contents, ',
+				'and our application is up and running! ',
+				'See ',
+				$$.a(
+					{
+						context: 'link',
+						href: 'https://github.com/backstrap/backstrap'
+					},
+					'the Backstrap project on GitHub'
+				),
+				' for more info.'
+			),
+			$$.button(
+				{
+					context: 'primary',
+					onClick: function () { document.location="#home"; }
+				},
+				'Home'
+			)
+		);
 	
-		// Display the page and start watching for events.
+		/*
+		 * Now we just display the page and start watching for events...
+		 */
 		$("body").empty().removeClass("loading").append(page);
-		bb.history.start();
+		BB.history.start();
 	});
 	</script>
 </body>

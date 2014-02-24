@@ -11,6 +11,11 @@ require(['backstrap'], function() {
     function testObj(obj, label) {
 	    test(obj.render().el, label);
     }
+    
+    // implicit test of $$.css
+	$("head").append($$.css("components/require.css")).
+		append($$.css("components/bootstrap/css/bootstrap.min.css")).
+		append($$.css("components/bootstrap/css/bootstrap-theme.min.css"));
 
 	test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
 	
@@ -28,11 +33,11 @@ require(['backstrap'], function() {
 	
 	test($$.span({context: 'info', bgcontext: 'danger'}, 'Info Hello World - danger background'), 'bgcontext');
 
-	test($$.label({size: 'small'}, 'small label'), 'size');
+	test($$.button('Button'), 'button');
 	
-	test($$.htmllabel('HTML label'), 'htmllabel');
+	test($$.span($$.button({size: 'small'}, 'small'), $$.button({size: 'large'}, 'big')), 'size');
 	
-	test($$.button({size: 'large'}, 'Large button'), 'button');
+	test($$.html.label('HTML label'), 'plain html label');
 	
 	test($$.div(
 			$$.span({context: 'danger'},
@@ -72,7 +77,7 @@ require(['backstrap'], function() {
 		{ name: 'third', href: '#third', label: 'Third' }
 	])}), 'Dropdown');
 
-	testObj(new $$.NavPills({model: new Backbone.Collection([
+	testObj(new $$.NavPills({context: 'primary', model: new Backbone.Collection([
 		{ name: 'first', href: '#first', label: 'First' },
 		{ name: 'second', href: '#second', label: 'Second' },
 		{ name: 'third', href: '#third', label: 'Third' }

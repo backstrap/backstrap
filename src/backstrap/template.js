@@ -6,26 +6,32 @@
  * @license MIT
  * 
  */
-(function(context)
-{
+(function(context) {
+	var fn = function($$)
+	{
+		
 	// Definition of object goes here.
-	var Thing = {};
-
+		return ($$.Thing = {
+				
+		});
+	};
+	
 	// If we're in an AMD environment, register it as a named AMD module.
 	if (typeof define === "function" && define.amd) {
-		define("backstrap/Thing", ["backstrap"], function() {
-			return Thing;
+		define("backstrap/Badge", ["backstrap"], function($$) {
+			return fn($$);
 		});
 	}
-
+	
 	// If we're in a CommonJS environment, export the object;
 	// otherwise put it in the $$ namespace.
 	if ( typeof module === "object" && typeof module.exports === "object" ) {
-		module.exports = Thing;
+		module.exports = fn(require("backstrap"));
 	} else {
-		if (typeof context.$$ !== "object") {
+		if (typeof context.$$ !== "function") {
 			throw new Error("$$ is not set - include backstrap.js before Thing.js.");
 		}
-		context.$$.Thing = Thing;
+		fn(context.$$);
 	}
+	
 }(this));

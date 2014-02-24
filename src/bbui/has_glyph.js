@@ -1,7 +1,8 @@
 // A mixin for dealing with glyphs in widgets 
-(function(){
-
-  Backbone.UI.HasGlyph = {
+(function(context){
+  var fn = function(backbone_ui){
+		
+  return (backbone_ui.HasGlyph = {
     
     insertGlyphLayout : function(glyphLeftClassName, glyphRightClassName, content, parent) {
 
@@ -38,5 +39,18 @@
       }
       return _(glyph).exists() ? glyph : content;
     }
+  });
   };
-}());
+  
+	if (typeof define === "function" && define.amd) {
+		define(/* no-name, */["backstrap/backbone_ui"], function (bbui) {
+			return fn(bbui);
+		});
+	}
+	
+	if (typeof module === "object" && typeof module.exports === "object") {
+		module.exports = fn(require("backstrap/backbone_ui"));
+	} else {
+		fn(context.$$.backbone_ui);
+	}
+}(this));

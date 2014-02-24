@@ -1,6 +1,8 @@
  // A mixin for those views that are model bound
-(function(){
-  Backbone.UI.HasModel = {
+(function(context){
+  var fn = function(backbone_ui){
+			
+  return (backbone_ui.HasModel = {
     
     options : {
       // The Backbone.Model instance the view is bound to
@@ -52,7 +54,20 @@
         }, this);
       }
     }
-    
+
+  });
   };
-}());
+  
+	if (typeof define === "function" && define.amd) {
+		define(/* no-name, */["backstrap/backbone_ui"], function (bbui) {
+			return fn(bbui);
+		});
+	}
+	
+	if (typeof module === "object" && typeof module.exports === "object") {
+		module.exports = fn(require("backstrap/backbone_ui"));
+	} else {
+		fn(context.$$.backbone_ui);
+	}
+}(this));
 

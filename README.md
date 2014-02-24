@@ -123,6 +123,11 @@ For example:
 	$$.div({'class' : 'example'}, 
 		$$.div('content'));
 
+In some cases, there is a Bootstrap component name that is the same as an HTML tag name.
+To work around this conflict, we make all the plain HTML tag methods accessible in the
+`$$.html` namespace.  Thus for instance in the case of "label", `$$.label() will give you
+a fully Bootstrapped `<label class="label">`,
+while `$$.html.label()` will give you a plain HTML `<label>`. 
 
 ### Bootstrap Tags
 
@@ -146,15 +151,25 @@ See also the Badge constructor, below.
 
 The `$$.button()` method creates an HTML `button` tag decorated with the Bootstrap "btn" class,
 and optionally "btn-*" classes for sizing and context.
+`$$.html.button()` gives you a bare HTML `button` tag.
+
+#### buttonGroup
+
+**To Be Implemented**
 
 #### container
 
 The `$$.container()` method creates an HTML `div` tag decorated with the Bootstrap "container" class,
 and optionally "container-fluid" for fluid layout.
 
-#### buttonGroup
+#### css
 
-**To Be Implemented**
+The `$$.css(url)` method is a shortcut for creating CSS stylesheet links.
+It creates an HTML `<link>` tag with standard attributes
+'rel="stylesheet"' and 'type="text/css"'.
+Use it to load CSS from within your JS code, thus:
+
+	$('head').append($$.css(url));
 
 #### form
 
@@ -214,9 +229,9 @@ to make a Bootstrap Jumbotron.
 
 The term "label" is, unfortunaterly, overloaded. The following methods are available:
 
-- `$$.label()` gives you an HTML `label` tag with class "label".
-- `$$.htmllabel()` gives you a bare HTML `label` tag.
-- `$$.spanlabel()` gives you an HTML `span` tag with class "label".
+- `$$.label()` gives you an HTML `label` tag with Bootstrap class "label".
+- `$$.spanlabel()` gives you an HTML `span` tag with Bootstrap class "label".
+- `$$.html.label()` gives you a bare HTML `label` tag.
 
 <span id="attrs"></span>
 

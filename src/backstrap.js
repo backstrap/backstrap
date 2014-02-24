@@ -92,59 +92,20 @@
 	// 
 	// for example:
 	// backstrap('div', {'class' : 'foo'}, 'bar');
-	var backstrap = function backstrap() {
+	var backstrap = function backstrap(tag, bootstrapClass) {
 
 		// handle Bootstrap special tags, context, and sizing.
-		var tag = arguments[0];
 		var size = null;
 		var context = 'default';
 		var fluid = false;
-		var type = 'text';
 		var classlist = {};
-		switch (arguments[0]) {
-			case 'badge':
-				tag = 'span';
-				classlist['badge'] = true;
-				break;
-			case 'container':
-				tag = 'div';
-				classlist['container'] = true;
-				break;
-			case 'button':
-				type = 'btn';
-				classlist['btn'] = true;
-				break;
-			case 'label':
-			case 'input':
-				type = arguments[0];
-				classlist[type] = true;
-				break;
-			case 'spanlabel':
-				tag = type = 'label';
-				classlist['label'] = true;
-				break;
-			case 'htmllabel':
-				tag = 'label';
-				break;
-			case 'jumbotron':
-				tag = 'div';
-				classlist['jumbotron'] = true;
-				break;
-			case 'pageHeader':
-				tag = 'div';
-				classlist['page-header'] = true;
-				break;
-			case 'well':
-				tag = 'div';
-				classlist['well'] = true;
-				break;
-		}
-
+		if (bootstrapClass) { classlist[bootstrapClass] = true; }
+		
 		// create a new element of the requested type
 		var el = document.createElement(tag);
 
 		// walk through the rest of the arguments
-		for(var i=1; i<arguments.length; i++) {
+		for(var i=2; i<arguments.length; i++) {
 			var arg = arguments[i];
 			if (arg === null || typeof arg === 'undefined') continue;
 
@@ -164,7 +125,7 @@
 
 			// if the argument is a plain-old object, and we're processing the first
 			// argument, then we apply the object's values as element attributes
-			else if (i === 1 && typeof(arg) === 'object') {
+			else if (i === 2 && typeof(arg) === 'object') {
 				for(var key in arg) {
 					if (arg.hasOwnProperty(key)) {
 						var value = arg[key];
@@ -184,7 +145,7 @@
 								switch (key) {
 									case 'style':
 										// if we're setting the style attribute, we may need to
-										// use the cssText property
+										// use the cssText property.
 										if (key === 'style' && el.style.setAttribute) {
 											el.style.setAttribute('cssText', value);
 										} else {
@@ -193,16 +154,18 @@
 										break;
 	
 									case 'className':
-										classlist[value] = true;
+										value.split(" ").forEach(function (name) {
+											classlist[name] = true;
+										});
 										break;
 	
+									case 'htmlFor':
 										// if we're setting an attribute that's not properly supported,
 										// then we apply the attribute directly to the element
-									case 'htmlFor':
 										el.htmlFor = value;
 										break;
 	
-										// The rest are special handling for Bootstrap keys
+									// The rest of the cases are for Bootstrap attributes.
 									case 'size':
 										if (value in sizeMap) {
 											size = sizeMap[value];
@@ -214,17 +177,13 @@
 									case 'context':
 										context = value;
 										break;
-
-									case 'fluid':
-										fluid = !!value;
-										break;
 	
 									case 'bgcontext':
 										classlist['bg-' + value] = true;
 										break;
-	
-									case 'glyph':
-										classlist['glyphicon'] = classlist['glyphicon-' + value] = true;
+
+									case 'fluid':
+										fluid = !!value;
 										break;
 	
 									// otherwise, we use the standard setAttribute
@@ -234,16 +193,6 @@
 							}
 						}
 					}
-				}
-				// Add requested classNames.
-				if (size != null && size !== 'text') {
-					classlist[type + '-' + size] = true;
-				}
-				if (context != null) {
-					classlist[type + '-' + context] = true;
-				}
-				if (fluid && classlist['container']) {
-					classlist['container-fluid'] = true;
 				}
 			}
 
@@ -256,6 +205,17 @@
 					}
 				}
 			}
+		}
+		
+		// Add requested classNames.
+		if (bootstrapClass !== null && size != null) {
+			classlist[bootstrapClass + '-' + size] = true;
+		} else if (size != null) {
+			classlist['text-' + size] = true;
+		}
+		classlist[(bootstrapClass !== null ? bootstrapClass : 'text') + '-' + context] = true;
+		if (bootstrapClass === 'container' && fluid) {
+			classlist['container-fluid'] = true;
 		}
 		
 		// Set className from classlist.
@@ -307,9 +267,6 @@
 		}
 	};
 
-	// Some special tags for Bootstrap support.
-	var bootstrapTags = ['badge', 'container', 'htmllabel', 'jumbotron', 'pageHeader', 'spanlabel', 'well'];
-
 	// html 4 tags
 	var deprecatedTags = ['acronym', 'applet', 'basefont', 'big', 'center', 'dir',
 	                      'font', 'frame', 'frameset', 'noframes', 'strike', 'tt', 'u', 'xmp'];
@@ -327,23 +284,65 @@
 	            'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'small',
 	            'source', 'span', 'strong', 'style', 'sub', 'summary', 'sup', 'table',
 	            'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr',
-	            'ul', 'var', 'video', 'wbr'].concat(deprecatedTags).concat(bootstrapTags);
+	            'ul', 'var', 'video', 'wbr'].concat(deprecatedTags);
+
+	// Bootstrap component pseudo-tags
+	var bootstrapComponents = ['badge', 'button', 'container', 'input', 'jumbotron', 'label', 'pageHeader', 'spanLabel', 'well'];
+	
+	// HTML tags for Bootstrap components
+	var bootstrapTags = {
+			badge: 'span',
+			container: 'div',
+			jumbotron: 'div',
+			pageHeader: 'div',
+			spanLabel: 'span',
+			well: 'div'
+	};
+
+	// HTML class names for Bootstrap components
+	var bootstrapClasses = {
+			button: 'btn',
+			pageHeader: 'page-header',
+			spanLabel: 'label'
+	};
 
 	// add our tag methods to the backstrap object
-	var makeApply = function(tagName) {
+	var makeApply = function(tagName, bootstrapClass) {
 		return function() {
 			return backstrap.apply(this,
-					[tagName].concat(Array.prototype.slice.call(arguments)));
+					[tagName, bootstrapClass].concat(Array.prototype.slice.call(arguments)));
 		};
 	};
 
 	for(var i=0; i<tags.length; i++) {
-		backstrap[tags[i]] = makeApply(tags[i]);
+		backstrap[tags[i]] = makeApply(tags[i], null);
+	}
+	
+	// Save all tag methods as properties of $$.html (also a tag factory method)
+	// so we can access them even after we overwrite some with Bootstrap functionality.
+	for(var i=0; i<tags.length; i++) {
+		backstrap.html[tags[i]] = backstrap[tags[i]];
 	}
 
+	// special tags for Bootstrap support.
+	// note that some of these override regular HTML tags.
+	// Use $$.html.* for the vanilla HTML versions.
+	for(var i=0; i<bootstrapComponents.length; i++) {
+		var name = bootstrapComponents[i];
+		backstrap[name] = makeApply(
+				(bootstrapTags[name] ? bootstrapTags[name] : name),
+				(bootstrapClasses[name] ? bootstrapClasses[name] : name)
+		);
+	}
+	
+	// shortcut for creating CSS stylesheet links.
+	backstrap.css = function (href) {
+		return backstrap.html.link({href: href, rel: "stylesheet", type: "text/css"});
+	};
+
 	// shortcut for creating glyphicons.
-	backstrap.glyph = function(name) {
-		return backstrap.span({glyph: name});
+	backstrap.glyph = function (name) {
+		return backstrap.html.span({className: 'glyphicon glyphicon-' + name});
 	};
 
 	// shortcut for creating Bootstrap grids.
@@ -405,7 +404,7 @@
 	// If we're in a CommonJS environment, we export ourself.
 	// Otherwise, we attach ourself to the top level $$ namespace.
 	// Call "var altName = $$.noConflict();" to revert definition of $$.
-	if ( typeof module === "object" && typeof module.exports === "object" ) {
+	if (typeof module === "object" && typeof module.exports === "object") {
 		module.exports = backstrap;
 	} else {
 		context.$$ = backstrap;
