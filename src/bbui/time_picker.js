@@ -1,4 +1,6 @@
 (function(){
+  var KEY_RETURN = 13;
+	  
   window.Backbone.UI.TimePicker = Backbone.UI.BaseView.extend({
 
     options : {
@@ -116,7 +118,7 @@
     },
 
     _hideMenu : function(e) {
-      if(e && e.keyCode === Backbone.UI.KEYS.KEY_RETURN) this._timeEdited();
+      if(e && e.keyCode === KEY_RETURN) this._timeEdited();
       $(this._menu.el).hide();
     },
 
@@ -139,7 +141,7 @@
 
       // if the enter key was pressed or we've invoked this method manually, 
       // we hide the calendar and re-format our date
-      if(!e || e.keyCode === Backbone.UI.KEYS.KEY_RETURN || e.type === 'blur') {
+      if(!e || e.keyCode === KEY_RETURN || e.type === 'blur') {
         var newValue = moment(newDate).format(this.options.format);
         this._textField.setValue(newValue);
         this._hideMenu();

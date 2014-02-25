@@ -10,7 +10,7 @@
 	var fn = function($$)
 	{
 		// TODO Extend BB.UI.Button instead of reproducing code? (opts & init() diff)
-		return ($$.Button = Backbone.View.extend({
+		return ($$.Button = $$.BaseView.extend({
 			options : {
 				tagName : 'button',
 				size    : 'default', // added.
@@ -33,7 +33,7 @@
 	
 			initialize : function(options) {
 				this.options = _.extend({}, this.options, options);
-				this.mixin([$$.backbone_ui.HasModel, $$.backbone_ui.HasGlyph]);
+				this.mixin([$$.HasModel, $$.HasGlyph]);
 	
 				_(this).bindAll('render');
 	
@@ -95,22 +95,14 @@
 		}));
 	};
 	
-	// If we're in an AMD environment, register it as a named AMD module.
-	if (typeof define === "function" && define.amd) {
-		define("backstrap/Badge", ["backstrap"], function($$) {
+	/* if (typeof context.define === "function" && context.define.amd) {
+		define("backstrap/Button", ["backstrap"], function ($$) {
 			return fn($$);
 		});
-	}
-	
-	// If we're in a CommonJS environment, export the object;
-	// otherwise put it in the $$ namespace.
-	if ( typeof module === "object" && typeof module.exports === "object" ) {
+	} else */ if (typeof context.module === "object" && typeof context.module.exports === "object") {
 		module.exports = fn(require("backstrap"));
 	} else {
-		if (typeof context.$$ !== "function") {
-			throw new Error("$$ is not set - include backstrap.js before Button.js.");
-		}
+		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
 		fn(context.$$);
 	}
-	
 }(this));

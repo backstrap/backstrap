@@ -1,4 +1,7 @@
 (function() {
+  var KEY_ESC = 27;
+  var noop = function(){};
+	  
   Backbone.UI.DragSession = function(options) {
     this.options = _.extend({
       // A mouse(move/down) event
@@ -8,24 +11,24 @@
       scope : null,
 
       //Sent when the session is ends up being a sloppy mouse click
-      onClick: Backbone.UI.noop,
+      onClick: noop,
 
       // Sent when a drag session starts for real 
       // (after the mouse has moved SLOP pixels)
-      onStart: Backbone.UI.noop,
+      onStart: noop,
 
       // Sent for each mouse move event that occurs during the drag session
-      onMove: Backbone.UI.noop,
+      onMove: noop,
 
       // Sent when the session stops normally (the mouse was released)
-      onStop: Backbone.UI.noop,
+      onStop: noop,
 
       // Sent when the session is aborted (ESC key pressed)
-      onAbort: Backbone.UI.noop,
+      onAbort: noop,
 
       // Sent when the drag session finishes, regardless of
       // whether it stopped normally or was aborted.
-      onDone: Backbone.UI.noop
+      onDone: noop
     }, options);
 
     if(Backbone.UI.DragSession.currentSession) {
@@ -179,7 +182,7 @@
           //this._stop();
           break;
         case 'keyup':
-          if (e.keyCode !== Backbone.UI.KEYS.KEY_ESC) return;
+          if (e.keyCode !== KEY_ESC) return;
           this.abort();
           break;
         default:

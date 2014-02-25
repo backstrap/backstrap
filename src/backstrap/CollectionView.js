@@ -1,7 +1,9 @@
 (function(context){
-  var fn = function(backbone_ui){
-	
-  return (backbone_ui.CollectionView = backbone_ui.BaseView.extend({
+  var fn = function($$){
+
+  var noop = function(){};
+
+  return ($$.CollectionView = $$.BaseView.extend({
     options : {
       // The Backbone.Collection instance the view is bound to
       model : null,
@@ -20,7 +22,7 @@
 
       // A callback to invoke when a row is clicked.  The associated model will be
       // passed as the first argument.
-      onItemClick : backbone_ui.noop,
+      onItemClick : noop,
 
       // The maximum height in pixels that this table show grow to.  If the
       // content exceeds this height, it will become scrollable.
@@ -35,10 +37,10 @@
     _emptyContent : null,
 
     // must be over-ridden to describe how an item is rendered
-    _renderItem : backbone_ui.noop,
+    _renderItem : noop,
 
     initialize : function(options) {
-      backbone_ui.BaseView.prototype.initialize.call(this, options);
+      $$.BaseView.prototype.initialize.call(this, options);
       if(this.model) {
         this.model.bind('add', _.bind(this._onItemAdded, this));
         if(this.options.renderOnChange){
@@ -143,16 +145,15 @@
   }));
   };
   
-	if (typeof define === "function" && define.amd) {
-		define(/* no-name, */["backstrap/backbone_ui"], function (bbui) {
-			return fn(bbui);
+	/*if (typeof context.define === "function" && context.define.amd) {
+		define("backstrap/CollectionView", ["backstrap"], function ($$) {
+			return fn($$);
 		});
-	}
-	
-	if (typeof module === "object" && typeof module.exports === "object") {
-		module.exports = fn(require("backstrap/backbone_ui"));
+	} else */ if (typeof context.module === "object" && typeof context.module.exports === "object") {
+		module.exports = fn(require("backstrap"));
 	} else {
-		fn(context.$$.backbone_ui);
+		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+		fn(context.$$);
 	}
 }(this));
 

@@ -309,10 +309,6 @@ to embed them within a `div` with the Bootstrap "panel-heading" or "panel-footer
 
 The `$$.pageHeader()` method creates a `div` tag decorated with the Bootstrap "page-header" class.
 
-#### progressbar
-
-**To Be Implemented**
-
 #### thumbnail
 
 The `$$.thumbnail()` method creates a `div` tag decorated with the Bootstrap "thumbnail" class.
@@ -526,6 +522,10 @@ For example:
 	var tabs = new $$.NavTabs({model: items}).render();
 
 creates a set of three tabs.
+
+#### ProgressBar
+
+**To Be Implemented**
 
 #### RadioGroup
 

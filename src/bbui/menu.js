@@ -1,4 +1,5 @@
 (function(){
+  var noop = function(){};
   window.Backbone.UI.Menu = Backbone.UI.BaseView.extend({
 
     options : {
@@ -12,7 +13,7 @@
 
       // A callback to invoke with a particular item when that item is
       // selected from the menu.
-      onChange : Backbone.UI.noop,
+      onChange : noop,
       
       // text to place in the pulldown button before a
       // selection has been made

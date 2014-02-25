@@ -1,4 +1,5 @@
 (function() {
+  var noop = function(){};
   Backbone.UI.TabSet = Backbone.UI.BaseView.extend({
     options : {
       // Tabs to initially add to this tab set.  Each entry may contain
@@ -64,7 +65,7 @@
         return false;
       }, this));
 
-      this._callbacks.push(tabOptions.onActivate || Backbone.UI.noop);
+      this._callbacks.push(tabOptions.onActivate || noop);
     },
 
     activateTab : function(index) {

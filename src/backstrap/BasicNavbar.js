@@ -9,7 +9,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		var ItemView = Backbone.View.extend({
+		var ItemView = $$.BaseView.extend({
 			tagName: 'a',
 			className: 'nav-item',
 			
@@ -21,22 +21,22 @@
 			}
 		});
 		
-		var NavList = $$.backbone_ui.List.extend({
+		var NavList = $$.List.extend({
 			className: 'navbar-collapse collapse',
 	
 			render: function () {
-				$$.backbone_ui.List.prototype.render.apply(this, arguments);
+				$$.List.prototype.render.apply(this, arguments);
 				this.$('> ul').addClass('nav navbar-nav');
 				return this;
 			}
 		});
 	
-		return ($$.BasicNavbar = Backbone.View.extend({
+		return ($$.BasicNavbar = $$.BaseView.extend({
 			className: 'navbar navbar-default',
 			brand: '',
 	
 			initialize: function (options) {
-				Backbone.View.prototype.initialize.apply(this, arguments);
+				$$.BaseView.prototype.initialize.apply(this, arguments);
 				if ('navbarType' in options) {
 					this.$el.addClass('navbar-'+options.navbarType);
 				}
@@ -72,22 +72,14 @@
 		}));
 	};
 	
-	// If we're in an AMD environment, register it as a named AMD module.
-	if (typeof define === "function" && define.amd) {
-		define("backstrap/Badge", ["backstrap"], function($$) {
+	/* if (typeof context.define === "function" && context.define.amd) {
+		define("backstrap/BasicNavbar", ["backstrap"], function ($$) {
 			return fn($$);
 		});
-	}
-	
-	// If we're in a CommonJS environment, export the object;
-	// otherwise put it in the $$ namespace.
-	if ( typeof module === "object" && typeof module.exports === "object" ) {
+	} else */ if (typeof context.module === "object" && typeof context.module.exports === "object") {
 		module.exports = fn(require("backstrap"));
 	} else {
-		if (typeof context.$$ !== "function") {
-			throw new Error("$$ is not set - include backstrap.js before BasicNavbar.js.");
-		}
+		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
 		fn(context.$$);
 	}
-	
 }(this));

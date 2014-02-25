@@ -9,7 +9,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Table = $$.backbone_ui.TableView.extend({
+		return ($$.Table = $$.TableView.extend({
 			options: {
 				tagName: 'table',
 				striped: false,
@@ -20,29 +20,21 @@
 			},
 			
 			render: function() {
-				$$.backbone_ui.TableView.prototype.render.apply(this, arguments);
+				$$.TableView.prototype.render.apply(this, arguments);
 				this.$('table').addClass('table');
 				return this;
 			}
 		}));
 	};
 	
-	// If we're in an AMD environment, register it as a named AMD module.
-	if (typeof define === "function" && define.amd) {
-		define("backstrap/Badge", ["backstrap"], function($$) {
+	/* if (typeof context.define === "function" && context.define.amd) {
+		define("backstrap/Table", ["backstrap"], function ($$) {
 			return fn($$);
 		});
-	}
-	
-	// If we're in a CommonJS environment, export the object;
-	// otherwise put it in the $$ namespace.
-	if ( typeof module === "object" && typeof module.exports === "object" ) {
+	} else */ if (typeof context.module === "object" && typeof context.module.exports === "object") {
 		module.exports = fn(require("backstrap"));
 	} else {
-		if (typeof context.$$ !== "function") {
-			throw new Error("$$ is not set - include backstrap.js before Table.js.");
-		}
+		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
 		fn(context.$$);
 	}
-	
 }(this));

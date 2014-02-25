@@ -1,4 +1,5 @@
 (function(){
+  var noop = function(){};
   window.Backbone.UI.TextField = Backbone.UI.BaseView.extend({
     options : {
       // disables the input text
@@ -15,7 +16,7 @@
       tabIndex : null,
 
       // a callback to invoke when a key is pressed within the text field
-      onKeyPress : Backbone.UI.noop,
+      onKeyPress : noop,
 
       // if given, the text field will limit it's character count
       maxLength : null

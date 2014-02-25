@@ -9,7 +9,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Context = Backbone.View.extend({
+		return ($$.Context = $$.BaseView.extend({
 			options : {
 				tagName : 'span',
 				background: false
@@ -18,7 +18,7 @@
 	
 			initialize : function(options) {
 				this.options = _.extend({}, this.options, options);
-				this.mixin([$$.backbone_ui.HasModel]);
+				this.mixin([$$.HasModel]);
 				this.prefix = this.options.background ? 'bg-' : 'text-';
 				_(this).bindAll('render');
 			},
@@ -33,22 +33,14 @@
 		}));
 	};
 	
-	// If we're in an AMD environment, register it as a named AMD module.
-	if (typeof define === "function" && define.amd) {
-		define("backstrap/Badge", ["backstrap"], function($$) {
+	/* if (typeof context.define === "function" && context.define.amd) {
+		define("backstrap/Context", ["backstrap"], function ($$) {
 			return fn($$);
 		});
-	}
-	
-	// If we're in a CommonJS environment, export the object;
-	// otherwise put it in the $$ namespace.
-	if ( typeof module === "object" && typeof module.exports === "object" ) {
+	} else */ if (typeof context.module === "object" && typeof context.module.exports === "object") {
 		module.exports = fn(require("backstrap"));
 	} else {
-		if (typeof context.$$ !== "function") {
-			throw new Error("$$ is not set - include backstrap.js before Context.js.");
-		}
+		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
 		fn(context.$$);
 	}
-	
 }(this));

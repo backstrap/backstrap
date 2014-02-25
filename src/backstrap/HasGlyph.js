@@ -1,8 +1,8 @@
 // A mixin for dealing with glyphs in widgets 
 (function(context){
-  var fn = function(backbone_ui){
+  var fn = function($$){
 		
-  return (backbone_ui.HasGlyph = {
+  return ($$.HasGlyph = {
     
     insertGlyphLayout : function(glyphLeftClassName, glyphRightClassName, content, parent) {
 
@@ -42,15 +42,14 @@
   });
   };
   
-	if (typeof define === "function" && define.amd) {
-		define(/* no-name, */["backstrap/backbone_ui"], function (bbui) {
-			return fn(bbui);
+	/* if (typeof context.define === "function" && context.define.amd) {
+		define("backstrap/HasGlyph", ["backstrap"], function ($$) {
+			return fn($$);
 		});
-	}
-	
-	if (typeof module === "object" && typeof module.exports === "object") {
-		module.exports = fn(require("backstrap/backbone_ui"));
+	} else */ if (typeof context.module === "object" && typeof context.module.exports === "object") {
+		module.exports = fn(require("backstrap"));
 	} else {
-		fn(context.$$.backbone_ui);
+		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+		fn(context.$$);
 	}
 }(this));

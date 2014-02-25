@@ -1,4 +1,5 @@
 (function(){
+  var noop = function(){};
   window.Backbone.UI.RadioGroup = Backbone.UI.BaseView.extend({
 
     options : {
@@ -9,7 +10,7 @@
       disabled : false,
 
       // A callback to invoke with the selected item whenever the selection changes
-      onChange : Backbone.UI.noop
+      onChange : noop
     },
 
     initialize : function(options) {

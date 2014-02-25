@@ -11,14 +11,14 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Badge = Backbone.View.extend({
+		return ($$.Badge = $$.BaseView.extend({
 			options : {
 				tagName : 'span',
 			},
 	
 			initialize : function(options) {
 				this.options = _.extend({}, this.options, options);
-				this.mixin([context.$$.backbone_ui.HasModel]);
+				this.mixin([context.$$.HasModel]);
 				_(this).bindAll('render');
 				$(this.el).addClass('badge');
 			},
@@ -32,22 +32,14 @@
 		}));
 	};
 	
-	// If we're in an AMD environment, register it as a named AMD module.
-	if (typeof define === "function" && define.amd) {
-		define("backstrap/Badge", ["backstrap"], function($$) {
-			return fn($$);
-		});
-	}
-	
-	// If we're in a CommonJS environment, export the object;
-	// otherwise put it in the $$ namespace.
-	if ( typeof module === "object" && typeof module.exports === "object" ) {
-		module.exports = fn(require("backstrap"));
+	/* if (typeof context.define === "function" && context.define.amd) {
+		context.define("backstrap/Badge", ["backstrap"], fn);
+		// above doesn't work, so punt and use global for now.
+		//fn(context.$$);
+	} else */ if (typeof context.module === "object" && typeof context.module.exports === "object") {
+		context.module.exports = fn(require("backstrap"));
 	} else {
-		if (typeof context.$$ !== "function") {
-			throw new Error("$$ is not set - include backstrap.js before Badge.js.");
-		}
+		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
 		fn(context.$$);
 	}
-	
 }(this));

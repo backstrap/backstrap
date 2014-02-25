@@ -23,13 +23,10 @@
         "component": {
             "scripts": [
                 "src/backstrap.js",
-                "src/bbui/backbone_ui.js",
-                "src/bbui/button.js",
-                "src/bbui/collection_view.js",
-                "src/bbui/has_glyph.js",
-                "src/bbui/has_model.js",
-                "src/bbui/list.js",
-                "src/bbui/table_view.js",
+                "src/backstrap/CollectionView.js",
+                "src/backstrap/HasGlyph.js",
+                "src/backstrap/HasModel.js",
+                "src/backstrap/List.js",
                 "src/backstrap/Badge.js",
                 "src/backstrap/BasicNavbar.js",
                 "src/backstrap/Button.js",
@@ -40,27 +37,23 @@
                 "src/backstrap/Dropdown.js",
                 "src/backstrap/Glyph.js",
                 "src/backstrap/Link.js",
-                "src/backstrap/List.js",
                 "src/backstrap/Menu.js",
                 "src/backstrap/NavPills.js",
                 "src/backstrap/NavTabs.js",
                 "src/backstrap/RadioGroup.js",
+                "src/backstrap/TableView.js",
                 "src/backstrap/Table.js",
                 "src/backstrap/TextArea.js",
                 "src/backstrap/TextField.js",
-                "src/backstrap/TimePicker.js"
-            ],
-            "files": [
-            ],
-            "styles": [
+                "src/backstrap/TimePicker.js",
+                "src/backstrap/UIButton.js"
             ],
             "shim": {
-                "exports": "Backstrap",
                 "deps": [
-                     "backbone",
-                     "bootstrap",
+                     "jquery",
                      "underscore",
-                     "jquery"
+                     "bootstrap",
+                     "backbone"
                 ]
             }
         }

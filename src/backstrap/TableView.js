@@ -1,7 +1,8 @@
 (function(context){
-  var fn = function(backbone_ui){
+  var noop = function(){};
+  var fn = function($$){
 	
-  return (backbone_ui.TableView = backbone_ui.CollectionView.extend({
+  return ($$.TableView = $$.CollectionView.extend({
     options : {
       // Each column should contain a <code>title</code> property to
       // describe the column's heading, a <code>content</code> property to
@@ -17,7 +18,7 @@
 
       // A callback to invoke when a row is clicked.  If this callback
       // is present, the rows will highlight on hover.
-      onItemClick : backbone_ui.noop,
+      onItemClick : noop,
 
       // Clicking on the column headers will sort the table. See
       // <code>comparator</code> property description on columns.
@@ -30,7 +31,7 @@
     },
 
     initialize : function(options) {
-      backbone_ui.CollectionView.prototype.initialize.call(this, options);
+      $$.CollectionView.prototype.initialize.call(this, options);
       $(this.el).addClass('table_view');
       this._sortState = {reverse : true};
     },
@@ -46,7 +47,7 @@
           cellSpacing : '0'
         }));
 
-      $(this.el).toggleClass('clickable', this.options.onItemClick !== backbone_ui.noop);
+      $(this.el).toggleClass('clickable', this.options.onItemClick !== noop);
 
       // generate a table row for our headings
       var headingRow = $$.tr();
@@ -70,7 +71,7 @@
 
         var onclick = this.options.sortable ? (_(this.options.onSort).isFunction() ?
           _(function(e) { this.options.onSort(column); }).bind(this) :
-          _(function(e, silent) { this._sort(column, silent); }).bind(this)) : backbone_ui.noop;
+          _(function(e, silent) { this._sort(column, silent); }).bind(this)) : noop;
 
         var th = $$.th({
             className : _(list).nameForIndex(index) + (sortHeader ? ' sorted' : ''), 
@@ -179,15 +180,14 @@
   }));
   };
   
-	if (typeof define === "function" && define.amd) {
-		define(/* no-name, */["backstrap/backbone_ui"], function (bbui) {
-			return fn(bbui);
+	/* if (typeof context.define === "function" && context.define.amd) {
+		define("backstrap/TableView", ["backstrap"], function ($$) {
+			return fn($$);
 		});
-	}
-	
-	if (typeof module === "object" && typeof module.exports === "object") {
-		module.exports = fn(require("backstrap/backbone_ui"));
+	} else */ if (typeof context.module === "object" && typeof context.module.exports === "object") {
+		module.exports = fn(require("backstrap"));
 	} else {
-		fn(context.$$.backbone_ui);
+		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+		fn(context.$$);
 	}
 }(this));

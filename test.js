@@ -1,11 +1,11 @@
-require(['backstrap'], function() {
+require(['jquery', 'backbone', 'backstrap'], function() {
 
 	var n = 1;
 	
     function test(obj, label) {
 	    $('body').append($$.div({style: 'min-height: 3em; padding-top: 1.5em;'},
 	    		$$.label({context: 'primary'}, '' + (n++) + '. ' + label))
-	    	).append($$.container({style:'padding: .5em;'}, obj));
+	    	).append($$.container({style: 'padding: .5em;'}, obj));
     }
     
     function testObj(obj, label) {
@@ -102,19 +102,19 @@ require(['backstrap'], function() {
 
 	test($$.grid({layout: [[
 	    {
-	        xs: 4,
+	        xs: 3,
 			content: $$.thumbnail(
-					$$.a($$.img({src: "http://www.princetonphotoclub.org/Images/Content/CarlPictureDec2013.jpg",
-						style: 'width: 200px;'
+					$$.a($$.img({src: "https://www.princeton.edu/main/images/news/2014/2/alumniday_IndexPage.jpg",
+						style: 'width: 100px;'
 					})),
 					$$.p("This is Carl")
 				)
 	    },
 	    {
-			xs: 4,
+			xs: 3,
 			content: $$.thumbnail(
-						$$.a($$.img({src: "http://www.princetonphotoclub.org/Images/Content/CarlPictureDec2013.jpg",
-							style: 'width: 200px;'
+						$$.a($$.img({src: "https://www.princeton.edu/main/images/news/2014/2/alumniday_IndexPage.jpg",
+							style: 'width: 100px;'
 						})),
 						$$.p("This is also Carl")
 					)
@@ -147,9 +147,9 @@ require(['backstrap'], function() {
 
 	test($$.media(
 		{
-			media: $$.img({src: "http://www.princetonphotoclub.org/Images/Content/CarlPictureDec2013.jpg",
+			media: $$.img({src: "https://www.princeton.edu/main/images/news/2014/2/alumniday_IndexPage.jpg",
 				className: 'media-object',
-				style: 'width: 200px;'
+				style: 'width: 100px;'
 			}),
 			pull: 'right'
 		},
@@ -159,23 +159,25 @@ require(['backstrap'], function() {
 	
 	// Object constructors
 	
+	testObj(new $$.Badge({content: '1'}), 'Badge');
+	
+	testObj(new $$.Glyph({content: 'retweet'}), 'Glyph');
+
+	testObj(new $$.Button({size: 'lg', context: 'info', content: 'Hello'}), 'Button');
+	
 	testObj(new $$.BasicNavbar({brand: 'Wow!', model: new Backbone.Collection([
 		{ name: 'first', href: '#first', label: 'First' },
 		{ name: 'second', href: '#second', label: 'Second' },
 		{ name: 'third', href: '#third', label: 'Third' }
 	])}), 'BasicNavbar');
 	
-	testObj(new $$.Button({size:'lg', context:'info', content: 'Hello'}), 'Button');
-
-	testObj(new $$.Glyph({content: 'retweet'}), 'Glyph');
-
-	var obj = new $$.Context({content:'danger'}).render();
-	obj.$el.append(new $$.Glyph({content:'star'}).render().el);
+	var obj = new $$.Context({content: 'danger'}).render();
+	obj.$el.append(new $$.Glyph({content: 'star'}).render().el);
 	testObj(obj, 'Context + Glyph');
 	
-	obj = new $$.Context({content:'danger', background: true}).render();
-	obj.$el.append(new $$.Glyph({content:'star'}).render().el);
-	obj.$el.append(new $$.Badge({content:'33'}).render().el);
+	obj = new $$.Context({content: 'danger', background: true}).render();
+	obj.$el.append(new $$.Glyph({content: 'star'}).render().el);
+	obj.$el.append(new $$.Badge({content: '33'}).render().el);
 	testObj(obj, 'Context(bg) + Glyph + Badge');
 
 	testObj(new $$.Dropdown({buttonLabel: 'Things', buttonId: 'button1', align: 'left', model: new Backbone.Collection([
