@@ -128,7 +128,7 @@ To work around this conflict, we make all the plain HTML tag methods accessible 
 `$$.html` namespace.  Thus for instance in the case of "label", `$$.label() will give you
 a fully Bootstrapped `<label class="label">`,
 while `$$.html.label()` will give you a plain HTML `<label>`.
-Overloaded names: button, input, label.
+Overloaded names: button, form, input, label.
 
 ### Bootstrap Tags
 
@@ -155,7 +155,7 @@ and optionally with "btn-*" classes for sizing and context.
 
 #### buttonGroup
 
-The `$$.buttonGroup()` method creates a `div` decorated with the Bootstrap "btn-group" class.
+The `$$.buttonGroup()` method creates a `div` tag decorated with the Bootstrap "btn-group" class.
 
 #### buttonToolbar
 
@@ -177,7 +177,12 @@ Use it to load CSS from within your JS code, thus:
 
 #### form
 
-**To Be Implemented**
+The `$$.form()` method creates a `form` tag decorated with the attribute 'role="form"'.
+
+#### formGroup
+
+The `$$.formGroup()` method creates a `div` tag decorated with the Bootstrap "form-group" class.
+Use it to group form inputs with their labels, inside a form.
 
 #### glyph
 
@@ -221,6 +226,10 @@ and optionally with "input-*" classes for sizing and context.
 
 The `$$.inputGroup()` method creates a `div` tag decorated with the Bootstrap "input-group" class.
 
+#### inputGroupAddon
+
+The `$$.inputGroupAddon()` method creates a `span` tag decorated with the Bootstrap "input-group-addon" class.
+
 #### jumbotron
 
 The `$$.jumbotron()` method creates a `div` tag decorated with the Bootstrap "jumbotron" class.
@@ -260,7 +269,10 @@ It should be used with `$$.list()`.
 
 #### media
 
-**To Be Implemented**
+The `$$.media()` method creates a `div` tag decorated with the Bootstrap "media" class.
+Passit a DOM object as its "media" attribute, and an optional 'pull: "right"'
+if you want it pulled right instead of left.
+Its body will be further wrapped in a div with class "media-body".
 
 #### noConflict
 
@@ -288,11 +300,14 @@ The `$$.pagination()` method creates a `ul` tag decorated with the Bootstrap "pa
 
 #### panel
 
-**To Be Implemented**
+The `$$.panel()` method creates a `div` tag decorated with the Bootstrap "panel-body" class,
+wrapped in a `div` decorated with the Bootstrap "panel" class.
+Pass it DOM objects in either the "heading" or "footer" attributes
+to embed them within a `div` with the Bootstrap "panel-heading" or "panel-footer" class.
 
 #### pageHeader
 
-The `$$.pageHeader()` method creates a `div` tag with class "page-header".
+The `$$.pageHeader()` method creates a `div` tag decorated with the Bootstrap "page-header" class.
 
 #### progressbar
 
@@ -300,7 +315,7 @@ The `$$.pageHeader()` method creates a `div` tag with class "page-header".
 
 #### thumbnail
 
-**To Be Implemented**
+The `$$.thumbnail()` method creates a `div` tag decorated with the Bootstrap "thumbnail" class.
 
 #### well
 

@@ -99,8 +99,63 @@ require(['backstrap'], function() {
 			$$.li($$.a({href: '#3'}, '3')),
 			$$.li($$.a({href: '#3'}, '>>'))
 	), 'pagination');
-	
-	// need input, input-group tests
+
+	test($$.grid({layout: [[
+	    {
+	        xs: 4,
+			content: $$.thumbnail(
+					$$.a($$.img({src: "http://www.princetonphotoclub.org/Images/Content/CarlPictureDec2013.jpg",
+						style: 'width: 200px;'
+					})),
+					$$.p("This is Carl")
+				)
+	    },
+	    {
+			xs: 4,
+			content: $$.thumbnail(
+						$$.a($$.img({src: "http://www.princetonphotoclub.org/Images/Content/CarlPictureDec2013.jpg",
+							style: 'width: 200px;'
+						})),
+						$$.p("This is also Carl")
+					)
+	    }
+	    ]]
+	}), 'grid, thumbnail');
+
+	test($$.panel(
+		{
+			heading: $$.h1({className: 'panel-title'}, 'A Panel'),
+			footer: $$.span('some footer content')
+		},
+		$$.p('Some panel body content'),
+		$$.p('Another panel body paragraph')
+	), 'panel');
+
+	test($$.form(
+		$$.formGroup(
+			$$.html.label('Name:'),
+			$$.input({type: 'text', name: 'name'})
+		),
+		$$.formGroup(
+			$$.html.label('Password:'),
+			$$.inputGroup(
+				$$.inputGroupAddon({context: 'danger'}, '*'),
+				$$.input({type: 'text', name: 'password'})
+			)
+		)
+	), 'form, formGroup, input, inputGroup');
+
+	test($$.media(
+		{
+			media: $$.img({src: "http://www.princetonphotoclub.org/Images/Content/CarlPictureDec2013.jpg",
+				className: 'media-object',
+				style: 'width: 200px;'
+			}),
+			pull: 'right'
+		},
+		$$.h4({className: 'media-heading'}, 'a heading'),
+		$$.p('Some content')
+	), 'media');
 	
 	// Object constructors
 	

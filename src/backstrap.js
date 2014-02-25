@@ -92,12 +92,12 @@
 	// 
 	// for example:
 	// backstrap('div', {'class' : 'foo'}, 'bar');
-	var backstrap = function backstrap(tag, bootstrapClass) {
+	var backstrap = function $$(tag, bootstrapClass) {
 
-		// handle Bootstrap special tags, context, and sizing.
-		var size = null;
-		var context = 'default';
-		var fluid = false;
+		// handle Bootstrap special attributes
+		var bootstrap = {
+			context: 'default'
+		};
 		var classlist = {};
 		if (bootstrapClass) { classlist[bootstrapClass] = true; }
 		
@@ -168,24 +168,26 @@
 									// The rest of the cases are for Bootstrap attributes.
 									case 'size':
 										if (value in sizeMap) {
-											size = sizeMap[value];
+											bootstrap.size = sizeMap[value];
 										} else {
 											el.setAttribute('size', value);
 										}
 										break;
 
-									case 'context':
-										context = value;
-										break;
-	
 									case 'bgcontext':
 										classlist['bg-' + value] = true;
 										break;
 
+									case 'context':
 									case 'fluid':
-										fluid = !!value;
+									case 'footer':
+									case 'heading':
+									case 'inline':
+									case 'media':
+									case 'pull':
+										bootstrap[key] = value;
 										break;
-	
+
 									// otherwise, we use the standard setAttribute
 									default:
 										el.setAttribute(key, value);
@@ -207,19 +209,53 @@
 			}
 		}
 		
-		// A few special Bootstrap details
-		classlist[(bootstrapClass !== null ? bootstrapClass : 'text') + '-' + context] = true;
-		if (size != null) {
-			classlist[(bootstrapClass !== null ? bootstrapClass : 'text') + '-' + size] = true;
+		// handle the Bootstrap details
+		classlist[(bootstrapClass !== null ? bootstrapClass : 'text') + '-' + bootstrap.context] = true;
+		if (bootstrap.size != null) {
+			classlist[(bootstrapClass !== null ? bootstrapClass : 'text') + '-' + bootstrap.size] = true;
 		}
-		if (bootstrapClass === 'btn-toolbar') {
-			el.setAttribute('role', 'toolbar');
-		}
-		if (bootstrapClass === 'container' && fluid) {
-			classlist['container-fluid'] = true;
-		}
-		if (bootstrapClass === 'input') {
-			classlist['form-control'] = true;
+		switch (bootstrapClass) {
+			case 'btn-toolbar':
+				el.setAttribute('role', 'toolbar');
+				break;
+			case 'form':
+				el.setAttribute('role', 'form');
+				if (bootstrap.inline) {
+					classlist['form-inline'] = true;
+				}
+				break;
+			case 'container':
+				if (bootstrap.fluid) {
+					classlist['container-fluid'] = true;
+				}
+				break;
+			case 'input':
+				classlist['form-control'] = true;
+				break;
+			case 'panel':
+				var content = $('> *', el);
+				var body = $$.div({className: 'panel-body'});
+				
+				$(body).append(content);
+				if (bootstrap.heading && bootstrap.heading.nodeType === 1) {
+					el.appendChild($$.div({className: 'panel-heading'}, bootstrap.heading));
+				}
+				el.appendChild(body);
+				if (bootstrap.footer && bootstrap.footer.nodeType === 1) {
+					el.appendChild($$.div({className: 'panel-footer'}, bootstrap.footer));
+				}
+				break;
+			case 'media':
+				if (bootstrap.media && bootstrap.media.nodeType === 1) {
+					var content = $('> *', el);
+					var body = $$.div({className: 'media-body'});
+					var pullClass = 'pull-' + (bootstrap.pull === 'right' ? 'right' : 'left');
+					
+					$(body).append(content);
+					el.appendChild($$.span({className: pullClass}, bootstrap.media));
+					el.appendChild(body);
+				}
+				break;
 		}
 		
 		// Set className from classlist.
@@ -257,7 +293,7 @@
 
 	var appendGridRow = function (layout) {
 		var rowdiv = backstrap.div({className: 'row'});
-		this.append(rowdiv);
+		$(this).append(rowdiv);
 		for (var c=0; c<layout.length; c++) {
 			var cell = layout[c];
 			var cellClass;
@@ -267,7 +303,7 @@
 			} else {
 				cellClass = 'col col-md-' + cell;
 			}
-			rowdiv.append(backstrap.div({className: cellClass}, content));
+			$(rowdiv).append(backstrap.div({className: cellClass}, content));
 		}
 	};
 
@@ -292,9 +328,9 @@
 
 	// Bootstrap component pseudo-tags
 	var bootstrapComponents = ['alert', 'badge', 'breadcrumb', 'button', 'buttonGroup', 'buttonToolbar',
-	                           'container', 'input', 'inputGroup', 'jumbotron', 'label',
-	                           'linkList', 'linkListItem', 'list', 'listItem',
-	                           'pageHeader', 'pagination', 'spanLabel', 'well'];
+	                           'container', 'form', 'formGroup', 'input', 'inputGroup', 'inputGroupAddon', 'jumbotron', 'label',
+	                           'linkList', 'linkListItem', 'list', 'listItem', 'media',
+	                           'pageHeader', 'pagination', 'panel', 'spanLabel', 'thumbnail', 'well'];
 	
 	// HTML tags for Bootstrap components
 	var bootstrapTags = {
@@ -304,15 +340,20 @@
 			buttonGroup: 'div',
 			buttonToolbar: 'div',
 			container: 'div',
+			formGroup: 'div',
 			inputGroup: 'div',
+			inputGroupAddon: 'span',
 			jumbotron: 'div',
 			linkList: 'div',
 			linkListItem: 'a',
 			list: 'ul',
 			listItem: 'li',
+			media: 'div',
 			pageHeader: 'div',
 			pagination: 'ul',
+			panel: 'div',
 			spanLabel: 'span',
+			thumbnail: 'div',
 			well: 'div'
 	};
 
@@ -321,8 +362,10 @@
 			button: 'btn',
 			buttonGroup: 'btn-group',
 			buttonToolbar: 'btn-toolbar',
+			formGroup: 'form-group',
 			input: 'form-control',
 			inputGroup: 'input-group',
+			inputGroupAddon: 'input-group-addon',
 			linkList: 'list-group',
 			linkListItem: 'list-group-item',
 			list: 'list-group',
