@@ -144,12 +144,13 @@
 
   }));
   };
-  
-	/*if (typeof context.define === "function" && context.define.amd) {
+
+	if (typeof context.define === "function" && context.define.amd &&
+			typeof context._$$_backstrap_built_flag === 'undefined') {
 		define("backstrap/CollectionView", ["backstrap"], function ($$) {
 			return fn($$);
 		});
-	} else */ if (typeof context.module === "object" && typeof context.module.exports === "object") {
+	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
 		module.exports = fn(require("backstrap"));
 	} else {
 		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');

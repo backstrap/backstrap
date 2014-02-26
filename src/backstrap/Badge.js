@@ -18,7 +18,7 @@
 	
 			initialize : function(options) {
 				this.options = _.extend({}, this.options, options);
-				this.mixin([context.$$.HasModel]);
+				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
 				$(this.el).addClass('badge');
 			},
@@ -32,11 +32,10 @@
 		}));
 	};
 	
-	/* if (typeof context.define === "function" && context.define.amd) {
-		context.define("backstrap/Badge", ["backstrap"], fn);
-		// above doesn't work, so punt and use global for now.
-		//fn(context.$$);
-	} else */ if (typeof context.module === "object" && typeof context.module.exports === "object") {
+	if (typeof context.define === "function" && context.define.amd &&
+			typeof context._$$_backstrap_built_flag === 'undefined') {
+		context.define("backstrap/Badge", ["backstrap", "backstrap/HasModel"], fn);
+	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
 		context.module.exports = fn(require("backstrap"));
 	} else {
 		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');

@@ -22,6 +22,7 @@
     "extra": {
         "component": {
             "scripts": [
+                "src/backstrap/_setup.js",
                 "src/backstrap.js",
                 "src/backstrap/CollectionView.js",
                 "src/backstrap/HasGlyph.js",
@@ -46,7 +47,8 @@
                 "src/backstrap/TextArea.js",
                 "src/backstrap/TextField.js",
                 "src/backstrap/TimePicker.js",
-                "src/backstrap/UIButton.js"
+                "src/backstrap/UIButton.js",
+                "src/backstrap/_cleanup.js"
             ],
             "shim": {
                 "deps": [

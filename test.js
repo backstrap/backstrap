@@ -1,4 +1,4 @@
-require(['jquery', 'backbone', 'backstrap'], function() {
+require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 
 	var n = 1;
 	
@@ -158,9 +158,9 @@ require(['jquery', 'backbone', 'backstrap'], function() {
 	), 'media');
 	
 	// Object constructors
-	
+
 	testObj(new $$.Badge({content: '1'}), 'Badge');
-	
+
 	testObj(new $$.Glyph({content: 'retweet'}), 'Glyph');
 
 	testObj(new $$.Button({size: 'lg', context: 'info', content: 'Hello'}), 'Button');

@@ -777,15 +777,32 @@
   };
 
   // If we're in an AMD environment, we register as a named AMD module.
+  // If this looks like AMD, but it's really backstrap-built.js, then
+  // we temporarily attach ourself to the top level $$ namespace;
+  // _cleanup.js will remove that temporary defn and run the AMD define().
   // If we're in a CommonJS environment, we export ourself.
   // Otherwise, we attach ourself to the top level $$ namespace, in which case
   // you can call "var altName = $$.noConflict();" to revert definition of $$.
-  /* if (typeof context.define === "function" && context.define.amd) {
+  if (typeof context.define === "function" && context.define.amd) {
+	  if (context._$$_backstrap_built_flag) {
+			if(typeof context.$ === 'undefined') throw new Error('jQuery environment not loaded');
+			if(typeof context.Backbone.View === 'undefined') throw new Error('Backbone environment not loaded');
+
+			var _$$ = context.$$;
+			var backstrap = fn(context);
+			
+			backstrap.noConflict = function() {
+				if ( context.$$ === backstrap ) { context.$$ = _$$; }
+				return backstrap;
+			};
+			
+			context.$$ = backstrap;
+	  } else {
 		context.define("backstrap", ["jquery", "backbone", "bootstrap"], function($, Backbone) {
-			console.log('define backstrap');
 			return fn({$: $, Backbone: Backbone});
 		});
-	} else */ if (typeof context.module === "object" && typeof context.module.exports === "object") {
+	  }
+	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
 		require("bootstrap");
 		context.module.exports = fn({$: require("jquery"), Backbone: require("backbone")});
 	} else {
