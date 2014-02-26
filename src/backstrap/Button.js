@@ -1,5 +1,7 @@
 /**
  * A model-bound Bootstrap button object.
+ * Largely from Backbone-UI's Button class,
+ * with Bootstrap additions.
  * 
  * @author Kevin Perry perry@princeton.edu
  * @copyright 2014 The Trustees of Princeton University.
@@ -9,13 +11,11 @@
 (function(context) {
 	var fn = function($$)
 	{
-		// TODO Extend BB.UI.Button instead of reproducing code? (opts & init() diff)
 		return ($$.Button = $$.BaseView.extend({
 			options : {
 				tagName : 'button',
 				size    : 'default', // added.
 				context : 'default', // added.
-	
 				// true will disable the button
 				// (muted non-clickable) 
 				disabled : false,
@@ -32,9 +32,8 @@
 			},
 	
 			initialize : function(options) {
-				this.options = _.extend({}, this.options, options);
+				$$.BaseView.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph]);
-	
 				_(this).bindAll('render');
 	
 				// Added/altered.
@@ -44,10 +43,8 @@
 				}
 	
 				$(this.el).bind('click', _(function(e) {
-					if(!this.options.disabled && !this.options.active && this.options.onClick) {
-						return this.options.onClick(e); 
-					}
-					return false;
+					return (this.options.disabled || this.options.active) ? false :
+						(this.options.onClick ? this.options.onClick(e) : true);
 				}).bind(this));
 			},
 	
@@ -60,7 +57,7 @@
 	
 				if(this.options.isSubmit) {
 					$(this.el).attr({
-						type : 'submit', 
+						type : 'submit',
 						value : ''
 					});
 				}

@@ -380,7 +380,7 @@ over the life of the page.
 
 #### Badge
 
-Creates a Bootstrap badge (a `span` with class="badge") whose content is model-bound.
+Creates a Bootstrap badge (a `span` tag with class="badge") whose content is model-bound.
 
 Example:
 
@@ -405,7 +405,7 @@ creates a navbar with three buttons.
 
 #### Button
 
-Creates a Bootstrap button whose label is model-bound.
+Creates a Bootstrap button (a `button` tag with class="btn") whose label is model-bound.
 
 A simple example:
 
@@ -414,6 +414,14 @@ A simple example:
 	...
 	// Alter the displayed label.
 	model.set('name', 'Save as Draft');
+
+#### Calendar
+
+**The Backbone-UI View - Needs Work**
+
+#### Checkbox
+
+**The Backbone-UI View - Needs Work**
 
 #### Context
 
@@ -427,17 +435,9 @@ A simple example - displays the text in a `span` with class "text-info":
 Passing `background: true` makes it use the "bg-*" classes instead of "text-*".
 You can also pass it a "tagName" attribute to create something other than a `span`.
 
-#### Calendar
-
-**To Be Implemented**
-
-#### Checkbox
-
-**To Be Implemented**
-
 #### DatePicker
 
-**To Be Implemented**
+**The Backbone-UI View - Needs Work**
 
 #### Dropdown
 
@@ -479,17 +479,21 @@ in order to properly implement "size" and "context" attributes.
 Gives you a large red star (note that you can pass a literal value directly to content
 instead of supplying a model object and property name.)
 
+#### Label
+
+**The Backbone-UI View - Needs Work**
+
 #### Link
 
-**To Be Implemented**
+**The Backbone-UI View - Needs Work**
 
 #### List
 
-**To Be Implemented**
+**The Backbone-UI View - Needs Work**
 
 #### Menu
 
-**To Be Implemented**
+**The Backbone-UI View - Needs Work**
 
 #### NavPills
 
@@ -525,26 +529,37 @@ creates a set of three tabs.
 
 #### ProgressBar
 
-**To Be Implemented**
+**The Backbone-UI View - Needs Work**
 
 #### RadioGroup
 
-**To Be Implemented**
+**The Backbone-UI View - Needs Work**
 
 #### Table
 
-**To Be Implemented**
+The Backbone-UI TableView, decorated with Bootstrap classes.
+Pass attributes to set the various table options available in Bootstrap:
+	new Table({
+		striped: true,
+		bordered: true,
+		hover: true,
+		condensed: true,
+		responsive: true
+	});
+
+will give you a zebra-striped, bordered, condensed,
+responsive table with hover highlighting.	
 
 #### TextArea
 
-**To Be Implemented**
+**The Backbone-UI View - Needs Work**
 
 #### TextField
 
-**To Be Implemented**
+**The Backbone-UI View - Needs Work**
 
 #### TimePicker
 
-**To Be Implemented**
+**The Backbone-UI View - Needs Work**
 
 

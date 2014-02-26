@@ -215,4 +215,97 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 		]
 		)
 	}), 'Table');
+	
+	testObj(new $$.Checkbox({
+		model: new Backbone.Model({
+			label: 'Use Checkbox?',
+			value: true
+		}),
+		content: 'value',
+		labelContent: 'label'
+	}), 'Checkbox');
+
+	testObj(new $$.Calendar({
+		model: new Backbone.Model({
+			name: 'Christmas', date: new Date(2014, 12, 31)
+		}),
+		content: 'date'
+	}), 'Calendar');
+	
+	testObj(new $$.DatePicker({
+		model: new Backbone.Model({
+			name: 'Christmas', date: new Date(2014, 12, 31)
+		}),
+		content: 'date'
+	}), 'DatePicker');
+	
+	testObj(new $$.TimePicker({
+		model: new Backbone.Model({
+			name: 'Christmas', date: new Date(2014, 12, 31, 6, 15)
+		}),
+		content: 'date'
+	}), 'TimePicker');
+	
+	testObj(new $$.Link({
+		model: new Backbone.Model({
+			name: 'Someplace'
+		}),
+		content: 'name',
+		onClick: function () { alert('clicked'); }
+	}), 'Link');
+	
+	testObj(new $$.TextArea({
+		model: new Backbone.Model({
+			name: 'First M. Last', description: 'lorem ipsum quod erat and all that jazz.'
+		}),
+		content: 'description'
+	}), 'TextArea');
+
+	testObj(new $$.TextField({
+		model: new Backbone.Model({
+			name: 'First M. Last', description: 'lorem ipsum quod erat and all that jazz.'
+		}),
+		content: 'name'
+	}), 'TextField');
+
+	testObj(new $$.Label({
+		model: new Backbone.Model({ descrip: 'lorem ipsum' }),
+		labelContent: 'descrip'
+	}), 'Label');
+
+	testObj(new $$.Menu({
+		model: new Backbone.Model({ name: 'Cathy' }),
+		content: 'name',
+		alternatives: new Backbone.Collection(
+			[
+			 { name: 'Adam',    value: 'a' },
+			 { name: 'Bert',    value: 'b' },
+			 { name: 'Cathy',   value: 'c' },
+			 { name: 'Douglas', value: 'd' },
+			 { name: 'Ellen',   value: 'e' },
+			 { name: 'Fred',    value: 'f' },
+			 { name: 'Georgia', value: 'g' },
+			]
+		),
+		altLabelContent: 'name',
+		altValueContent: 'value'
+	}), 'Menu');
+	
+	testObj(new $$.RadioGroup({
+		model: new Backbone.Model({ name: 'Cathy' }),
+		content: 'name',
+		alternatives: new Backbone.Collection(
+			[
+			 { name: 'Adam',    value: 'a' },
+			 { name: 'Bert',    value: 'b' },
+			 { name: 'Cathy',   value: 'c' },
+			 { name: 'Douglas', value: 'd' },
+			 { name: 'Ellen',   value: 'e' },
+			 { name: 'Fred',    value: 'f' },
+			 { name: 'Georgia', value: 'g' },
+			]
+		),
+		altLabelContent: 'name',
+		altValueContent: 'value'
+	}), 'RadioGroup');
 });
