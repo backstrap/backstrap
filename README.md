@@ -129,7 +129,7 @@ To work around this conflict, we make all the plain HTML tag methods accessible 
 `$$.plain` namespace.  Thus for instance in the case of "label", `$$.label()` will give you
 a fully Bootstrapped `<label class="label">`,
 while `$$.plain.label()` will give you a plain HTML `<label>`.
-Overloaded names: button, form, input, label.
+Overloaded names include: button, form, input, label, table.
 
 ### Bootstrap Tags
 
