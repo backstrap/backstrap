@@ -4,7 +4,7 @@
 	{
 		return ($$.HasFormLabel = {
 			wrapWithFormLabel : function(content) {
-				var wrapped = $$.label();
+				var wrapped = $$.plain.label();
 				
 				var formLabelText = this.options.formLabelContent ? 
 					this.resolveContent(this.model, this.options.formLabelContent, 

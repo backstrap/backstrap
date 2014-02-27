@@ -12,15 +12,14 @@
 
 			initialize : function(options) {
 				$$.BaseView.prototype.initialize.call(this, options);
-				this.mixin([$$.HasModel, $$.HasGlyph,
-					$$.HasError]);
+				this.mixin([$$.HasModel, $$.HasGlyph, $$.HasError]);
 				_(this).bindAll('_refreshCheck');
 				$(this.el).addClass('checkbox');
 				if(this.options.name){
 					$(this.el).addClass(this.options.name);
 				}
-				this.label = $$.label();
-				this.input = $$.input({type : 'checkbox'});
+				this.label = $$.plain.label();
+				this.input = $$.plain.input({type : 'checkbox'});
 				$(this.input).change(_(this._updateModel).bind(this));
 				$(this.input).click(_(this._updateModel).bind(this));
 				this._observeModel(_(this._refreshCheck).bind(this));

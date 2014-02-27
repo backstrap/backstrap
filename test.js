@@ -13,9 +13,7 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
     }
     
     // implicit test of $$.css
-	$("head").append($$.css("components/require.css")).
-		append($$.css("components/bootstrap/css/bootstrap.min.css")).
-		append($$.css("components/bootstrap/css/bootstrap-theme.min.css"));
+	$("head").append($$.css("components/require.css"));
 
 	// tag factories
 	
@@ -216,7 +214,7 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 		)
 	}), 'Table');
 	
-	testObj($$.form(
+	test($$.form(
 	  new $$.Checkbox({
 		model: new Backbone.Model({
 			label: 'Use Checkbox?',
@@ -224,11 +222,11 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 		}),
 		content: 'value',
 		labelContent: 'label'
-	})), 'Checkbox');
+	}).render().el), 'Checkbox');
 
 	testObj(new $$.Calendar({
 		model: new Backbone.Model({
-			name: 'Christmas', date: new Date(2014, 12, 31)
+			name: 'Christmas', date: new Date(2014, 12, 25)
 		}),
 		content: 'date'
 	}), 'Calendar');
@@ -242,9 +240,10 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	
 	testObj(new $$.TimePicker({
 		model: new Backbone.Model({
-			name: 'Christmas', date: new Date(2014, 12, 31, 6, 15)
+			name: 'Christmas', date: new Date(2014, 12, 31, 6, 17)
 		}),
-		content: 'date'
+		content: 'date',
+		interval: 15
 	}), 'TimePicker');
 	
 	testObj(new $$.Link({
@@ -275,8 +274,8 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	}), 'Label');
 
 	testObj(new $$.Menu({
-		model: new Backbone.Model({ name: 'Cathy' }),
-		content: 'name',
+		model: new Backbone.Model({ value: 'e' }),
+		content: 'value',
 		alternatives: new Backbone.Collection(
 			[
 			 { name: 'Adam',    value: 'a' },
@@ -293,8 +292,8 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	}), 'Menu');
 	
 	testObj(new $$.RadioGroup({
-		model: new Backbone.Model({ name: 'Cathy' }),
-		content: 'name',
+		model: new Backbone.Model({ value: 'c' }),
+		content: 'value',
 		alternatives: new Backbone.Collection(
 			[
 			 { name: 'Adam',    value: 'a' },
@@ -309,4 +308,6 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 		altLabelContent: 'name',
 		altValueContent: 'value'
 	}), 'RadioGroup');
+	
+	test($$.div, ' === END === ');
 });

@@ -2,6 +2,7 @@ Backstrap
 =========
 
 **UNDER CONSTRUCTION. VERSION 1.0 COMING SOON!**
+**Awaiting a couple of pull requests (on moment & bootstrap-default) to get them to deploy properly.**
 
 Need something meaty to go between the MVC backbone of your
 client-side JavaScript app and its UI skin?

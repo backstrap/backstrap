@@ -50,7 +50,7 @@
 					var selected = selectedValue === val;
 					var label = this.resolveContent(item, this.options.altLabelContent);
 
-					var input = $$.input();
+					var input = $$.plain.input();
 					$(input).attr({ 
 						type : 'radio',
 						name : this.options.content,
@@ -75,7 +75,7 @@
 
 					// create a new label/input pair and insert into the group
 					this.group.appendChild(
-						$$.label({className : _(this._collectionArray()).nameForIndex(idx++) + 
+						$$.plain.label({className : _(this._collectionArray()).nameForIndex(idx++) + 
 							' ' + (idx % 2 === 0 ? 'even' : 'odd')}, input, parent));
 
 				}, this);

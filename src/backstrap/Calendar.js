@@ -55,14 +55,17 @@
 			
 			// all calendar days that are after the maximum date 
 			// will be out of range and disabled
-			maxDate : null
+			maxDate : null,
+			
+			// default to condensed but allow user to specify condensed: false
+			condensed: true
 		},
 
 		date : null, 
 
 		initialize : function(options) {
 			$$.BaseView.prototype.initialize.call(this, options);
-			$(this.el).addClass('calendar');
+			$(this.el).addClass('calendar calendar-default');
 			_(this).bindAll('render');
 		},
 
@@ -158,9 +161,12 @@
 				$$.td(names[i]).appendTo(daysRow);
 			}
 
-			var tbody, table = $$.table(
+			var tbody, table = $$.table({
+					bordered: true,
+					condensed: this.options.condensed
+				},
 				$$.thead(
-					$$.th(
+					$$.th({colspan: 2},
 						$$.a({className : 'go_back', onclick : _(this._renderDate).bind(this, lastMonth, minDate, maxDate)}, '\u2039')),
 					$$.th({className : 'title', colspan : 5},
 						$$.div(formatDateHeading(date))),

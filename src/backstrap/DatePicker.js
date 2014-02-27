@@ -87,7 +87,9 @@
 
 			_showCalendar : function() {
 				$(this._calendar.el).show();
-				$(this._calendar.el).alignTo(this._textField.el, 'bottom -left', 0, 2);
+				$(this._calendar.el).alignTo(this._textField.el, 'bottom -left');
+				// TODO: First time, it mis-computes vertical position.
+				$(this._calendar.el).alignTo(this._textField.el, 'bottom -left', 5, 2);
 			},
 
 			_hideCalendar : function(e) {

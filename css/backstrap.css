@@ -1,0 +1,47 @@
+@CHARSET "UTF-8";
+
+div.calendar.calendar-default {
+	width: 240px;
+	text-transform: capitalize;
+}
+
+div.calendar.calendar-default > table.table > thead > th,
+div.calendar.calendar-default > table.table > tbody > tr > td {
+	text-align: center;
+}
+
+div.calendar.calendar-default > table.table > tbody > tr > td.cell.selected,
+div.calendar.calendar-default > table.table > tbody > tr > td.cell.selected a,
+div.calendar.calendar-default > table.table > tbody > tr > td.cell.selected:hover,
+div.calendar.calendar-default > table.table > tbody > tr > td.cell.selected a:hover {
+    background-color: #AE5317;
+    color: #FFFFFF;
+}
+
+div.calendar.calendar-default > table.table > tbody > tr > td.cell:hover,
+div.calendar.calendar-default > table.table > tbody > tr > td.cell:active {
+    background-color: #E9D4C7;
+}
+
+div.calendar.calendar-default > table.table > tbody > tr > td.cell a,
+div.calendar.calendar-default > table.table > tbody > tr > td.cell a:hover,
+div.calendar.calendar-default > table.table > tbody > tr > td.cell a:active {
+	color: #222222;
+	text-decoration: none;
+}
+
+div.date_picker_calendar.calendar.calendar-default {
+	background: #ffffff;
+}
+
+.radio_group .radio_group_wrapper {
+    display: inline-block;
+}
+
+.radio_group .radio_group_wrapper label {
+    margin-right: 1.3em;
+}
+
+.radio_group .radio_group_wrapper span {
+    margin-left: .3em;
+}

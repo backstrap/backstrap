@@ -187,9 +187,14 @@
 									case 'inline':
 									case 'media':
 									case 'pull':
+									case 'striped':
+									case 'bordered':
+									case 'hover':
+									case 'condensed':
 										bootstrap[key] = value;
 										break;
-
+										
+''
 									// otherwise, we use the standard setAttribute
 									default:
 										el.setAttribute(key, value);
@@ -256,6 +261,20 @@
 					$(body).append(content);
 					el.appendChild($$.span({className: pullClass}, bootstrap.media));
 					el.appendChild(body);
+				}
+				break;
+			case 'table':
+				if (bootstrap.striped) {
+					classlist['table-striped'] = true;
+				}
+				if (bootstrap.bordered) {
+					classlist['table-bordered'] = true;
+				}
+				if (bootstrap.hover) {
+					classlist['table-hover'] = true;
+				}
+				if (bootstrap.condensed) {
+					classlist['table-condensed'] = true;
 				}
 				break;
 		}
@@ -332,7 +351,7 @@
 	var bootstrapComponents = ['alert', 'badge', 'breadcrumb', 'button', 'buttonGroup', 'buttonToolbar',
 	                           'container', 'form', 'formGroup', 'input', 'inputGroup', 'inputGroupAddon', 'jumbotron', 'label',
 	                           'linkList', 'linkListItem', 'list', 'listItem', 'media',
-	                           'pageHeader', 'pagination', 'panel', 'spanLabel', 'thumbnail', 'well'];
+	                           'pageHeader', 'pagination', 'panel', 'spanLabel', 'table', 'thumbnail', 'well'];
 	
 	// HTML tags for Bootstrap components
 	var bootstrapTags = {
