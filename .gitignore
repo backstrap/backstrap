@@ -2,3 +2,4 @@ vendor
 components
 composer.lock
 notes.txt
+.externalToolBuilders

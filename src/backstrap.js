@@ -384,19 +384,17 @@
 		};
 	};
 
+	backstrap.plain = {};
+
+	// Save all tag methods as properties of $$.plain
+	// so we can access them even if we overwrite some with Bootstrap functionality.
 	for(var i=0; i<tags.length; i++) {
-		backstrap[tags[i]] = makeApply(tags[i], null);
-	}
-	
-	// Save all tag methods as properties of $$.html (also a tag factory method)
-	// so we can access them even after we overwrite some with Bootstrap functionality.
-	for(var i=0; i<tags.length; i++) {
-		backstrap.html[tags[i]] = backstrap[tags[i]];
+		backstrap.plain[tags[i]] = backstrap[tags[i]] = makeApply(tags[i], null);
 	}
 
-	// special tags for Bootstrap support.
-	// note that some of these override regular HTML tags.
-	// Use $$.html.* for the vanilla HTML versions.
+	// Special tags for Bootstrap support.
+	// Note that some of these will overwrite regular HTML tags.
+	// Use $$.plain.* for the vanilla HTML versions.
 	for(var i=0; i<bootstrapComponents.length; i++) {
 		var name = bootstrapComponents[i];
 		backstrap[name] = makeApply(
@@ -407,12 +405,12 @@
 	
 	// shortcut for creating CSS stylesheet links.
 	backstrap.css = function (href) {
-		return backstrap.html.link({href: href, rel: "stylesheet", type: "text/css"});
+		return backstrap.plain.link({href: href, rel: "stylesheet", type: "text/css"});
 	};
 
 	// shortcut for creating glyphicons.
 	backstrap.glyph = function (name) {
-		return backstrap.html.span({className: 'glyphicon glyphicon-' + name});
+		return backstrap.plain.span({className: 'glyphicon glyphicon-' + name});
 	};
 
 	// shortcut for creating Bootstrap grids.

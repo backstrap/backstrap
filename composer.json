@@ -17,14 +17,14 @@
     ],
     "require": {
         "components/backbone" : "~1.0",
-        "components/bootstrap": "~3.1"
+        "components/bootstrap": "~3.1",
+        "moment/moment": "2.5.1"
     },
     "extra": {
         "component": {
             "scripts": [
                 "src/backstrap/_setup.js",
                 "src/backstrap.js",
-                "src/moment.js",
                 "src/input_event.js",
                 "src/backstrap/CollectionView.js",
                 "src/backstrap/HasAlternativeProperty.js",
@@ -61,9 +61,15 @@
                      "jquery",
                      "underscore",
                      "bootstrap",
-                     "backbone"
+                     "backbone",
+                     "moment"
                 ]
             }
+        }
+    },
+    "config": {
+        "component": {
+            "noGlobal": false
         }
     }
 }

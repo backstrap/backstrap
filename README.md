@@ -125,9 +125,9 @@ For example:
 
 In some cases, there is a Bootstrap component name that is the same as an HTML tag name.
 To work around this conflict, we make all the plain HTML tag methods accessible in the
-`$$.html` namespace.  Thus for instance in the case of "label", `$$.label() will give you
+`$$.plain` namespace.  Thus for instance in the case of "label", `$$.label() will give you
 a fully Bootstrapped `<label class="label">`,
-while `$$.html.label()` will give you a plain HTML `<label>`.
+while `$$.plain.label()` will give you a plain HTML `<label>`.
 Overloaded names: button, form, input, label.
 
 ### Bootstrap Tags
@@ -151,7 +151,7 @@ The `$$.breadcrumb()` method creates an `ol` tag decorated with the Bootstrap "b
 The `$$.button()` method creates an HTML `button` tag decorated with the Bootstrap "btn" class,
 and optionally with "btn-*" classes for sizing and context.
 
-`$$.html.button()` gives you a bare HTML `button` tag.
+`$$.plain.button()` gives you a bare HTML `button` tag.
 
 #### buttonGroup
 
@@ -241,7 +241,7 @@ The term "label" is, unfortunaterly, overloaded. The following methods are avail
 
 - `$$.label()` gives you an HTML `label` tag decorated with the Bootstrap "label" class.
 - `$$.spanLabel()` gives you an HTML `span` tag decorated with the Bootstrap "label" class.
-- `$$.html.label()` gives you a bare HTML `label` tag.
+- `$$.plain.label()` gives you a bare HTML `label` tag.
 
 <span id="attrs"></span>
 
