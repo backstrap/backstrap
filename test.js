@@ -41,7 +41,7 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	
 	test($$.span($$.button({size: 'small'}, 'small'), $$.button({size: 'large'}, 'big')), 'size');
 	
-	test($$.html.label('HTML label'), 'plain html label');
+	test($$.plain.label('HTML label'), 'plain html label');
 	
 	test($$.div(
 			$$.span({context: 'danger'},
@@ -133,11 +133,11 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 
 	test($$.form(
 		$$.formGroup(
-			$$.html.label('Name:'),
+			$$.plain.label('Name:'),
 			$$.input({type: 'text', name: 'name'})
 		),
 		$$.formGroup(
-			$$.html.label('Password:'),
+			$$.plain.label('Password:'),
 			$$.inputGroup(
 				$$.inputGroupAddon({context: 'danger'}, '*'),
 				$$.input({type: 'text', name: 'password'})
@@ -216,14 +216,15 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 		)
 	}), 'Table');
 	
-	testObj(new $$.Checkbox({
+	testObj($$.form(
+	  new $$.Checkbox({
 		model: new Backbone.Model({
 			label: 'Use Checkbox?',
 			value: true
 		}),
 		content: 'value',
 		labelContent: 'label'
-	}), 'Checkbox');
+	})), 'Checkbox');
 
 	testObj(new $$.Calendar({
 		model: new Backbone.Model({
