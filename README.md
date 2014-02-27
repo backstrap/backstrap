@@ -85,7 +85,7 @@ it will be converted into a suitable Bootstrap classname.
 - if you pass a "glyph" attribute
 it will be converted into a suitable Bootstrap classname.
 Use just the distinct part of the Bootstrap glyphicon class,
-e.g. `$$.span({glyph: "star"})` becomes <span class="glyphicon glyphicon-star">.
+e.g. `$$.span({glyph: "star"})` becomes `<span class="glyphicon glyphicon-star">`.
 - there is a shortcut method `$$.glyph(name)` for creating glyphs.
 `$$.glyph("star")` is equivalent to `$$.span({glyph: "star"})`.
 - there are some new pseudo-tags, such as
@@ -126,7 +126,7 @@ For example:
 
 In some cases, there is a Bootstrap component name that is the same as an HTML tag name.
 To work around this conflict, we make all the plain HTML tag methods accessible in the
-`$$.plain` namespace.  Thus for instance in the case of "label", `$$.label() will give you
+`$$.plain` namespace.  Thus for instance in the case of "label", `$$.label()` will give you
 a fully Bootstrapped `<label class="label">`,
 while `$$.plain.label()` will give you a plain HTML `<label>`.
 Overloaded names: button, form, input, label.
@@ -170,8 +170,7 @@ and optionally with the "container-fluid" class for fluid layout.
 #### css
 
 The `$$.css(url)` method is a shortcut for creating CSS stylesheet links.
-It creates an HTML `<link>` tag with standard attributes
-'rel="stylesheet"' and 'type="text/css"'.
+It creates an HTML `<link rel="stylesheet" type="text/css" href="url">` tag.
 Use it to load CSS from within your JS code, thus:
 
 	$('head').append($$.css(url));
@@ -187,7 +186,7 @@ Use it to group form inputs with their labels, inside a form.
 
 #### glyph
 
-The `$$.glyph(name)` method creates a `span` tag decorated with the Bootstrap "glyphicon" and "glyphicon-<name>" classes.
+The `$$.glyph(name)` method creates a `span` tag decorated with the Bootstrap "glyphicon" and "glyphicon-{name}" classes.
 
 #### grid
 
@@ -243,8 +242,6 @@ The term "label" is, unfortunaterly, overloaded. The following methods are avail
 - `$$.label()` gives you an HTML `label` tag decorated with the Bootstrap "label" class.
 - `$$.spanLabel()` gives you an HTML `span` tag decorated with the Bootstrap "label" class.
 - `$$.plain.label()` gives you a bare HTML `label` tag.
-
-<span id="attrs"></span>
 
 #### linkList
 
@@ -320,6 +317,7 @@ The `$$.well()` method creates a `div` tag with class "well",
 to make Bootstrap's simple well effect.
 
 
+<span id="attrs"></span>
 ### Bootstrap attributes
 
 We define a few special attributes that can be passed to
