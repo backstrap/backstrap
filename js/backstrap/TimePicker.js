@@ -94,10 +94,11 @@
 			},
 
 			_collectTimes : function() {
-				var collection = [];
+				var collection;
 				var d = moment().startOf('day');
 				var day = d.date();
-
+				
+				collection = [];
 				while(d.date() === day) {
 					collection.push({
 						label : d.format(this.options.format),

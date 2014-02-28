@@ -193,8 +193,7 @@
 									case 'condensed':
 										bootstrap[key] = value;
 										break;
-										
-''
+
 									// otherwise, we use the standard setAttribute
 									default:
 										el.setAttribute(key, value);

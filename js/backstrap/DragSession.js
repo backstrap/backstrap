@@ -96,7 +96,7 @@
 
 						// Create a new drag session
 						var activeElement = document.activeElement;
-						var ds = new $$.DragSession({
+						new $$.DragSession({
 							dragEvent : e, 
 							scope : del.ownerDocument, 
 							onStart : function(ds) {

@@ -42,7 +42,7 @@ if(window.jQuery) {
 
       $.event.special.txtinput = {
           setup: function(data, namespaces, handler) {
-              var timer,
+              var timer = null,
                   bndCount,
                   // Get references to the element
                   elem  = this,
@@ -128,6 +128,6 @@ if(window.jQuery) {
       // Setup our jQuery shorthand method
       $.fn.input = function (handler) {
           return handler ? $(this).bind("txtinput", handler) : this.trigger("txtinput");
-      }
+      };
   })(window.jQuery);
 }

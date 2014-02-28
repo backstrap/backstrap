@@ -80,10 +80,9 @@
 				// add the disclosure
 				this.el.appendChild(this._disclosure);
 				// set the position
-				var position = this.options.errorPosition === 'right' ? 
+				this.options.errorPosition === 'right' ? 
 					$(this._disclosure).alignTo(this.errorMessage, 'right', 10, 0, this.el) : 
 					$(this._disclosure).alignTo(this.errorMessage, 'center bottom', 0, 10, this.el);
-					 
 
 				// add the appropriate class to disclosure arrow for correct sprite and styles
 				$(this._disclosureOuter).addClass(this.options.errorPosition === 'right' ? 'arrow_left' : 'arrow_up');

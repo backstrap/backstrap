@@ -2,9 +2,9 @@
  * Backbone-UI's TableView, with some Bootstrap additions.
  */
 (function(context){
-	var noop = function(){};
 	var fn = function($$)
 	{
+		var noop = function(){};
 		return ($$.Table = $$.CollectionView.extend({
 			options : {
 				// Each column should contain a <code>title</code> property to

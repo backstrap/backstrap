@@ -28,7 +28,7 @@
 			},
 
 			_determineSelectedItem : function() {
-				var item;
+				var item = null;
 
 				// if a bound property has been given, we attempt to resolve it
 				if(_(this.model).exists() && _(this.options.content).exists()) {
