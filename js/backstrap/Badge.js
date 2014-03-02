@@ -12,21 +12,19 @@
 	var fn = function($$)
 	{
 		return ($$.Badge = $$.BaseView.extend({
-			options : {
-				tagName : 'span',
-			},
+			tagName: 'span',
 	
 			initialize : function(options) {
 				$$.BaseView.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
-				$(this.el).addClass('badge');
+				this.$el.addClass('badge');
 			},
 	
 			render : function() {
 				var content = this.resolveContent();
 				this._observeModel(this.render);
-				$(this.el).text(content);
+				this.$el.text(content);
 				return this;
 			}
 		}));

@@ -25,7 +25,7 @@
 			initialize : function(options) {
 				$$.BaseView.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasFormLabel, $$.HasError]);
-				$(this.el).addClass('date_picker');
+				this.$el.addClass('date_picker');
 
 				this._calendar = new $$.Calendar({
 					className : 'date_picker_calendar',
@@ -49,7 +49,7 @@
 			},
 
 			render : function() {
-				$(this.el).empty();
+				this.$el.empty();
 
 				this._textField = new $$.TextField({
 					name : this.options.name,

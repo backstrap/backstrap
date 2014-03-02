@@ -72,7 +72,7 @@
 
 		initialize : function(options) {
 			$$.BaseView.prototype.initialize.call(this, options);
-			$(this.el).addClass('calendar calendar-default');
+			this.$el.addClass('calendar calendar-default');
 			_(this).bindAll('render');
 		},
 
@@ -143,9 +143,8 @@
 		},
 
 		_renderDate : function(date, minDate, maxDate, e) {
-			if(e) e.stopPropagation();
-			$(this.el).empty();
-
+			if (e) e.stopPropagation();
+			this.$el.empty();
 
 			var startOfMinDay = minDate ? moment(minDate).startOf('day').toDate() : null;
 			var endOfMaxDay = maxDate ? moment(maxDate).endOf('day').toDate() : null;

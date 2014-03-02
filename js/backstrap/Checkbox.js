@@ -21,9 +21,9 @@
 				$$.BaseView.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph, $$.HasError]);
 				_(this).bindAll('_refreshCheck');
-				$(this.el).addClass('checkbox');
+				this.$el.addClass('checkbox');
 				if(this.options.name){
-					$(this.el).addClass(this.options.name);
+					this.$el.addClass(this.options.name);
 				}
 				this.label = $$.plain.label();
 				this.input = $$.plain.input({type : 'checkbox'});
@@ -34,7 +34,7 @@
 
 			render : function() {
 
-				$(this.el).empty();
+				this.$el.empty();
 				$(this.label).empty();
 
 				$(this.input).off('change');
@@ -91,9 +91,9 @@
 			// sets the enabled state
 			setEnabled : function(enabled) {
 				if(enabled) { 
-					$(this.el).removeClass('disabled');
+					this.$el.removeClass('disabled');
 				} else {
-					$(this.el).addClass('disabled');
+					this.$el.addClass('disabled');
 				}
 				this.input.disabled = !enabled;
 			}

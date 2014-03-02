@@ -14,7 +14,10 @@
 				disabled : false,
 
 				// A callback to invoke when the link is clicked
-				onClick : null
+				onClick : null,
+				
+				size: 'default',
+				context: 'default'
 			},
 
 			tagName : 'a',
@@ -22,12 +25,12 @@
 			initialize : function(options) {
 				$$.BaseView.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph]);
-
 				_(this).bindAll('render');
-
-				$(this.el).addClass('link');
-
-				$(this.el).bind('click', _(function(e) {
+				this.$el.addClass('link text-' + $$._mapSize(this.options.size));
+				if (this.options.size !== this.options.context) {
+					this.$el.addClass(' text-' + this.options.context);
+				}
+				this.$el.bind('click', _(function(e) {
 					return this.options.disabled ? false :
 						(this.options.onClick ? this.options.onClick(e) : true);
 				}).bind(this));
@@ -38,7 +41,7 @@
 
 				this._observeModel(this.render);
 
-				$(this.el).empty();
+				this.$el.empty();
 
 				var content = $$.span(labelText);
 
@@ -61,7 +64,7 @@
 					this.el.removeAttribute('href');
 				}
 				this.options.disabled = !enabled;
-				$(this.el).toggleClass('disabled', !enabled);
+				this.$el.toggleClass('disabled', !enabled);
 			}
 		}));
 	};

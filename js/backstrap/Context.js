@@ -27,7 +27,7 @@
 			render : function() {
 				var context = this.resolveContent();
 				this._observeModel(this.render);
-				$(this.el).removeClass(this.prefix + this.context).addClass(this.prefix + context);
+				this.$el.removeClass(this.prefix + this.context).addClass(this.prefix + context);
 				this.context = context;
 				return this;
 			}

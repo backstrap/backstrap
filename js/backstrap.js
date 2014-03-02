@@ -72,6 +72,7 @@
 			'lg'           : 'lg',
 			'medium'       : 'md',  // for cols
 			'md'           : 'md',  // for cols
+			'default'      : 'default',
 			'small'        : 'sm',
 			'sm'           : 'sm',
 			'extra-small'  : 'xs',
@@ -470,6 +471,11 @@
 			};
 		}
 	};
+	
+	backstrap._mapSize = function (value)
+	{
+		return sizeMap[value];
+	};
 
 	/******** Backbone-UI stuff ****************/
 	
@@ -649,7 +655,7 @@
 	/************* Add some utility methods to JQuery **********/
 	
 	_($.fn).extend({
-	  // aligns each element releative to the given anchor
+	  // aligns each element relative to the given anchor
 	  /**
 	  * <p>
 	  * Align an element relative to another element (which can be absolute or

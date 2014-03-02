@@ -237,7 +237,7 @@ The `$$.jumbotron()` method creates a `div` tag decorated with the Bootstrap "ju
 <span id="label"></span>
 #### label
 
-The term "label" is, unfortunaterly, overloaded. The following methods are available:
+The term "label" is, unfortunately, overloaded. The following methods are available:
 
 - `$$.label()` gives you an HTML `label` tag decorated with the Bootstrap "label" class.
 - `$$.spanLabel()` gives you an HTML `span` tag decorated with the Bootstrap "label" class.
@@ -405,6 +405,8 @@ creates a navbar with three buttons.
 #### Button
 
 Creates a Bootstrap button (a `button` tag with class="btn") whose label is model-bound.
+You can pass "context" and "size" attributes to define
+the corresponding Bootstrap "btn-*" classNames.
 
 A simple example:
 
@@ -480,11 +482,15 @@ instead of supplying a model object and property name.)
 
 #### Label
 
-**The Backbone-UI View - Needs Work**
+Creates a Bootstrap label (a `label` tag with class="label") whose label text is model-bound.
+You can pass "context" and "size" attributes to define
+the corresponding Bootstrap "btn-*" classNames.
 
 #### Link
 
-**The Backbone-UI View - Needs Work**
+Creates a URL link (an `a` tag) whose label text is model-bound.
+You can pass "context" and "size" attributes to define
+the corresponding Bootstrap "btn-*" classNames.
 
 #### List
 

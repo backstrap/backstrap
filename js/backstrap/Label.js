@@ -13,7 +13,9 @@
 		return ($$.Label = $$.BaseView.extend({
     
 			options : {
-				emptyContent : ''
+				emptyContent : '',
+				size: 'default',
+				context: 'default'
 			},
 			
 			tagName : 'label',
@@ -21,14 +23,13 @@
 			initialize : function(options) {
 				$$.BaseView.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
-
 				_(this).bindAll('render');
-				
-				// TODO needs sizing, context.
-				$(this.el).addClass('label label-default');
-
+				this.$el.addClass('label label-' + $$._mapSize(this.options.size));
+				if (this.options.size !== this.options.context) {
+					this.$el.addClass(' label-' + this.options.context);
+				}
 				if(this.options.name){
-					$(this.el).addClass(this.options.name);
+					this.$el.addClass(this.options.name);
 				}
 
 			},
@@ -41,7 +42,7 @@
 				}
 				this._observeModel(this.render);
 
-				$(this.el).empty();
+				this.$el.empty();
 				
 				// insert label
 				this.el.appendChild(document.createTextNode(labelText));

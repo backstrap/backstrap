@@ -17,20 +17,15 @@
 			initialize : function(options) {
 				this.options = _.extend({}, this.options, options);
 				this.mixin([$$.HasModel]);
-	
 				_(this).bindAll('render');
-	
-				$(this.el).addClass('glyphicon');
+				this.$el.addClass('glyphicon');
 			},
 	
 			render : function() {
 				var glyph = this.resolveContent();
-	
 				this._observeModel(this.render);
-	
-				$(this.el).empty();
-				$(this.el).addClass('glyphicon-' + glyph);
-				
+				this.$el.empty();
+				this.$el.addClass('glyphicon-' + glyph);
 				return this;
 			}
 		}));
