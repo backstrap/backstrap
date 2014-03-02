@@ -1,3 +1,10 @@
+/**
+ * A Bootstrap View that displays a model-bound text area.
+ * Largely from Backbone-UI's TextArea class,
+ * with Bootstrap decoration.
+ * 
+ * @license MIT
+ */
 (function(context) {
 	var fn = function($$)
 	{

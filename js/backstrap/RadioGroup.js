@@ -1,3 +1,10 @@
+/**
+ * A Bootstrap View that displays a model-bound radio-button group.
+ * Largely from Backbone-UI's RadioGroup class,
+ * with Bootstrap decoration.
+ * 
+ * @license MIT
+ */
 (function(context) {
 	var fn = function($$)
 	{

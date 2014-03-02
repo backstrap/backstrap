@@ -1,3 +1,10 @@
+/**
+ * A Bootstrap View that displays a model-bound calendar.
+ * Largely from Backbone-UI's Calendar class,
+ * with Bootstrap decoration.
+ * 
+ * @license MIT
+ */
 (function(context) {
 	var fn = function($$)
 	{

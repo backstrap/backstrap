@@ -1,5 +1,6 @@
 /**
- * A model-bound Bootstrap contextually-colored object.
+ * A Bootstrap View that displays a contextually-colored spanor other tag;
+ * context name bound to model data.
  * 
  * @author Kevin Perry perry@princeton.edu
  * @copyright 2014 The Trustees of Princeton University.

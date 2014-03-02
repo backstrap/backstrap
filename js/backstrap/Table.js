@@ -1,5 +1,9 @@
-/*
- * Backbone-UI's TableView, with some Bootstrap additions.
+/**
+ * A Bootstrap View that displays a model-bound table.
+ * Largely from Backbone-UI's TableView class,
+ * with Bootstrap decoration.
+ * 
+ * @license MIT
  */
 (function(context){
 	var fn = function($$)

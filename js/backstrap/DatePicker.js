@@ -1,3 +1,10 @@
+/**
+ * A Bootstrap View that displays a model-bound date picker.
+ * Largely from Backbone-UI's DatePicker class,
+ * with Bootstrap decoration.
+ * 
+ * @license MIT
+ */
 (function(context) {
 	var fn = function($$)
 	{

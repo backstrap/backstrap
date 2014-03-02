@@ -1,12 +1,14 @@
 /**
  * The core Backstrap object. Provides various tag and object factory methods.
  * 
- * This is based heavily on Joe Stelmach's nifty laconic.js package
+ * This is based heavily on Joe Stelmach's nifty laconic.js
  * https://github.com/joestelmach/laconic
  * 
- * It is also based heavily on Backbone-UI
+ * It also uses Backbone-UI
  * https://github.com/perka/backbone-ui
- * and enhances the Backbone-UI components with Bootstrap-awareness.
+ * 
+ * It enhances the laconic tag generator and Backbone-UI components
+ * with an awareness of Bootstrap class decoration.
  * 
  * Both those packages are under the MIT license:
  * https://github.com/joestelmach/laconic/blob/master/LICENSE
@@ -25,11 +27,8 @@
  *     );
  *   }
  *
- * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
- *
- ************************************************************/
+ **/
 (function (context) {
   var fn = function (context) {
 
