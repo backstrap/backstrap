@@ -528,7 +528,12 @@ creates a set of three tabs.
 
 #### ProgressBar
 
-**The Backbone-UI View - Needs Work**
+ProgressBar creates a Bootstrap "progress" div, with model-bound progress bar(s).
+"Model" property can be either a BackBone Model (for a single progress bar)
+or a BackBone.Collection for (multiple stacked progress bars).
+Model objects may contain context, min, max, labelled, and labelSuffix properties,
+in addition to a content property which should be numeric.
+Min and max default to 0 and 100; labelled defaults to false.
 
 #### RadioGroup
 

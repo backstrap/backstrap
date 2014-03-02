@@ -23,12 +23,14 @@
 			
 			render: function () {
 				var value = this.resolveContent();
+				var min = this.resolveContent(this.model, 'min', 0);
+				var max = this.resolveContent(this.model, 'max', 100);
 				$(this.el).attr({
 					role: 'progressbar',
-					'aria-min': this.model.min,
-					'aria-max': this.model.max,
+					'aria-min': min,
+					'aria-max': max,
 					'aria-valuenow': value
-				}).style('width', (value-this.model.min)/(this.model.max-this.model.min) + '%');
+				}).style('width', (value - min)/(max - min) + '%');
 				// TODO Allow for "minutes left" style label (computed if flag set?)
 				this.span.text(value + this.model.labelSuffix);
 			}
