@@ -15,7 +15,7 @@
 				//Sent when the session is ends up being a sloppy mouse click
 				onClick: noop,
 
-				// Sent when a drag session starts for real 
+				// Sent when a drag session starts for real
 				// (after the mouse has moved SLOP pixels)
 				onStart: noop,
 
@@ -56,7 +56,7 @@
 			$$.DragSession.currentSession = this;
 		};
 
-		// add class methods 
+		// add class methods
 		_.extend($$.DragSession, {
 			SLOP : 2,
 
@@ -97,8 +97,8 @@
 						// Create a new drag session
 						var activeElement = document.activeElement;
 						new $$.DragSession({
-							dragEvent : e, 
-							scope : del.ownerDocument, 
+							dragEvent : e,
+							scope : del.ownerDocument,
 							onStart : function(ds) {
 								if (activeElement && activeElement.blur) activeElement.blur();
 								ds.pos = del.positionedOffset();
