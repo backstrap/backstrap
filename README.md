@@ -1,11 +1,21 @@
 Backstrap
 =========
 
-**UNDER CONSTRUCTION. VERSION 1.0 COMING SOON!**
+**UNDER CONSTRUCTION**
+
+**VERSION 1.0 COMING SOON!**
 
 Need something meaty to go between the MVC backbone and the UI skin
 of your client-side JavaScript app?
 Look no further, you've found it: Backstrap!
+
+Skip to...
+
+	- [Detailed Usage](#Detailed Usage)
+	- [HTML Tags](#HTML Tags)
+	- [Bootstrap Tags](#Bootstrap Tags)
+	- [Bootstrap Attributes](#Bootstrap Attributes)
+	- [Components](#Components)
 
 The Backstrap JavaScript library provides a layer of functionality
 tying together [Bootstrap][] and [Backbone][].
@@ -18,7 +28,11 @@ and as a Composer component on [packagist.org][packagist].
 The project depends on Backbone, Bootstrap, jQuery and Underscore.
 Unless you've built your own Bootstrap theme, you'll also want to
 use the [bootstrap-default][] theme.
-Just add `"components/bootstrap-theme": "~3.0"` to your composer.json "require".
+Just add 
+
+	"components/bootstrap-theme": "~3.0"
+	
+to your composer.json "require".
 
 The core Backstrap object is based heavily on
 Joe Stelmach's nifty [laconic.js][laconic] package.
@@ -32,6 +46,8 @@ including Bootstrap's sizing and context-coloring features;
 automatic use of Bootstrap class names;
 methods for making complex widgets like
 grids, navbars, button-groups, forms.
+
+Try out the [Examples Page][examples]!
 
 In non-CommonJS environments, Backstrap defines the global namespace `$$`.
 It provides a `noConflict()` method to revert the definition of `$$` if needed.
@@ -51,7 +67,7 @@ Sample suggested use:
 	);
 
 
-which produces the DOM tree represented by this HTML code:
+produces this DOM tree:
 
 	<div>
 	  <span class="text-danger">
@@ -72,26 +88,21 @@ which produces the DOM tree represented by this HTML code:
 [b7f4861a96]:  https://github.com/joestelmach/laconic/commit/b7f4861a96153c213569ac8aa537e94312c71ce8
 [ece3ea14d7]:  https://github.com/perka/backbone-ui/commit/ece3ea14d71bf1bc8f8a0ce01103d74bfe29a10f
 [bootstrap-default]:   https://github.com/components/bootstrap-default "Bootstrap Default Theme on GitHub"
+[examples]:   http://backstrap.github.io/backstrap/ "Backstrap Examples Page"
+[HTML Elements]: http://www.whatwg.org/specs/web-apps/current-work/multipage/section-index.html#elements-1 "HTML Element Spec"
 
-
+<a id="Detailed Usage"></a>
 ## Detailed usage
 
-See the [laconic doc](http://joestelmach.github.io/laconic/)
-for a description of laconic.
-(I really should reproduce some of that information here.)
-Everything there pretty much applies here, with the following changes:
+Backstrap adds a method to the $$ namespace for all known
+[HTML Elements][].
+These methods should be invoked with a variable-length list of child elements, strings, numbers, or arrays containing these types.
+An optional attributes object may be passed as the first argument. 
 
-- Backstrap defines the global namespace `$$` instead of laconic's `$.el`.
 - if you pass a "size" attribute
 it will be converted into a suitable Bootstrap classname.
 - if you pass a "context" or "bgcontext" attribute
 it will be converted into a suitable Bootstrap classname.
-- if you pass a "glyph" attribute
-it will be converted into a suitable Bootstrap classname.
-Use just the distinct part of the Bootstrap glyphicon class,
-e.g. `$$.span({glyph: "star"})` becomes `<span class="glyphicon glyphicon-star">`.
-- there is a shortcut method `$$.glyph(name)` for creating glyphs.
-`$$.glyph("star")` is equivalent to `$$.span({glyph: "star"})`.
 - there are some new pseudo-tags, such as
 `$$.badge()` to create a span with class="badge";
 `$$.grid()` to create a `div` with a pre-built grid layout.
@@ -110,7 +121,10 @@ whose contents are built from a description provided as a Backbone Collection.
 Backstrap, like laconic, adds an `appendTo()` convenience method
 to each DOM object it creates.
 
+See the [laconic doc](http://joestelmach.github.io/laconic/)
+for a description of laconic.
 
+<a id="HTML Tags"></a>
 ### HTML Tags
 
 Each HTML5 tag has a factory function in the `$$` namespace.
@@ -122,7 +136,7 @@ child elements, strings, numbers, or arrays containing these types.
 An optional attributes object may be passed as the first argument.
 Most attributes get applied directly to the created object as HTML attributes;
 there are a few special attributes which undergo further processing
-(see [Bootstrap Attributes](#attrs) below.)
+(see [Bootstrap Attributes](#Bootstrap Attributes) below.)
 For example: 
 
 	$$.div({'class' : 'example'}, 
@@ -133,8 +147,9 @@ To work around this conflict, we make all the plain HTML tag methods accessible 
 `$$.plain` namespace.  Thus for instance in the case of "label", `$$.label()` will give you
 a fully Bootstrapped `<label class="label">`,
 while `$$.plain.label()` will give you a plain HTML `<label>`.
-Overloaded names include: button, form, input, label, table.
+Overloaded names include: button, form, input, label, and table.
 
+<a id="Bootstrap Tags"></a>
 ### Bootstrap Tags
 
 The special Bootstrap methods are:
@@ -321,8 +336,8 @@ The `$$.well()` method creates a `div` tag with class "well",
 to make Bootstrap's simple well effect.
 
 
-<span id="attrs"></span>
-### Bootstrap attributes
+<span id="Bootstrap Attributes"></span>
+### Bootstrap Attributes
 
 We define a few special attributes that can be passed to
 most tag factory functions, to handle certain Bootstrap formatting features.
@@ -356,6 +371,7 @@ For example:
 	$$.button({size: 'large'})
 
 
+<a id="Components"></a>
 ### Components
 
 The tag factory functions described above give you
