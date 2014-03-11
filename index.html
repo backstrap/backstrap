@@ -28,10 +28,19 @@
       </header>
       <section>
         <h1>
-<a name="backstrap" class="anchor" href="#backstrap"><span class="octicon octicon-link"></span></a>Backstrap</h1>
+<a id="backstrap" class="anchor" href="#backstrap"><span class="octicon octicon-link"></span></a>Backstrap</h1>
 
 <p><strong>UNDER CONSTRUCTION</strong></p>
 <p><strong>VERSION 1.0 COMING SOON!</strong></p>
+
+<p>Skip to...</p>
+
+<ul>
+<li><a href="#detailed-usage">Detailed Usage</a></li>
+<li><a href="#html-tags">HTML Tags</a></li>
+<li><a href="#bootstrap-attributes">Bootstrap Attributes</a></li>
+<li><a href="#components">Components</a></li>
+</ul>
 
 <p>Need something meaty to go between the MVC backbone and the UI skin
 of your client-side JavaScript app?
@@ -98,7 +107,7 @@ and Backbone-UI commit <a href="https://github.com/perka/backbone-ui/commit/ece3
 </code></pre>
 
 <h2>
-<a name="detailed-usage" class="anchor" href="#detailed-usage"><span class="octicon octicon-link"></span></a>Detailed usage</h2>
+<a id="detailed-usage" class="anchor" href="#detailed-usage"><span class="octicon octicon-link"></span></a>Detailed usage</h2>
 
 Backstrap adds a method to the $$ namespace for all known
 <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/section-index.html#elements-1">HTML Elements</a>.
@@ -131,7 +140,7 @@ to each DOM object it creates.</p>
 for a complete description of laconic.</p>
 
 <h3>
-<a name="html-tags" class="anchor" href="#html-tags"><span class="octicon octicon-link"></span></a>HTML Tags</h3>
+<a id="html-tags" class="anchor" href="#html-tags"><span class="octicon octicon-link"></span></a>HTML Tags</h3>
 
 <p>Each HTML5 tag has a factory function in the <code>$$</code> namespace.
 (Some deprecated HTML4 tags are also available.)
@@ -180,27 +189,27 @@ Overloaded names include: button, form, input, label, and table.</p>
 </code></pre>
 
 <h3>
-<a name="bootstrap-tags" class="anchor" href="#bootstrap-tags"><span class="octicon octicon-link"></span></a>Bootstrap Tags</h3>
+<a id="bootstrap-tags" class="anchor" href="#bootstrap-tags"><span class="octicon octicon-link"></span></a>Bootstrap Tags</h3>
 
 <p>The special Bootstrap methods are:</p>
 
 <h4>
-<a name="alert" class="anchor" href="#alert"><span class="octicon octicon-link"></span></a>alert</h4>
+<a id="alert" class="anchor" href="#alert"><span class="octicon octicon-link"></span></a>alert</h4>
 
 <p>The <code>$$.alert()</code> method creates a <code>div</code> tag decorated with the Bootstrap "alert" class.</p>
 
 <h4>
-<a name="badge" class="anchor" href="#badge"><span class="octicon octicon-link"></span></a>badge</h4>
+<a id="badge" class="anchor" href="#badge"><span class="octicon octicon-link"></span></a>badge</h4>
 
 <p>The <code>$$.badge()</code> method creates a <code>span</code> tag decorated with the Bootstrap "badge" class.</p>
 
 <h4>
-<a name="breadcrumb" class="anchor" href="#breadcrumb"><span class="octicon octicon-link"></span></a>breadcrumb</h4>
+<a id="breadcrumb" class="anchor" href="#breadcrumb"><span class="octicon octicon-link"></span></a>breadcrumb</h4>
 
 <p>The <code>$$.breadcrumb()</code> method creates an <code>ol</code> tag decorated with the Bootstrap "breadcrumb" class.</p>
 
 <h4>
-<a name="button" class="anchor" href="#button"><span class="octicon octicon-link"></span></a>button</h4>
+<a id="button" class="anchor" href="#button"><span class="octicon octicon-link"></span></a>button</h4>
 
 <p>The <code>$$.button()</code> method creates an HTML <code>button</code> tag decorated with the Bootstrap "btn" class,
 and optionally with "btn-*" classes for sizing and context.</p>
@@ -208,23 +217,23 @@ and optionally with "btn-*" classes for sizing and context.</p>
 <p><code>$$.plain.button()</code> gives you a bare HTML <code>button</code> tag.</p>
 
 <h4>
-<a name="buttongroup" class="anchor" href="#buttongroup"><span class="octicon octicon-link"></span></a>buttonGroup</h4>
+<a id="buttongroup" class="anchor" href="#buttongroup"><span class="octicon octicon-link"></span></a>buttonGroup</h4>
 
 <p>The <code>$$.buttonGroup()</code> method creates a <code>div</code> tag decorated with the Bootstrap "btn-group" class.</p>
 
 <h4>
-<a name="buttontoolbar" class="anchor" href="#buttontoolbar"><span class="octicon octicon-link"></span></a>buttonToolbar</h4>
+<a id="buttontoolbar" class="anchor" href="#buttontoolbar"><span class="octicon octicon-link"></span></a>buttonToolbar</h4>
 
 <p>The <code>$$.buttonToolbar()</code> method creates a <code>div</code> tag decorated with the Bootstrap "btn-toolbar" class and "toolbar" role.</p>
 
 <h4>
-<a name="container" class="anchor" href="#container"><span class="octicon octicon-link"></span></a>container</h4>
+<a id="container" class="anchor" href="#container"><span class="octicon octicon-link"></span></a>container</h4>
 
 <p>The <code>$$.container()</code> method creates a <code>div</code> tag decorated with the Bootstrap "container" class,
 and optionally with the "container-fluid" class for fluid layout.</p>
 
 <h4>
-<a name="css" class="anchor" href="#css"><span class="octicon octicon-link"></span></a>css</h4>
+<a id="css" class="anchor" href="#css"><span class="octicon octicon-link"></span></a>css</h4>
 
 <p>The <code>$$.css(url)</code> method is a shortcut for creating CSS stylesheet links.
 It creates an HTML <code>&lt;link rel="stylesheet" type="text/css" href="url"&gt;</code> tag.
@@ -234,23 +243,23 @@ Use it to load CSS from within your JS code, thus:</p>
 </code></pre>
 
 <h4>
-<a name="form" class="anchor" href="#form"><span class="octicon octicon-link"></span></a>form</h4>
+<a id="form" class="anchor" href="#form"><span class="octicon octicon-link"></span></a>form</h4>
 
 <p>The <code>$$.form()</code> method creates a <code>form</code> tag decorated with the attribute 'role="form"'.</p>
 
 <h4>
-<a name="formgroup" class="anchor" href="#formgroup"><span class="octicon octicon-link"></span></a>formGroup</h4>
+<a id="formgroup" class="anchor" href="#formgroup"><span class="octicon octicon-link"></span></a>formGroup</h4>
 
 <p>The <code>$$.formGroup()</code> method creates a <code>div</code> tag decorated with the Bootstrap "form-group" class.
 Use it to group form inputs with their labels, inside a form.</p>
 
 <h4>
-<a name="glyph" class="anchor" href="#glyph"><span class="octicon octicon-link"></span></a>glyph</h4>
+<a id="glyph" class="anchor" href="#glyph"><span class="octicon octicon-link"></span></a>glyph</h4>
 
 <p>The <code>$$.glyph(name)</code> method creates a <code>span</code> tag decorated with the Bootstrap "glyphicon" and "glyphicon-{name}" classes.</p>
 
 <h4>
-<a name="grid" class="anchor" href="#grid"><span class="octicon octicon-link"></span></a>grid</h4>
+<a id="grid" class="anchor" href="#grid"><span class="octicon octicon-link"></span></a>grid</h4>
 
 <p>The <code>$$.grid()</code> method creates a nested set of divs. Pass it a "layout" attribute
 in the attributes argument to format the grid. The "layout" attribute should contain
@@ -282,30 +291,30 @@ grid.getCell(2, 2).append('Hello World');
 <p>puts "Hello World" in the middle cell of the second row.</p>
 
 <h4>
-<a name="input" class="anchor" href="#input"><span class="octicon octicon-link"></span></a>input</h4>
+<a id="input" class="anchor" href="#input"><span class="octicon octicon-link"></span></a>input</h4>
 
 <p>Creates an HTML <code>input</code> tag decorated with the Bootstrap "form-control" class,
 and optionally with "input-*" classes for sizing and context.</p>
 
 <h4>
-<a name="inputgroup" class="anchor" href="#inputgroup"><span class="octicon octicon-link"></span></a>inputGroup</h4>
+<a id="inputgroup" class="anchor" href="#inputgroup"><span class="octicon octicon-link"></span></a>inputGroup</h4>
 
 <p>The <code>$$.inputGroup()</code> method creates a <code>div</code> tag decorated with the Bootstrap "input-group" class.</p>
 
 <h4>
-<a name="inputgroupaddon" class="anchor" href="#inputgroupaddon"><span class="octicon octicon-link"></span></a>inputGroupAddon</h4>
+<a id="inputgroupaddon" class="anchor" href="#inputgroupaddon"><span class="octicon octicon-link"></span></a>inputGroupAddon</h4>
 
 <p>The <code>$$.inputGroupAddon()</code> method creates a <code>span</code> tag decorated with the Bootstrap "input-group-addon" class.</p>
 
 <h4>
-<a name="jumbotron" class="anchor" href="#jumbotron"><span class="octicon octicon-link"></span></a>jumbotron</h4>
+<a id="jumbotron" class="anchor" href="#jumbotron"><span class="octicon octicon-link"></span></a>jumbotron</h4>
 
 <p>The <code>$$.jumbotron()</code> method creates a <code>div</code> tag decorated with the Bootstrap "jumbotron" class.</p>
 
 <p></p>
 
 <h4>
-<a name="label" class="anchor" href="#label"><span class="octicon octicon-link"></span></a>label</h4>
+<a id="label" class="anchor" href="#label"><span class="octicon octicon-link"></span></a>label</h4>
 
 <p>The term "label" is, unfortunately, overloaded. The following methods are available:</p>
 
@@ -317,33 +326,33 @@ and optionally with "input-*" classes for sizing and context.</p>
 <li>
 <code>$$.plain.label()</code> gives you a bare HTML <code>label</code> tag.</li>
 </ul><h4>
-<a name="linklist" class="anchor" href="#linklist"><span class="octicon octicon-link"></span></a>linkList</h4>
+<a id="linklist" class="anchor" href="#linklist"><span class="octicon octicon-link"></span></a>linkList</h4>
 
 <p>The <code>$$.linkList()</code> method creates a <code>div</code> tag decorated with the Bootstrap "list-group" class,
 to implement a Bootstrap "linked item list group".
 It should be populated with <code>$$.linkListItem()'s</code>.</p>
 
 <h4>
-<a name="linklistitem" class="anchor" href="#linklistitem"><span class="octicon octicon-link"></span></a>linkListItem</h4>
+<a id="linklistitem" class="anchor" href="#linklistitem"><span class="octicon octicon-link"></span></a>linkListItem</h4>
 
 <p>The <code>$$.linkListItem()</code> method creates an <code>a</code> tag decorated with the Bootstrap "list-group-item" class.
 It should be used with <code>$$.linkList()</code>.</p>
 
 <h4>
-<a name="list" class="anchor" href="#list"><span class="octicon octicon-link"></span></a>list</h4>
+<a id="list" class="anchor" href="#list"><span class="octicon octicon-link"></span></a>list</h4>
 
 <p>The <code>$$.list()</code> method creates a <code>ul</code> tag decorated with the Bootstrap "list-group" class,
 to implement a Bootstrap "list group".
 It should be populated with <code>$$.listItem()'s</code>.</p>
 
 <h4>
-<a name="listitem" class="anchor" href="#listitem"><span class="octicon octicon-link"></span></a>listItem</h4>
+<a id="listitem" class="anchor" href="#listitem"><span class="octicon octicon-link"></span></a>listItem</h4>
 
 <p>The <code>$$.listItem()</code> method creates an <code>li</code> tag decorated with the Bootstrap "list-group-item" class.
 It should be used with <code>$$.list()</code>.</p>
 
 <h4>
-<a name="media" class="anchor" href="#media"><span class="octicon octicon-link"></span></a>media</h4>
+<a id="media" class="anchor" href="#media"><span class="octicon octicon-link"></span></a>media</h4>
 
 <p>The <code>$$.media()</code> method creates a <code>div</code> tag decorated with the Bootstrap "media" class.
 Passit a DOM object as its "media" attribute, and an optional 'pull: "right"'
@@ -351,7 +360,7 @@ if you want it pulled right instead of left.
 Its body will be further wrapped in a div with class "media-body".</p>
 
 <h4>
-<a name="noconflict" class="anchor" href="#noconflict"><span class="octicon octicon-link"></span></a>noConflict</h4>
+<a id="noconflict" class="anchor" href="#noconflict"><span class="octicon octicon-link"></span></a>noConflict</h4>
 
 <p>Provides a mechanism for reverting the definition of <code>$$</code>.
 Backstrap will attempt to register itself as a CommonJS module.
@@ -373,12 +382,12 @@ and you can use the variable <code>Backstrap</code> to access the Backstrap meth
 You might want to pick a shorter variable name, like <code>$b</code>.</p>
 
 <h4>
-<a name="pagination" class="anchor" href="#pagination"><span class="octicon octicon-link"></span></a>pagination</h4>
+<a id="pagination" class="anchor" href="#pagination"><span class="octicon octicon-link"></span></a>pagination</h4>
 
 <p>The <code>$$.pagination()</code> method creates a <code>ul</code> tag decorated with the Bootstrap "pagination" class.</p>
 
 <h4>
-<a name="panel" class="anchor" href="#panel"><span class="octicon octicon-link"></span></a>panel</h4>
+<a id="panel" class="anchor" href="#panel"><span class="octicon octicon-link"></span></a>panel</h4>
 
 <p>The <code>$$.panel()</code> method creates a <code>div</code> tag decorated with the Bootstrap "panel-body" class,
 wrapped in a <code>div</code> decorated with the Bootstrap "panel" class.
@@ -386,17 +395,17 @@ Pass it DOM objects in either the "heading" or "footer" attributes
 to embed them within a <code>div</code> with the Bootstrap "panel-heading" or "panel-footer" class.</p>
 
 <h4>
-<a name="pageheader" class="anchor" href="#pageheader"><span class="octicon octicon-link"></span></a>pageHeader</h4>
+<a id="pageheader" class="anchor" href="#pageheader"><span class="octicon octicon-link"></span></a>pageHeader</h4>
 
 <p>The <code>$$.pageHeader()</code> method creates a <code>div</code> tag decorated with the Bootstrap "page-header" class.</p>
 
 <h4>
-<a name="thumbnail" class="anchor" href="#thumbnail"><span class="octicon octicon-link"></span></a>thumbnail</h4>
+<a id="thumbnail" class="anchor" href="#thumbnail"><span class="octicon octicon-link"></span></a>thumbnail</h4>
 
 <p>The <code>$$.thumbnail()</code> method creates a <code>div</code> tag decorated with the Bootstrap "thumbnail" class.</p>
 
 <h4>
-<a name="well" class="anchor" href="#well"><span class="octicon octicon-link"></span></a>well</h4>
+<a id="well" class="anchor" href="#well"><span class="octicon octicon-link"></span></a>well</h4>
 
 <p>The <code>$$.well()</code> method creates a <code>div</code> tag with class "well",
 to make Bootstrap's simple well effect.</p>
@@ -404,13 +413,13 @@ to make Bootstrap's simple well effect.</p>
 <p></p>
 
 <h3>
-<a name="bootstrap-attributes" class="anchor" href="#bootstrap-attributes"><span class="octicon octicon-link"></span></a>Bootstrap attributes</h3>
+<a id="bootstrap-attributes" class="anchor" href="#bootstrap-attributes"><span class="octicon octicon-link"></span></a>Bootstrap attributes</h3>
 
 <p>We define a few special attributes that can be passed to
 most tag factory functions, to handle certain Bootstrap formatting features.</p>
 
 <h4>
-<a name="bgcontext" class="anchor" href="#bgcontext"><span class="octicon octicon-link"></span></a>bgcontext</h4>
+<a id="bgcontext" class="anchor" href="#bgcontext"><span class="octicon octicon-link"></span></a>bgcontext</h4>
 
 <p>Sets the "bg-*" background context-coloring class on the object.
 Contexts defined by Bootstrap are
@@ -421,7 +430,7 @@ For example:</p>
 </code></pre>
 
 <h4>
-<a name="context" class="anchor" href="#context"><span class="octicon octicon-link"></span></a>context</h4>
+<a id="context" class="anchor" href="#context"><span class="octicon octicon-link"></span></a>context</h4>
 
 <p>Sets the appropriate context-coloring class on the object.
 "text-<em>", "btn-</em>", "label-*", etc.
@@ -434,7 +443,7 @@ For example:</p>
 </code></pre>
 
 <h4>
-<a name="size" class="anchor" href="#size"><span class="octicon octicon-link"></span></a>size</h4>
+<a id="size" class="anchor" href="#size"><span class="octicon octicon-link"></span></a>size</h4>
 
 <p>Sets the appropriate Bootstrap sizing class on the object.
 Supported size names are "large" or "lg", "small" or "sm", and "xs" or "extra-small".
@@ -444,7 +453,7 @@ For example:</p>
 </code></pre>
 
 <h3>
-<a name="components" class="anchor" href="#components"><span class="octicon octicon-link"></span></a>Components</h3>
+<a id="components" class="anchor" href="#components"><span class="octicon octicon-link"></span></a>Components</h3>
 
 <p>The tag factory functions described above give you
 an easy way to build nice static content.
@@ -464,7 +473,7 @@ to bind a graphic object to a data model whose values may change
 over the life of the page.</p>
 
 <h4>
-<a name="badge-1" class="anchor" href="#badge-1"><span class="octicon octicon-link"></span></a>Badge</h4>
+<a id="badge-1" class="anchor" href="#badge-1"><span class="octicon octicon-link"></span></a>Badge</h4>
 
 <p>Creates a Bootstrap badge (a <code>span</code> tag with class="badge") whose content is model-bound.
 Give it a Model object and the name of the property you want to use as the
@@ -477,7 +486,7 @@ var badge = new $$.Badge({model: model, content: 'count'}).render();
 </code></pre>
 
 <h4>
-<a name="basicnavbar" class="anchor" href="#basicnavbar"><span class="octicon octicon-link"></span></a>BasicNavbar</h4>
+<a id="basicnavbar" class="anchor" href="#basicnavbar"><span class="octicon octicon-link"></span></a>BasicNavbar</h4>
 
 <p>Creates a Bootstrap navbar whose buttons are model-bound.
 By default, it will create a simple button for each element of the
@@ -495,7 +504,7 @@ var navbar = new $$.BasicNavbar({brand: 'My App', model: items}).render();
 <p>creates a navbar with three buttons.</p>
 
 <h4>
-<a name="button-1" class="anchor" href="#button-1"><span class="octicon octicon-link"></span></a>Button</h4>
+<a id="button-1" class="anchor" href="#button-1"><span class="octicon octicon-link"></span></a>Button</h4>
 
 <p>Creates a Bootstrap button (a <code>button</code> tag with class="btn") whose label is model-bound.
 You can pass "context" and "size" attributes to define
@@ -511,7 +520,7 @@ model.set('name', 'Save as Draft');
 </code></pre>
 
 <h4>
-<a name="calendar" class="anchor" href="#calendar"><span class="octicon octicon-link"></span></a>Calendar</h4>
+<a id="calendar" class="anchor" href="#calendar"><span class="octicon octicon-link"></span></a>Calendar</h4>
 
 <p>Creates a month calendar diplay with the bound date value highlighted.
 Clicking on a date will set the Model's date to the chosen value.</p>
@@ -523,7 +532,7 @@ var cal = new $$.Calendar({model: model, content: 'when'}).render();
 </code></pre>
 
 <h4>
-<a name="checkbox" class="anchor" href="#checkbox"><span class="octicon octicon-link"></span></a>Checkbox</h4>
+<a id="checkbox" class="anchor" href="#checkbox"><span class="octicon octicon-link"></span></a>Checkbox</h4>
 
 <p>Creates a checkbox input.
 Clicking on the checkbox will set or unset the Model's state</p>
@@ -535,7 +544,7 @@ var input = new $$.Checkbox({model: model, content: 'state'}).render();
 </code></pre>
 
 <h4>
-<a name="context-1" class="anchor" href="#context-1"><span class="octicon octicon-link"></span></a>Context</h4>
+<a id="context-1" class="anchor" href="#context-1"><span class="octicon octicon-link"></span></a>Context</h4>
 
 <p>Creates a <code>span</code> whose Bootstrap context-color is model-bound.</p>
 
@@ -553,12 +562,12 @@ You can also pass it a "tagName" attribute to create something other than a <cod
 The value of "content" defaults to "context".</p>
 
 <h4>
-<a name="datepicker" class="anchor" href="#datepicker"><span class="octicon octicon-link"></span></a>DatePicker</h4>
+<a id="datepicker" class="anchor" href="#datepicker"><span class="octicon octicon-link"></span></a>DatePicker</h4>
 
 <p>Combines a text box input with a Calendar component.</p>
 
 <h4>
-<a name="dropdown" class="anchor" href="#dropdown"><span class="octicon octicon-link"></span></a>Dropdown</h4>
+<a id="dropdown" class="anchor" href="#dropdown"><span class="octicon octicon-link"></span></a>Dropdown</h4>
 
 <p>Creates a Bootstrap dropdown menu whose buttons are model-bound.
 By default, it will create a simple button for each element of the
@@ -580,7 +589,7 @@ var dropdown = new $$.Dropdown({buttonLabel: 'File', model: items}).render();
 You can also use a "separator" property - "separator" is a synonym for "divider".</p>
 
 <h4>
-<a name="glyph-1" class="anchor" href="#glyph-1"><span class="octicon octicon-link"></span></a>Glyph</h4>
+<a id="glyph-1" class="anchor" href="#glyph-1"><span class="octicon octicon-link"></span></a>Glyph</h4>
 
 <p>Creates a Bootstrap Glyphicon glyph (a <code>span</code> with class="glyphicon") whose icon is model-bound.</p>
 
@@ -603,26 +612,26 @@ in order to properly implement "size" and "context" attributes.</p>
 instead of supplying a model object and property name.)</p>
 
 <h4>
-<a name="label-1" class="anchor" href="#label-1"><span class="octicon octicon-link"></span></a>Label</h4>
+<a id="label-1" class="anchor" href="#label-1"><span class="octicon octicon-link"></span></a>Label</h4>
 
 <p>Creates a Bootstrap label (a <code>label</code> tag with class="label") whose label text is model-bound.
 You can pass "context" and "size" attributes to define
 the corresponding Bootstrap "btn-*" classNames.</p>
 
 <h4>
-<a name="link" class="anchor" href="#link"><span class="octicon octicon-link"></span></a>Link</h4>
+<a id="link" class="anchor" href="#link"><span class="octicon octicon-link"></span></a>Link</h4>
 
 <p>Creates a URL link (an <code>a</code> tag) whose label text is model-bound.
 You can pass "context" and "size" attributes to define
 the corresponding Bootstrap "btn-*" classNames.</p>
 
 <h4>
-<a name="list-1" class="anchor" href="#list-1"><span class="octicon octicon-link"></span></a>List</h4>
+<a id="list-1" class="anchor" href="#list-1"><span class="octicon octicon-link"></span></a>List</h4>
 
 <p>Creates a simple list display of a Collection.</p>
 
 <h4>
-<a name="menu" class="anchor" href="#menu"><span class="octicon octicon-link"></span></a>Menu</h4>
+<a id="menu" class="anchor" href="#menu"><span class="octicon octicon-link"></span></a>Menu</h4>
 
 <p>Creates a scrolling menu list whose value is taken from the bound Model
 and whose choices are taken from the bound Collection of alternatives.</p>
@@ -644,7 +653,7 @@ and whose choices are taken from the bound Collection of alternatives.</p>
 <p>altValueContent defaults to altLabelContent.</p>
 
 <h4>
-<a name="navpills" class="anchor" href="#navpills"><span class="octicon octicon-link"></span></a>NavPills</h4>
+<a id="navpills" class="anchor" href="#navpills"><span class="octicon octicon-link"></span></a>NavPills</h4>
 
 <p>Creates a Bootstrap "pills" nav whose buttons are model-bound.
 By default, it will create a simple button for each element of the
@@ -662,7 +671,7 @@ var pills = new $$.NavPills({model: items}).render();
 <p>creates a set of three pills.</p>
 
 <h4>
-<a name="navtabs" class="anchor" href="#navtabs"><span class="octicon octicon-link"></span></a>NavTabs</h4>
+<a id="navtabs" class="anchor" href="#navtabs"><span class="octicon octicon-link"></span></a>NavTabs</h4>
 
 <p>Creates a Bootstrap "tabs" nav whose buttons are model-bound.
 By default, it will create a simple button for each element of the
@@ -680,7 +689,7 @@ var tabs = new $$.NavTabs({model: items}).render();
 <p>creates a set of three tabs.</p>
 
 <h4>
-<a name="progressbar" class="anchor" href="#progressbar"><span class="octicon octicon-link"></span></a>ProgressBar</h4>
+<a id="progressbar" class="anchor" href="#progressbar"><span class="octicon octicon-link"></span></a>ProgressBar</h4>
 
 <p>ProgressBar creates a Bootstrap "progress" div, with model-bound progress bar(s).
 "Model" property can be either a BackBone Model (for a single progress bar)
@@ -690,7 +699,7 @@ in addition to a content property which should be numeric.
 Min and max default to 0 and 100; labelled defaults to false.</p>
 
 <h4>
-<a name="radiogroup" class="anchor" href="#radiogroup"><span class="octicon octicon-link"></span></a>RadioGroup</h4>
+<a id="radiogroup" class="anchor" href="#radiogroup"><span class="octicon octicon-link"></span></a>RadioGroup</h4>
 
 <p>Creates a group of radio buttons whose value is taken from the bound Model
 and whose choices are taken from the bound Collection of alternatives.</p>
@@ -712,7 +721,7 @@ and whose choices are taken from the bound Collection of alternatives.</p>
 <p>altValueContent defaults to altLabelContent.</p>
 
 <h4>
-<a name="table" class="anchor" href="#table"><span class="octicon octicon-link"></span></a>Table</h4>
+<a id="table" class="anchor" href="#table"><span class="octicon octicon-link"></span></a>Table</h4>
 
 <p>The Backbone-UI TableView, decorated with Bootstrap classes.
 Pass attributes to set the various table options available in Bootstrap:
@@ -728,7 +737,7 @@ Pass attributes to set the various table options available in Bootstrap:
 responsive table with hover highlighting.   </p>
 
 <h4>
-<a name="textarea" class="anchor" href="#textarea"><span class="octicon octicon-link"></span></a>TextArea</h4>
+<a id="textarea" class="anchor" href="#textarea"><span class="octicon octicon-link"></span></a>TextArea</h4>
 
 <p>A model-bound textarea.</p>
 
@@ -741,7 +750,7 @@ responsive table with hover highlighting.   </p>
 </code></pre>
 
 <h4>
-<a name="textfield" class="anchor" href="#textfield"><span class="octicon octicon-link"></span></a>TextField</h4>
+<a id="textfield" class="anchor" href="#textfield"><span class="octicon octicon-link"></span></a>TextField</h4>
 
 <p>A model-bound text input.</p>
 
@@ -754,7 +763,7 @@ responsive table with hover highlighting.   </p>
 </code></pre>
 
 <h4>
-<a name="timepicker" class="anchor" href="#timepicker"><span class="octicon octicon-link"></span></a>TimePicker</h4>
+<a id="timepicker" class="anchor" href="#timepicker"><span class="octicon octicon-link"></span></a>TimePicker</h4>
 
 <p>A text area with a dropdown list of times.
 Defaults to allowing choices in half-hour increments,
