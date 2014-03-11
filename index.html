@@ -7,9 +7,7 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <!--link rel="stylesheet" href="src/require.css"-->
     <script src="javascripts/scale.fix.js"></script>
-    <script src="src/require.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!--[if lt IE 9]>
@@ -70,6 +68,8 @@ It provides a <code>noConflict()</code> method to revert the definition of <code
 <p>Backstrap was originally forked from
 laconic commit <a href="https://github.com/joestelmach/laconic/commit/b7f4861a96153c213569ac8aa537e94312c71ce8">b7f4861a96</a>
 and Backbone-UI commit <a href="https://github.com/perka/backbone-ui/commit/ece3ea14d71bf1bc8f8a0ce01103d74bfe29a10f">ece3ea14d7</a>.</p>
+
+<p>Try out the <a href="examples.html">Examples Page</a>.</p>
 
 <p>Sample suggested use:</p>
 
@@ -754,10 +754,6 @@ Format defaults to 'hh:mm a'.</p>
       <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
     </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    <script>
-    require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
-      $('body > .wrapper').append($$.jumbotron({bgcontext: 'primary'}, 'Some example text'));
-    });
-    </script>
+
   </body>
 </html>
