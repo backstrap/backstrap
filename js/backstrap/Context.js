@@ -12,10 +12,10 @@
 	{
 		return ($$.Context = $$.BaseView.extend({
 			options : {
-				tagName : 'span',
+				tagName: 'span',
+				content: 'context',
 				background: false
 			},
-			context: null,
 	
 			initialize : function(options) {
 				this.options = _.extend({}, this.options, options);
@@ -25,10 +25,9 @@
 			},
 	
 			render : function() {
-				var context = this.resolveContent();
+				var contextName = this.resolveContent();
 				this._observeModel(this.render);
-				this.$el.removeClass(this.prefix + this.context).addClass(this.prefix + context);
-				this.context = context;
+				this.$el.removeClass(this.prefix + this.context).addClass(this.prefix + contextName);
 				return this;
 			}
 		}));
