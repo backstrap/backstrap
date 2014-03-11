@@ -2,10 +2,9 @@ Backstrap
 =========
 
 **UNDER CONSTRUCTION. VERSION 1.0 COMING SOON!**
-**Awaiting a couple of pull requests (on moment & bootstrap-default) to get them to deploy properly.**
 
-Need something meaty to go between the MVC backbone of your
-client-side JavaScript app and its UI skin?
+Need something meaty to go between the MVC backbone and the UI skin
+of your client-side JavaScript app?
 Look no further, you've found it: Backstrap!
 
 The Backstrap JavaScript library provides a layer of functionality
@@ -16,6 +15,10 @@ take a look at this article by Christophe Coenraets:
 
 Backstrap is available on [GitHub][]
 and as a Composer component on [packagist.org][packagist].
+The project depends on Backbone, Bootstrap, jQuery and Underscore.
+Unless you've built your own Bootstrap theme, you'll also want to
+use the [bootstrap-default][] theme.
+Just add `"components/bootstrap-theme": "~3.0"` to your composer.json "require".
 
 The core Backstrap object is based heavily on
 Joe Stelmach's nifty [laconic.js][laconic] package.
@@ -68,6 +71,7 @@ which produces the DOM tree represented by this HTML code:
 [bbuiLicense]: https://github.com/perka/backbone-ui/blob/master/LICENSE "Backbone-UI License"
 [b7f4861a96]:  https://github.com/joestelmach/laconic/commit/b7f4861a96153c213569ac8aa537e94312c71ce8
 [ece3ea14d7]:  https://github.com/perka/backbone-ui/commit/ece3ea14d71bf1bc8f8a0ce01103d74bfe29a10f
+[bootstrap-default]:   https://github.com/components/bootstrap-default "Bootstrap Default Theme on GitHub"
 
 
 ## Detailed usage
@@ -352,25 +356,19 @@ For example:
 	$$.button({size: 'large'})
 
 
-### Object Constructors
+### Components
 
 The tag factory functions described above give you
 an easy way to build nice static content.
 But here's where things get even more fun!
 The Backstrap object also provides constructors for several
-object classes that extend `Backbone.View`, to give you powerful
+component classes that extend `Backbone.View`, to give you powerful
 (and good-looking!) data-driven, model-bound DOM widgets,
 using the power of Backbone-UI.
-For example:
 
-- BasicNavbar
-- Badge
-- Button
-- Context
-- Glyph
-- NavPills
-- NavTabs
-- Table
+The components are bound to either a Backbone Model or Collection.
+The components then automatically re-render when the bound model
+data changes.
 
 For efficiency, you should use the factory functions, like `$$.glyph()`,
 for static graphics. Use the object constructors, like `$$.Glyph()`,
@@ -380,6 +378,8 @@ over the life of the page.
 #### Badge
 
 Creates a Bootstrap badge (a `span` tag with class="badge") whose content is model-bound.
+Give it a Model object and the name of the property you want to use as the
+badge's content.
 
 Example:
 
@@ -408,7 +408,7 @@ Creates a Bootstrap button (a `button` tag with class="btn") whose label is mode
 You can pass "context" and "size" attributes to define
 the corresponding Bootstrap "btn-*" classNames.
 
-A simple example:
+Example:
 
 	var model = new Backbone.Model({name: 'Submit'});
 	var button = new $$.Button({model: model, content: 'name'}).render();
@@ -418,11 +418,23 @@ A simple example:
 
 #### Calendar
 
-**The Backbone-UI View - Needs Work**
+Creates a month calendar diplay with the bound date value highlighted.
+Clicking on a date will set the Model's date to the chosen value.
+
+Example:
+
+	var model = new Backbone.Model({when: new Date()});
+	var cal = new $$.Calendar({model: model, content: 'when'}).render();
 
 #### Checkbox
 
-**The Backbone-UI View - Needs Work**
+Creates a checkbox input.
+Clicking on the checkbox will set or unset the Model's state
+
+Example:
+
+	var model = new Backbone.Model({state: true});
+	var input = new $$.Checkbox({model: model, content: 'state'}).render();
 
 #### Context
 
@@ -435,10 +447,11 @@ A simple example - displays the text in a `span` with class "text-info":
 
 Passing `background: true` makes it use the "bg-*" classes instead of "text-*".
 You can also pass it a "tagName" attribute to create something other than a `span`.
+The value of "content" defaults to "context".
 
 #### DatePicker
 
-**The Backbone-UI View - Needs Work**
+Combines a text box input with a Calendar component.
 
 #### Dropdown
 
@@ -494,11 +507,28 @@ the corresponding Bootstrap "btn-*" classNames.
 
 #### List
 
-**The Backbone-UI View - Needs Work**
+Creates a simple list display of a Collection.
 
 #### Menu
 
-**The Backbone-UI View - Needs Work**
+Creates a scrolling menu list whose value is taken from the bound Model
+and whose choices are taken from the bound Collection of alternatives.
+
+For example:
+	var menu = new $$.Menu({
+		model: new Backbone.Model({place: 'Alaska'}),
+		content: 'place',
+		alternatives: new Backbone.Collection({
+			{ id: 1, name: 'Alaska' },
+			{ id: 2, name: 'Maine' },
+			{ id: 3, name: 'Florida' },
+			{ id: 4, name: 'Nevada' }
+		}),
+		altLabelContent: 'name',
+		altValueContent: 'id'
+	}).render();
+
+altValueContent defaults to altLabelContent.
 
 #### NavPills
 
@@ -543,7 +573,24 @@ Min and max default to 0 and 100; labelled defaults to false.
 
 #### RadioGroup
 
-**The Backbone-UI View - Needs Work**
+Creates a group of radio buttons whose value is taken from the bound Model
+and whose choices are taken from the bound Collection of alternatives.
+
+For example:
+	var menu = new $$.RadioGroup({
+		model: new Backbone.Model({place: 'Alaska'}),
+		content: 'place',
+		alternatives: new Backbone.Collection({
+			{ id: 1, name: 'Alaska' },
+			{ id: 2, name: 'Maine' },
+			{ id: 3, name: 'Florida' },
+			{ id: 4, name: 'Nevada' }
+		}),
+		altLabelContent: 'name',
+		altValueContent: 'id'
+	}).render();
+
+altValueContent defaults to altLabelContent.
 
 #### Table
 
@@ -562,14 +609,40 @@ responsive table with hover highlighting.
 
 #### TextArea
 
-**The Backbone-UI View - Needs Work**
+A model-bound textarea.
+
+Example:
+
+	new $$.TextArea({
+		model: new Bakcbone.Model({ description: 'some text' }),
+		content: 'description'
+	}).render();
 
 #### TextField
 
-**The Backbone-UI View - Needs Work**
+A model-bound text input.
+
+Example:
+
+	new $$.TextField({
+		model: new Bakcbone.Model({ description: 'some text' }),
+		content: 'description'
+	}).render();
 
 #### TimePicker
 
-**The Backbone-UI View - Needs Work**
+A text area with a dropdown list of times.
+Defaults to allowing choices in half-hour increments,
+which can be changed by setting the 'interval' option (in minutes).
+'Name' is the HTML name attribute for the form item.
+Format defaults to 'hh:mm a'.
 
+Example:
 
+	new $$.TimePicker({
+		name: 'startTime',
+		interval: 15,
+		format: 'hh:mm a',
+		model: new Backbone.Model({ when: new Date() }),
+		content: 'when'
+	}).render();
