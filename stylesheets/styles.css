@@ -249,6 +249,7 @@ pre {
   -moz-border-radius: 8px;
   -ms-border-radius: 8px;
   -o-border-radius: 8px;
+  border-radius: 8px;
 }
 pre code {
   color: #f8f8f2;
