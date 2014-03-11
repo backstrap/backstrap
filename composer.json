@@ -18,8 +18,13 @@
     "require": {
         "components/backbone" : "~1.0",
         "components/bootstrap": "~3.1",
-        "components/bootstrap-default": "~3.0",
-        "moment/moment": "2.5.1"
+        "moment/moment": "*@dev"
+    },
+    "require-dev": {
+        "components/bootstrap-default": "*@dev"
+    },
+    "suggest": {
+        "components/bootstrap-default": "*@dev"
     },
     "extra": {
         "component": {
