@@ -11,11 +11,11 @@ Look no further, you've found it: Backstrap!
 
 Skip to...
 
-	- [Detailed Usage](#Detailed Usage)
-	- [HTML Tags](#HTML Tags)
-	- [Bootstrap Tags](#Bootstrap Tags)
-	- [Bootstrap Attributes](#Bootstrap Attributes)
-	- [Components](#Components)
+- [Detailed Usage](#Detailed Usage)
+- [HTML Tags](#HTML Tags)
+- [Bootstrap Tags](#Bootstrap Tags)
+- [Bootstrap Attributes](#Bootstrap Attributes)
+- [Components](#Components)
 
 The Backstrap JavaScript library provides a layer of functionality
 tying together [Bootstrap][] and [Backbone][].
