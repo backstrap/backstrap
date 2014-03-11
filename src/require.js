@@ -2074,7 +2074,7 @@ var components = {
             ]
         }
     },
-    "baseUrl": "components",
+    "baseUrl": "src",
     "noGlobal": false
 };
 if (typeof require !== "undefined" && require.config) {
