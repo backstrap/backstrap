@@ -1,4 +1,5 @@
 vendor
+components
 composer.lock
 composer.phar
 notes.txt
