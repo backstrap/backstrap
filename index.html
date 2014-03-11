@@ -38,6 +38,7 @@
 <ul>
 <li><a href="#detailed-usage">Detailed Usage</a></li>
 <li><a href="#html-tags">HTML Tags</a></li>
+<li><a href="#bootstrap-tags">Bootstrap Tags</a></li>
 <li><a href="#bootstrap-attributes">Bootstrap Attributes</a></li>
 <li><a href="#components">Components</a></li>
 </ul>
@@ -596,7 +597,10 @@ You can also use a "separator" property - "separator" is a synonym for "divider"
 <p>A simple example:</p>
 
 <pre><code>var model = new Backbone.Model({glyph: 'star'});
-var glyph = new $$.Glyph({model: model, content: 'glyph'}).render();
+var glyph = new $$.Glyph({
+    model: model,
+    content: 'glyph'
+  }).render();
 ...
 // Alter the displayed icon.
 model.set('glyph', 'ok');
@@ -636,7 +640,9 @@ the corresponding Bootstrap "btn-*" classNames.</p>
 <p>Creates a scrolling menu list whose value is taken from the bound Model
 and whose choices are taken from the bound Collection of alternatives.</p>
 
-<p>For example:
+<p>For example:</p>
+
+<pre><code>
     var menu = new $$.Menu({
         model: new Backbone.Model({place: 'Alaska'}),
         content: 'place',
@@ -648,7 +654,7 @@ and whose choices are taken from the bound Collection of alternatives.</p>
         }),
         altLabelContent: 'name',
         altValueContent: 'id'
-    }).render();</p>
+    }).render();</code></pre>
 
 <p>altValueContent defaults to altLabelContent.</p>
 
@@ -704,7 +710,9 @@ Min and max default to 0 and 100; labelled defaults to false.</p>
 <p>Creates a group of radio buttons whose value is taken from the bound Model
 and whose choices are taken from the bound Collection of alternatives.</p>
 
-<p>For example:
+<p>For example:</p>
+
+<pre><code>
     var menu = new $$.RadioGroup({
         model: new Backbone.Model({place: 'Alaska'}),
         content: 'place',
@@ -716,7 +724,7 @@ and whose choices are taken from the bound Collection of alternatives.</p>
         }),
         altLabelContent: 'name',
         altValueContent: 'id'
-    }).render();</p>
+    }).render();</code></pre>
 
 <p>altValueContent defaults to altLabelContent.</p>
 
@@ -724,14 +732,17 @@ and whose choices are taken from the bound Collection of alternatives.</p>
 <a id="table" class="anchor" href="#table"><span class="octicon octicon-link"></span></a>Table</h4>
 
 <p>The Backbone-UI TableView, decorated with Bootstrap classes.
-Pass attributes to set the various table options available in Bootstrap:
+Pass attributes to set the various table options available in Bootstrap:</p>
+
+<pre><code>
     new Table({
         striped: true,
         bordered: true,
         hover: true,
         condensed: true,
         responsive: true
-    });</p>
+    });
+</code></pre>
 
 <p>will give you a zebra-striped, bordered, condensed,
 responsive table with hover highlighting.   </p>
