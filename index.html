@@ -32,8 +32,8 @@
 
 <p><strong>UNDER CONSTRUCTION. VERSION 1.0 COMING SOON!</strong></p>
 
-<p>Need something meaty to go between the MVC backbone of your
-client-side JavaScript app and its UI skin?
+<p>Need something meaty to go between the MVC backbone and the UI skin
+of your client-side JavaScript app?
 Look no further, you've found it: Backstrap!</p>
 
 <p>The Backstrap JavaScript library provides a layer of functionality
@@ -43,7 +43,11 @@ take a look at this article by Christophe Coenraets:
 <a href="http://coenraets.org/blog/2013/04/sample-application-with-backbone-js-and-twitter-bootstrap-updated-and-improved/" title="Christophe Coenraets Blog">Sample Application with Backbone.js and Twitter Bootstrap</a>.</p>
 
 <p>Backstrap is available on <a href="https://github.com/backstrap/backstrap" title="Backstrap on GitHub">GitHub</a>
-and as a Composer component on <a href="https://packagist.org/packages/backstrap/backstrap" title="Backstrap on Packagist">packagist.org</a>.</p>
+and as a Composer component on <a href="https://packagist.org/packages/backstrap/backstrap" title="Backstrap on Packagist">packagist.org</a>.
+The project depends on Backbone, Bootstrap, jQuery and Underscore.
+Unless you've built your own Bootstrap theme, you'll also want to
+use the <a href="https://github.com/components/bootstrap-default" title="Bootstrap Default Theme on GitHub">bootstrap-default</a> theme.
+Just add <code>"components/bootstrap-theme": "~3.0"</code> to your composer.json "require".</p>
 
 <p>The core Backstrap object is based heavily on
 Joe Stelmach's nifty <a href="https://github.com/joestelmach/laconic" title="Laconic on GitHub">laconic.js</a> package.
@@ -277,7 +281,7 @@ and optionally with "input-*" classes for sizing and context.</p>
 <h4>
 <a name="label" class="anchor" href="#label"><span class="octicon octicon-link"></span></a>label</h4>
 
-<p>The term "label" is, unfortunaterly, overloaded. The following methods are available:</p>
+<p>The term "label" is, unfortunately, overloaded. The following methods are available:</p>
 
 <ul>
 <li>
@@ -414,27 +418,21 @@ For example:</p>
 </code></pre>
 
 <h3>
-<a name="object-constructors" class="anchor" href="#object-constructors"><span class="octicon octicon-link"></span></a>Object Constructors</h3>
+<a name="components" class="anchor" href="#components"><span class="octicon octicon-link"></span></a>Components</h3>
 
 <p>The tag factory functions described above give you
 an easy way to build nice static content.
 But here's where things get even more fun!
 The Backstrap object also provides constructors for several
-object classes that extend <code>Backbone.View</code>, to give you powerful
+component classes that extend <code>Backbone.View</code>, to give you powerful
 (and good-looking!) data-driven, model-bound DOM widgets,
-using the power of Backbone-UI.
-For example:</p>
+using the power of Backbone-UI.</p>
 
-<ul>
-<li>BasicNavbar</li>
-<li>Badge</li>
-<li>Button</li>
-<li>Context</li>
-<li>Glyph</li>
-<li>NavPills</li>
-<li>NavTabs</li>
-<li>Table</li>
-</ul><p>For efficiency, you should use the factory functions, like <code>$$.glyph()</code>,
+<p>The components are bound to either a Backbone Model or Collection.
+The components then automatically re-render when the bound model
+data changes.</p>
+
+<p>For efficiency, you should use the factory functions, like <code>$$.glyph()</code>,
 for static graphics. Use the object constructors, like <code>$$.Glyph()</code>,
 to bind a graphic object to a data model whose values may change
 over the life of the page.</p>
@@ -442,7 +440,9 @@ over the life of the page.</p>
 <h4>
 <a name="badge-1" class="anchor" href="#badge-1"><span class="octicon octicon-link"></span></a>Badge</h4>
 
-<p>Creates a Bootstrap badge (a <code>span</code> tag with class="badge") whose content is model-bound.</p>
+<p>Creates a Bootstrap badge (a <code>span</code> tag with class="badge") whose content is model-bound.
+Give it a Model object and the name of the property you want to use as the
+badge's content.</p>
 
 <p>Example:</p>
 
@@ -471,9 +471,11 @@ var navbar = new $$.BasicNavbar({brand: 'My App', model: items}).render();
 <h4>
 <a name="button-1" class="anchor" href="#button-1"><span class="octicon octicon-link"></span></a>Button</h4>
 
-<p>Creates a Bootstrap button (a <code>button</code> tag with class="btn") whose label is model-bound.</p>
+<p>Creates a Bootstrap button (a <code>button</code> tag with class="btn") whose label is model-bound.
+You can pass "context" and "size" attributes to define
+the corresponding Bootstrap "btn-*" classNames.</p>
 
-<p>A simple example:</p>
+<p>Example:</p>
 
 <pre><code>var model = new Backbone.Model({name: 'Submit'});
 var button = new $$.Button({model: model, content: 'name'}).render();
@@ -485,12 +487,26 @@ model.set('name', 'Save as Draft');
 <h4>
 <a name="calendar" class="anchor" href="#calendar"><span class="octicon octicon-link"></span></a>Calendar</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>Creates a month calendar diplay with the bound date value highlighted.
+Clicking on a date will set the Model's date to the chosen value.</p>
+
+<p>Example:</p>
+
+<pre><code>var model = new Backbone.Model({when: new Date()});
+var cal = new $$.Calendar({model: model, content: 'when'}).render();
+</code></pre>
 
 <h4>
 <a name="checkbox" class="anchor" href="#checkbox"><span class="octicon octicon-link"></span></a>Checkbox</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>Creates a checkbox input.
+Clicking on the checkbox will set or unset the Model's state</p>
+
+<p>Example:</p>
+
+<pre><code>var model = new Backbone.Model({state: true});
+var input = new $$.Checkbox({model: model, content: 'state'}).render();
+</code></pre>
 
 <h4>
 <a name="context-1" class="anchor" href="#context-1"><span class="octicon octicon-link"></span></a>Context</h4>
@@ -504,12 +520,13 @@ var text = new $$.Context({model: model, content: 'context'}, 'This is some text
 </code></pre>
 
 <p>Passing <code>background: true</code> makes it use the "bg-<em>" classes instead of "text-</em>".
-You can also pass it a "tagName" attribute to create something other than a <code>span</code>.</p>
+You can also pass it a "tagName" attribute to create something other than a <code>span</code>.
+The value of "content" defaults to "context".</p>
 
 <h4>
 <a name="datepicker" class="anchor" href="#datepicker"><span class="octicon octicon-link"></span></a>DatePicker</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>Combines a text box input with a Calendar component.</p>
 
 <h4>
 <a name="dropdown" class="anchor" href="#dropdown"><span class="octicon octicon-link"></span></a>Dropdown</h4>
@@ -559,22 +576,43 @@ instead of supplying a model object and property name.)</p>
 <h4>
 <a name="label-1" class="anchor" href="#label-1"><span class="octicon octicon-link"></span></a>Label</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>Creates a Bootstrap label (a <code>label</code> tag with class="label") whose label text is model-bound.
+You can pass "context" and "size" attributes to define
+the corresponding Bootstrap "btn-*" classNames.</p>
 
 <h4>
 <a name="link" class="anchor" href="#link"><span class="octicon octicon-link"></span></a>Link</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>Creates a URL link (an <code>a</code> tag) whose label text is model-bound.
+You can pass "context" and "size" attributes to define
+the corresponding Bootstrap "btn-*" classNames.</p>
 
 <h4>
 <a name="list-1" class="anchor" href="#list-1"><span class="octicon octicon-link"></span></a>List</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>Creates a simple list display of a Collection.</p>
 
 <h4>
 <a name="menu" class="anchor" href="#menu"><span class="octicon octicon-link"></span></a>Menu</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>Creates a scrolling menu list whose value is taken from the bound Model
+and whose choices are taken from the bound Collection of alternatives.</p>
+
+<p>For example:
+    var menu = new $$.Menu({
+        model: new Backbone.Model({place: 'Alaska'}),
+        content: 'place',
+        alternatives: new Backbone.Collection({
+            { id: 1, name: 'Alaska' },
+            { id: 2, name: 'Maine' },
+            { id: 3, name: 'Florida' },
+            { id: 4, name: 'Nevada' }
+        }),
+        altLabelContent: 'name',
+        altValueContent: 'id'
+    }).render();</p>
+
+<p>altValueContent defaults to altLabelContent.</p>
 
 <h4>
 <a name="navpills" class="anchor" href="#navpills"><span class="octicon octicon-link"></span></a>NavPills</h4>
@@ -615,12 +653,34 @@ var tabs = new $$.NavTabs({model: items}).render();
 <h4>
 <a name="progressbar" class="anchor" href="#progressbar"><span class="octicon octicon-link"></span></a>ProgressBar</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>ProgressBar creates a Bootstrap "progress" div, with model-bound progress bar(s).
+"Model" property can be either a BackBone Model (for a single progress bar)
+or a BackBone.Collection for (multiple stacked progress bars).
+Model objects may contain context, min, max, labelled, and labelSuffix properties,
+in addition to a content property which should be numeric.
+Min and max default to 0 and 100; labelled defaults to false.</p>
 
 <h4>
 <a name="radiogroup" class="anchor" href="#radiogroup"><span class="octicon octicon-link"></span></a>RadioGroup</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>Creates a group of radio buttons whose value is taken from the bound Model
+and whose choices are taken from the bound Collection of alternatives.</p>
+
+<p>For example:
+    var menu = new $$.RadioGroup({
+        model: new Backbone.Model({place: 'Alaska'}),
+        content: 'place',
+        alternatives: new Backbone.Collection({
+            { id: 1, name: 'Alaska' },
+            { id: 2, name: 'Maine' },
+            { id: 3, name: 'Florida' },
+            { id: 4, name: 'Nevada' }
+        }),
+        altLabelContent: 'name',
+        altValueContent: 'id'
+    }).render();</p>
+
+<p>altValueContent defaults to altLabelContent.</p>
 
 <h4>
 <a name="table" class="anchor" href="#table"><span class="octicon octicon-link"></span></a>Table</h4>
@@ -641,17 +701,50 @@ responsive table with hover highlighting.   </p>
 <h4>
 <a name="textarea" class="anchor" href="#textarea"><span class="octicon octicon-link"></span></a>TextArea</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>A model-bound textarea.</p>
+
+<p>Example:</p>
+
+<pre><code>new $$.TextArea({
+    model: new Bakcbone.Model({ description: 'some text' }),
+    content: 'description'
+}).render();
+</code></pre>
 
 <h4>
 <a name="textfield" class="anchor" href="#textfield"><span class="octicon octicon-link"></span></a>TextField</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>A model-bound text input.</p>
+
+<p>Example:</p>
+
+<pre><code>new $$.TextField({
+    model: new Bakcbone.Model({ description: 'some text' }),
+    content: 'description'
+}).render();
+</code></pre>
 
 <h4>
 <a name="timepicker" class="anchor" href="#timepicker"><span class="octicon octicon-link"></span></a>TimePicker</h4>
 
-<p><strong>The Backbone-UI View - Needs Work</strong></p>
+<p>A text area with a dropdown list of times.
+Defaults to allowing choices in half-hour increments,
+which can be changed by setting the 'interval' option (in minutes).
+'Name' is the HTML name attribute for the form item.
+Format defaults to 'hh:mm a'.</p>
+
+<p>Example:</p>
+
+<pre><code>new $$.TimePicker({
+    name: 'startTime',
+    interval: 15,
+    format: 'hh:mm a',
+    model: new Backbone.Model({ when: new Date() }),
+    content: 'when'
+}).render();
+</code></pre>
+
+
       </section>
     </div>
     <footer>

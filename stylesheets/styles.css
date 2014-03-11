@@ -243,12 +243,7 @@ pre {
   padding: 20px;
   background: #3A3C42;
   color: #f8f8f2;
-  /*margin: 0 -20px 20px;*/
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  -ms-border-radius: 8px;
-  -o-border-radius: 8px;
-  border-radius: 8px;
+  margin: 0 -20px 20px;
 }
 pre code {
   color: #f8f8f2;
