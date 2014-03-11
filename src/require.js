@@ -2056,13 +2056,13 @@ var components = {
                 "jquery"
             ]
         },
+        "underscore": {
+            "exports": "_"
+        },
         "bootstrap-default": {
             "deps": [
                 "bootstrap"
             ]
-        },
-        "underscore": {
-            "exports": "_"
         },
         "backstrap": {
             "deps": [
