@@ -18,13 +18,13 @@
     "require": {
         "components/backbone" : "~1.0",
         "components/bootstrap": "~3.1",
-        "moment/moment": "*@dev"
+        "moment/moment": "dev-develop"
     },
     "require-dev": {
-        "components/bootstrap-default": "*@dev"
+        "components/bootstrap-default": "dev-master"
     },
     "suggest": {
-        "components/bootstrap-default": "*@dev"
+        "components/bootstrap-default": "dev-master"
     },
     "extra": {
         "component": {
