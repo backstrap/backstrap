@@ -756,7 +756,7 @@ Format defaults to 'hh:mm a'.</p>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     <script>
     require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
-      $('body').append($$.jumbotron({bgcontext: 'primary'}, 'Some example text'));
+      $('body > .wrapper').append($$.jumbotron({bgcontext: 'primary'}, 'Some example text'));
     });
     </script>
   </body>
