@@ -3,11 +3,11 @@
     "description": "The Backstrap JavaScript library provides a layer of functionality tying together Bootstrap and Backbone.",
     "keywords": ["backbone", "bootstrap", "browser", "client", "UI"],
     "type": "component",
-    "homepage": "https://github.com/backstrap/backstrap",
+    "homepage": "http://backstrap.github.io/backstrap",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/backstrap/backstrap",
-        "source": "https://github.com/backstrap/backstrap"
+        "issues": "https://github.com/backstrap/backstrap/issues",
+        "source": "https://github.com/backstrap/backstrap/tree/master"
     },
     "authors": [
         {
