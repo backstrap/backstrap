@@ -13,7 +13,7 @@ body {
   padding: 50px 0;
   margin: 0;
   font: 14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #333;
+  color: #555;
   font-weight: 300;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeCAYAAABNChwpAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNXG14zYAAAAUdEVYdENyZWF0aW9uIFRpbWUAMy82LzEygrTcTAAAAFRJREFUSIljfPDggZRf5RIGGNjUHsNATz6jXmSL1Kb2GLiAX+USBnrymRgGGDCORgFmoNAXjEbBaBSMRsFoFIxGwWgUjEbBaBSMRsFoFIxGwWgUAABYNujumib3wAAAAABJRU5ErkJggg==') fixed;
 }
@@ -159,11 +159,13 @@ header ul a {
   line-height: 1;
   font-size: 11px;
   color: #fff;
+  color: rgba(255, 255, 255, 0.8);
   display: block;
   text-align: center;
-  font-weight: 600;
+  font-weight: 400;
   padding-top: 6px;
   height: 40px;
+  text-shadow: rgba(0, 0, 0, 0.4) 0 -1px 0;
 }
 header ul a strong {
   font-size: 14px;
@@ -176,12 +178,12 @@ section {
   padding: 15px 20px;
   font-size: 15px;
   border-top: 1px solid #fff;
-  background: -webkit-gradient(linear, 50% 0%, 50% 700, color-stop(0%, #ffffff), color-stop(100%, #f7f7f7));
-  background: -webkit-linear-gradient(#ffffff, #f7f7f7 700px);
-  background: -moz-linear-gradient(#ffffff, #f7f7f7 700px);
-  background: -o-linear-gradient(#ffffff, #f7f7f7 700px);
-  background: -ms-linear-gradient(#ffffff, #f7f7f7 700px);
-  background: linear-gradient(#ffffff, #f7f7f7 700px);
+  background: -webkit-gradient(linear, 50% 0%, 50% 700, color-stop(0%, #fafafa), color-stop(100%, #dedede));
+  background: -webkit-linear-gradient(#fafafa, #dedede 700px);
+  background: -moz-linear-gradient(#fafafa, #dedede 700px);
+  background: -o-linear-gradient(#fafafa, #dedede 700px);
+  background: -ms-linear-gradient(#fafafa, #dedede 700px);
+  background: linear-gradient(#fafafa, #dedede 700px);
   -webkit-border-radius: 0 0 8px 8px;
   -moz-border-radius: 0 0 8px 8px;
   -ms-border-radius: 0 0 8px 8px;
@@ -241,12 +243,7 @@ pre {
   padding: 20px;
   background: #3A3C42;
   color: #f8f8f2;
-  /*margin: 0 -20px 20px;*/
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  -ms-border-radius: 8px;
-  -o-border-radius: 8px;
-  border-radius: 8px;
+  margin: 0 -20px 20px;
 }
 pre code {
   color: #f8f8f2;
