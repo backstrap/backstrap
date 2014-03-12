@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Backstrap Example App</title>
+	<style>
+		body.loading {
+			margin: 2em auto 0; font: 150% sans-serif; text-align: center; height: 2em;
+		}
+	</style>
+</head>
+<body class="loading">
+	<div>Page loading...</div>
+	<script src="components/require.js"></script>
+	<script>
+	/*
+	 * Normally, your JS would go in a separate file.
+	 * I've chosen to include it for this example page
+	 * so that you can see everything on one page.
+	 */
+	require(["jquery", "backstrap", "backbone"], function ($, $$, BB) {
+		/*
+		 * Load the main CSS.
+		 * We don't want CSS loading to get in the way
+		 * of our "Loading..." page display.
+		 */
+		$("head").append($$.css("components/require.css")).
+			append($$.css("components/bootstrap/css/bootstrap.min.css")).
+			append($$.css("components/bootstrap/css/bootstrap-theme.min.css"));
+		
+		/*
+		 * Build some application objects.
+		 * Typically you'll have a Backbone Router on your page.
+		 * This one doesn't do anything useful.
+		 */
+		new (BB.Router.extend({
+			routes: {
+				'home': 'home',
+				'foo': 'home'
+			},
+			home: function () { alert('home button clicked'); }
+		}))();
+		
+		/*
+		 * Build the page contents.
+		 */
+		var page = $$.container(
+			$$.pageHeader(
+				$$.h1("Hello, No-HTML World!")
+			),
+			$$.jumbotron(
+			  $$.p(
+				'This is an example of a "No-HTML" web page using Backstrap. ',
+				'The HTML just puts a simple "Loading..." message on the page, ',
+				'along with the CSS for that content. ',
+				'Then JavaScript does the heavy lifting of ',
+				'loading the main JS libraries and CSS, ',
+				'and building our content programmatically ',
+				'with Backstrap, Backbone, Bootstrap and jQuery. ',
+				'Once everything is ready, we swap out the page contents, ',
+				'and our application is up and running! ',
+				'See ',
+				$$.a(
+					{
+						context: 'link',
+						href: 'https://github.com/backstrap/backstrap'
+					},
+					'the Backstrap project on GitHub'
+				),
+				' for more info.'
+			  ),
+			  $$.p(
+			  	'Obviously this isn\'t a good solution for building static pages. ',
+			  	'But it may be appropriate for web applications which want to ',
+			  	'do a lot of JavaScript processing on the client anyway.'
+			  ),
+			  $$.p('View ', $$.a({href: 'nohtml.txt'}, 'the source code for this page.'))
+			),
+			$$.button(
+				{
+					context: 'primary',
+					onClick: function () { document.location="#home"; }
+				},
+				'Home'
+			)
+		);
+	
+		/*
+		 * Now we just display the page and start watching for events...
+		 */
+		$("body").empty().removeClass("loading").append(page);
+		BB.history.start();
+	});
+	</script>
+</body>
+</html>
