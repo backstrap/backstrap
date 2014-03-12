@@ -11,14 +11,6 @@ of your client-side JavaScript app?
 Look no further, you've found it:
 **Backstrap!**
 
-Skip to...
-
-- [HTML Tags](#html-tags)
-- [Bootstrap Tags](#bootstrap-tags)
-- [Bootstrap Attributes](#bootstrap-attributes)
-- [Components](#components)
-- [noConflict](#noconflict)
-
 The Backstrap JavaScript library provides a layer of functionality
 tying together [Bootstrap][] and [Backbone][].
 It makes it easy to lay out a clean, well-designed user interface
@@ -27,6 +19,14 @@ backed by a powerful model-view-control application framework.
 If you're wondering why that's such a great idea,
 take a look at this popular article by Christophe Coenraets:
 [Sample Application with Backbone.js and Twitter Bootstrap][coenraets].
+
+Skip to...
+
+- [HTML Tags](#html-tags)
+- [Bootstrap Tags](#bootstrap-tags)
+- [Bootstrap Attributes](#bootstrap-attributes)
+- [Components](#components)
+- [noConflict](#noconflict)
 
 Backstrap is available on [GitHub][]
 and as a Composer component on [Packagist][packagist].
@@ -98,7 +98,6 @@ produces this DOM tree:
 
 ## Detailed usage
 
-<a id="html-tags"></a>
 ### HTML Tags
 
 Backstrap adds a method to the $$ namespace for each known
@@ -161,7 +160,6 @@ Bootstrap-enabled. For instance `$$.BasicNavbar()` which creates a navbar
 whose contents are built from a description provided as a Backbone Collection.
 See [Components](#components) below for more details.
 
-<a id="bootstrap-tags"></a>
 ### Bootstrap Tags
 
 The Bootstrap-enabled DOM generator methods are:
@@ -325,7 +323,6 @@ to embed them within a `div` with the Bootstrap "panel-heading" or "panel-footer
 
 The `$$.pageHeader()` method creates a `div` tag decorated with the Bootstrap "page-header" class.
 
-<a id="spanlabel"></a>
 #### spanlabel
 
 The `$$.spanlabel()` method creates a `span` tag decorated with the Bootstrap "label" class,
@@ -382,7 +379,6 @@ For example:
 
 will create a button with class "btn btn-lg".
 
-<a id="components"></a>
 ### Components
 
 The tag factory functions described above give you
@@ -440,7 +436,6 @@ For example:
 	// Alter the displayed label.
 	model.set('name', 'Save as Draft');
 
-<a id="calendar"></a>
 #### Calendar
 
 Creates a month calendar diplay with the bound date value highlighted.
@@ -677,7 +672,6 @@ For example:
 		content: 'when'
 	}).render();
 
-<a id="noconflict"></a>
 ### noConflict
 
 The `$$.noConflict()` method provides a mechanism for reverting the definition of `$$`.
