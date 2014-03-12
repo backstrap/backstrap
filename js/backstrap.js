@@ -455,7 +455,7 @@
 			return $('> *:nth-child('+row+') ', el);
 		};
 		el.getCell = function (row, col) {
-			return $('> *:nth-child('+row+') > *:nth-child(' + cell + ') ', el);
+			return $('> *:nth-child('+row+') > *:nth-child(' + col + ') ', el);
 		};
 		el.appendRows(layout);
 		return el;
