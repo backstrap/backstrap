@@ -112,9 +112,9 @@ For example:
 
 produces
 
-	&lt;div class="example"&gt;
-		&lt;p&gt;content&lt;/p&gt;
-	&lt;/div&gt;
+	<div class="example">
+		<p>content</p>
+	</div>
 
 Various HTML tags get extra Bootstrap decoration by default,
 for instance `$$.button()` automatically adds the Bootstrap "btn" class to your button.
@@ -149,10 +149,10 @@ Overloaded names include: button, form, input, label, and table. For example:
 
 produces:
 
-	&lt;div&gt;
-		&lt;button&gt;Click me!&lt;/button&gt;
-		&lt;button class="btn btn-lg"&gt;No, click me!&lt;/button&gt;
-	&lt;/div&gt;
+	<div>
+		<button>Click me!</button>
+		<button class="btn btn-lg">No, click me!</button>
+	</div>
 
 There are also constructors for building various Bootstrap.View extensions,
 which allow you to make Backbone Model-bound components that are also
