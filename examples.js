@@ -8,10 +8,19 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	    { type: 'recumbent',  color: 'yellow', purchased: '08/01/2012' }
 	]);
 	
+	var grid;
+	
 	$('body').append(
 		$$.div({className: 'wrapper'},
-			$$.pageHeader($$.h1('Backstrap Examples'))
-		),
+			$$.pageHeader($$.h1('Backstrap Examples')),
+			grid = $$.grid({ layout: [
+			    [ 12 ],
+			    [ 4, 4, 4 ]
+			]})
+		)
+	);
+	
+	grid.getCell(1, 1).append($$.container(
 		$$.jumbotron({bgcontext: 'primary'},
 			'Some example text in a Jumbotron, including ',
 			$$.span({context: 'warning'}, 'some text in a warning context color,'),
@@ -31,10 +40,28 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 			"]);"
 		))),
 		$$.p('Note that the widgets are all sharing the same data model objects, ',
-			'so changing a value with one widget will cause changes in the other widgets.'),
+			'so changing a value with one widget will cause changes in the other widgets.')
+	));
+	
+	grid.getCell(2, 1).append(
 		$$.div({ context: 'primary' },
 			$$.plain.label('Mountain bike color: '),
 			$$.badge('red')
 		)
 	);
+	
+	grid.getCell(2, 2).append(
+		$$.div({ context: 'primary' },
+			$$.plain.label('Mountain bike color: '),
+			$$.badge('red')
+		)
+	);
+	
+	grid.getCell(2, 3).append(
+		$$.div({ context: 'primary' },
+			$$.plain.label('Mountain bike color: '),
+			$$.badge('red')
+		)
+	);
+	
 });
