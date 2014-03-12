@@ -13,7 +13,7 @@
 </head>
 <body class="loading">
 	<div>Page loading...</div>
-	<script src="components/require.js"></script>
+	<script src="src/require.js"></script>
 	<script>
 	/*
 	 * Normally, your JS would go in a separate file.
@@ -74,7 +74,9 @@
 			  $$.p(
 			  	'Obviously this isn\'t a good solution for building static pages. ',
 			  	'But it may be appropriate for web applications which want to ',
-			  	'do a lot of JavaScript processing on the client anyway.'
+			  	'do a lot of JavaScript processing on the client anyway.',
+			  	'And Backstrap is also useful for adding dynamic content ',
+			  	'to more traditional HTMl pages too.'
 			  ),
 			  $$.p('View ', $$.a({href: 'nohtml.txt'}, 'the source code for this page.'))
 			),
