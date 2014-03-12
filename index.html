@@ -66,23 +66,21 @@ Unless you've built your own Bootstrap theme, you'll also want to
 use the <a href="https://github.com/components/bootstrap-default" title="Bootstrap Default Theme on GitHub">bootstrap-default</a> theme.
 With Composer, just add</p>
 
-<blockquote>
-<code>"backstrap/backstrap": ">0.1"<br>
-<code>"components/bootstrap-theme": "~3.0"</code>
-</blockquote>
+<blockquote><code>"backstrap/backstrap": ">0.1"<br>
+<code>"components/bootstrap-theme": "~3.0"</code></blockquote>
 
 <p>to your composer.json "require".</p>
 
 <p>The core Backstrap object is based heavily on
-Joe Stelmach's nifty <a href="https://github.com/joestelmach/laconic" title="Laconic on GitHub">laconic.js</a> package.
-("Laconic simplifies the generation of DOM content.")
-It also extends <a href="https://github.com/perka/backbone-ui" title="Backbone-UI on GitHub">Backbone-UI</a> and enhances
-the Backbone-UI components with Bootstrap-awareness.</p>
+Joe Stelmach's nifty <a href="https://github.com/joestelmach/laconic" title="Laconic on GitHub">laconic.js</a> package,
+which simplifies the generation of DOM content,
+and on <a href="https://github.com/perka/backbone-ui" title="Backbone-UI on GitHub">Backbone-UI</a>
+which provides a set of
+higher-level data-bound components.</p>
 
-<p>To all of that we've added a natural syntax for making
-basic Bootstrap-aware DOM objects,
-including Bootstrap's sizing and context-coloring features;
-automatic use of Bootstrap class names;
+<p>To all of that we've added generators for
+Bootstrap-enhanced DOM objects and data-bound components,
+easy support for Bootstrap's sizing and context-coloring features;
 and methods for making complex widgets like
 grids, navbars, button-groups, forms.</p>
 
@@ -92,28 +90,27 @@ Also see an example of a <a href="nohtml.html">"No-HTML" web page</a>.
 </p>
 
 <p>In non-CommonJS environments, Backstrap defines the global namespace <code>$$</code>.
-It provides a <code>noConflict()</code> method to revert the definition of <code>$$</code> if needed.</p>
-
-<p>Backstrap was originally forked from
-laconic commit <a href="https://github.com/joestelmach/laconic/commit/b7f4861a96153c213569ac8aa537e94312c71ce8">b7f4861a96</a>
-and Backbone-UI commit <a href="https://github.com/perka/backbone-ui/commit/ece3ea14d71bf1bc8f8a0ce01103d74bfe29a10f">ece3ea14d7</a>.</p>
+It provides a <code>noConflict()</code> method to revert the definition of <code>$$</code> if needed.
+It can also be used in a RequireJS context.</p>
 
 <p>Sample suggested use:</p>
 
-<pre><code>$$.div(
-    $$.span({context: 'danger'},
-        'Uh-oh! ',
-        $$.glyph('star')
-    ),
-    $$.button({size: 'large'}, 'OK')
-);
+<pre><code>require(['backstrap'], function ($$) {
+    $$.div(
+        $$.span({context: 'danger'},
+            'Hello, star! ',
+            $$.glyph('star')
+        ),
+        $$.button({size: 'large'}, 'OK')
+    );
+});
 </code></pre>
 
 <p>produces this DOM tree:</p>
 
 <pre><code>&lt;div&gt;
   &lt;span class="text-danger"&gt;
-    Uh-oh! &lt;span class="glyphicon glyphicon-star"&gt;&lt;/span&gt;
+    Hello, star! &lt;span class="glyphicon glyphicon-star"&gt;&lt;/span&gt;
   &lt;/span&gt;
   &lt;button class="btn btn-lg"&gt;OK&lt;/button&gt;
 &lt;/div&gt;
