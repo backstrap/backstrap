@@ -536,7 +536,10 @@ var input = new $$.Checkbox({model: model, content: 'state'}).render();
 <p>A simple example - displays the text in a <code>span</code> with class "text-info":</p>
 
 <pre><code>var model = new Backbone.Model({context: 'info'});
-var text = new $$.Context({model: model, content: 'context'}, 'This is some text').render();
+var text = new $$.Context({
+        model: model,
+        content: 'context'
+    }, 'This is some text').render();
 </code></pre>
 
 <p>Passing <code>background: true</code> makes it use the "bg-*" classes instead of "text-*".
@@ -577,7 +580,10 @@ You can also use a "separator" property - "separator" is a synonym for "divider"
 For example:</p>
 
 <pre><code>var model = new Backbone.Model({glyph: 'star'});
-var glyph = new $$.Glyph({model: model, content: 'glyph'}).render();
+var glyph = new $$.Glyph({
+    model: model,
+    content: 'glyph'
+}).render();
 ...
 // Alter the displayed icon.
 model.set('glyph', 'ok');
