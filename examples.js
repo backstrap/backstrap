@@ -21,7 +21,7 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 			$$.glyph('star')
 		),
 		$$.p('For the rest of the page, we will bind this dataset to various components:'),
-		$$.blockquote($$.code(
+		$$.blockquote($$.code($$.pre(
 			"var bicycles = new Backbone.Collection([\n",
 			"    { type: 'mountain',   color: 'red',    purchased: '12/24/2013' },\n",
 			"    { type: 'road',       color: 'silver', purchased: '03/11/2013' },\n",
@@ -29,12 +29,12 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 			"    { type: 'hybrid',     color: 'white',  purchased: '07/30/2012' },\n",
 			"    { type: 'recumbent',  color: 'yellow', purchased: '08/01/2012' }\n",
 			"]);"
-		)),
+		))),
 		$$.p('Note that the widgets are all sharing the same data model objects, ',
 			'so changing a value with one widget will cause changes in the other widgets.'),
-		$$.div(
-			$$.label('Mountain bike color: '),
-			$$.TextField({model: bicycles[0], content: 'color'})
+		$$.div({ context: 'primary' },
+			$$.plain.label('Mountain bike color: '),
+			$$.badge('red')
 		)
 	);
 });
