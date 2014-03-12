@@ -461,7 +461,10 @@ Creates a `span` whose Bootstrap context-color is model-bound.
 A simple example - displays the text in a `span` with class "text-info":
 
 	var model = new Backbone.Model({context: 'info'});
-	var text = new $$.Context({model: model, content: 'context'}, 'This is some text').render();
+	var text = new $$.Context({
+			model: model,
+			content: 'context'
+		}, 'This is some text').render();
 
 Passing `background: true` makes it use the "bg-\*" classes instead of "text-\*".
 You can also pass it a "tagName" attribute to create something other than a `span`.
@@ -497,7 +500,10 @@ Creates a Bootstrap Glyphicon glyph (a `span` with class="glyphicon") whose icon
 For example:
 
 	var model = new Backbone.Model({glyph: 'star'});
-	var glyph = new $$.Glyph({model: model, content: 'glyph'}).render();
+	var glyph = new $$.Glyph({
+		model: model,
+		content: 'glyph'
+	}).render();
 	...
 	// Alter the displayed icon.
 	model.set('glyph', 'ok');
