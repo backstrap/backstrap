@@ -5,73 +5,77 @@ Backstrap
 
 **VERSION 1.0 COMING SOON!**
 
-Need something meaty to go between the MVC backbone and the UI skin
+Are you looking for something meaty to connect
+the MVC backbone and the UI skin
 of your client-side JavaScript app?
-Look no further, you've found it: Backstrap!
+Look no further, you've found it:
+**Backstrap!**
 
 Skip to...
 
-- [Detailed Usage](#Detailed Usage)
-- [HTML Tags](#HTML Tags)
-- [Bootstrap Tags](#Bootstrap Tags)
-- [Bootstrap Attributes](#Bootstrap Attributes)
-- [Components](#Components)
+- [HTML Tags](#html-tags)
+- [Bootstrap Tags](#bootstrap-tags)
+- [Bootstrap Attributes](#bootstrap-attributes)
+- [Components](#components)
+- [noConflict](#noconflict)
 
 The Backstrap JavaScript library provides a layer of functionality
 tying together [Bootstrap][] and [Backbone][].
+It makes it easy to lay out a clean, well-designed user interface
+with interface widgets that are tightly bound to data model objects
+backed by a powerful model-view-control application framework.
 If you're wondering why that's such a great idea,
-take a look at this article by Christophe Coenraets:
+take a look at this popular article by Christophe Coenraets:
 [Sample Application with Backbone.js and Twitter Bootstrap][coenraets].
 
 Backstrap is available on [GitHub][]
-and as a Composer component on [packagist.org][packagist].
+and as a Composer component on [Packagist][packagist].
 The project depends on Backbone, Bootstrap, jQuery and Underscore.
 Unless you've built your own Bootstrap theme, you'll also want to
 use the [bootstrap-default][] theme.
-Just add 
+With Composer, just add 
 
+	"backstrap/backstrap": ">0.1",
 	"components/bootstrap-theme": "~3.0"
 	
 to your composer.json "require".
 
 The core Backstrap object is based heavily on
-Joe Stelmach's nifty [laconic.js][laconic] package.
-("Laconic simplifies the generation of DOM content.")
-It also extends [Backbone-UI][] and enhances
-the Backbone-UI components with Bootstrap-awareness.
+Joe Stelmach's nifty [laconic.js][laconic] package,
+which simplifies the generation of DOM content,
+and on [Backbone-UI][] which provides a set of
+higher-level data-bound components.
 
-To all of that we've added a natural syntax for making
-basic Bootstrap-aware DOM objects,
-including Bootstrap's sizing and context-coloring features;
-automatic use of Bootstrap class names;
-methods for making complex widgets like
+To all of that we've added generators for
+Bootstrap-enhanced DOM objects and data-bound components,
+easy support for Bootstrap's sizing and context-coloring features;
+and methods for making complex widgets like
 grids, navbars, button-groups, forms.
 
 Try out the [Examples Page][examples]!
+Also see an example of a ["No-HTML" web page][nohtml].
 
 In non-CommonJS environments, Backstrap defines the global namespace `$$`.
 It provides a `noConflict()` method to revert the definition of `$$` if needed.
-
-Backstrap was originally forked from
-laconic commit [b7f4861a96][]
-and Backbone-UI commit [ece3ea14d7][].
+It can also be used in a RequireJS context.
 
 Sample suggested use:
 
-	$$.div(
-		$$.span({context: 'danger'},
-			'Uh-oh! ',
-			$$.glyph('star')
-		),
-		$$.button({size: 'large'}, 'OK')
-	);
-
+	require(['backstrap'], function ($$) {
+		$$.div(
+			$$.span({context: 'danger'},
+				'Hello, star! ',
+				$$.glyph('star')
+			),
+			$$.button({size: 'large'}, 'OK')
+		);
+	});
 
 produces this DOM tree:
 
 	<div>
 	  <span class="text-danger">
-	    Uh-oh! <span class="glyphicon glyphicon-star"></span>
+	    Hello, star! <span class="glyphicon glyphicon-star"></span>
 	  </span>
 	  <button class="btn btn-lg">OK</button>
 	</div>
@@ -88,71 +92,79 @@ produces this DOM tree:
 [b7f4861a96]:  https://github.com/joestelmach/laconic/commit/b7f4861a96153c213569ac8aa537e94312c71ce8
 [ece3ea14d7]:  https://github.com/perka/backbone-ui/commit/ece3ea14d71bf1bc8f8a0ce01103d74bfe29a10f
 [bootstrap-default]:   https://github.com/components/bootstrap-default "Bootstrap Default Theme on GitHub"
-[examples]:   http://backstrap.github.io/backstrap/ "Backstrap Examples Page"
+[examples]:    http://backstrap.github.io/backstrap/examples.html "Backstrap Examples Page"
+[nohtml]:      http://backstrap.github.io/backstrap/nohtml.html "Backstrap No-HTML Example"
 [HTML Elements]: http://www.whatwg.org/specs/web-apps/current-work/multipage/section-index.html#elements-1 "HTML Element Spec"
 
-<a id="Detailed Usage"></a>
 ## Detailed usage
 
-Backstrap adds a method to the $$ namespace for all known
-[HTML Elements][].
-These methods should be invoked with a variable-length list of child elements, strings, numbers, or arrays containing these types.
-An optional attributes object may be passed as the first argument. 
+<a id="html-tags"></a>
+### HTML Tags
 
-- if you pass a "size" attribute
-it will be converted into a suitable Bootstrap classname.
-- if you pass a "context" or "bgcontext" attribute
-it will be converted into a suitable Bootstrap classname.
-- there are some new pseudo-tags, such as
-`$$.badge()` to create a span with class="badge";
-`$$.grid()` to create a `div` with a pre-built grid layout.
-- various tags get extra decoration, for instance `$$.button()`
-automatically adds the Bootstrap "btn" class to your button.
+Backstrap adds a method to the $$ namespace for each known
+[HTML Element][].
+These methods should be invoked with a variable-length list of child elements, strings, numbers, or arrays containing these types.
+An optional attributes object may be passed as the first argument.
+For example:
+
+	$$.div({className: 'example'},
+		$$.p('content')
+	);
+
+produces
+
+	&lt;div class="example"&gt;
+		&lt;p&gt;content&lt;/p&gt;
+	&lt;/div&gt;
+
+Various HTML tags get extra Bootstrap decoration by default,
+for instance `$$.button()` automatically adds the Bootstrap "btn" class to your button.
 Note that this is the only supported way to build buttons -
-you should avoid doing, for example, `$$.a({className: "btn"})`.
-The term "label" is overloaded, since there is both an HTML label tag and
-a Bootstrap label class. See the [label](#label) section below for details
-on how to use labels.
-- there are also constructors for building various Bootstrap.View extensions,
-which allow you to make Backbone Model-bound widgets that are also
-Bootstrap-enabled. For instance `$$.BasicNavbar()` which creates a navbar
-whose contents are built from a description provided as a Backbone Collection.
+you should avoid using, for example, `$$.a({className: "btn"})`.
+
+Most attributes get applied directly to the created object as HTML attributes;
+there are a few special attributes which undergo further processing.
+For instance, if you pass a "size" or "context" attribute
+it will be converted into a suitable Bootstrap classname.
+See [Bootstrap Attributes](#bootstrap-attributes) below for more details.
 
 Backstrap, like laconic, adds an `appendTo()` convenience method
 to each DOM object it creates.
-
 See the [laconic doc](http://joestelmach.github.io/laconic/)
 for a description of laconic.
 
-<a id="HTML Tags"></a>
-### HTML Tags
-
-Each HTML5 tag has a factory function in the `$$` namespace.
-(Some deprecated HTML4 tags are also available.)
-Some additional functions which build Bootstrap-enabled tags
-have also been included.
-All these methods should be invoked with a variable-length list of
-child elements, strings, numbers, or arrays containing these types.
-An optional attributes object may be passed as the first argument.
-Most attributes get applied directly to the created object as HTML attributes;
-there are a few special attributes which undergo further processing
-(see [Bootstrap Attributes](#Bootstrap Attributes) below.)
-For example: 
-
-	$$.div({'class' : 'example'}, 
-		$$.div('content'));
+Some additional methods which build more complex, Bootstrap-enabled tag sets have also been included,
+for instance `$$.grid()`. These are described in the next section, [Bootstrap Tags](bootstrap-tags).
 
 In some cases, there is a Bootstrap component name that is the same as an HTML tag name.
 To work around this conflict, we make all the plain HTML tag methods accessible in the
 `$$.plain` namespace.  Thus for instance in the case of "label", `$$.label()` will give you
 a fully Bootstrapped `<label class="label">`,
 while `$$.plain.label()` will give you a plain HTML `<label>`.
-Overloaded names include: button, form, input, label, and table.
+Overloaded names include: button, form, input, label, and table. For example:
 
-<a id="Bootstrap Tags"></a>
+	$$.div(
+		$$.plain.button('Click me!'),
+		$$.button({size: 'large'}, 'No, click me!')
+	);
+
+produces:
+
+	&lt;div&gt;
+		&lt;button&gt;Click me!&lt;/button&gt;
+		&lt;button class="btn btn-lg"&gt;No, click me!&lt;/button&gt;
+	&lt;/div&gt;
+
+There are also constructors for building various Bootstrap.View extensions,
+which allow you to make Backbone Model-bound components that are also
+Bootstrap-enabled. For instance `$$.BasicNavbar()` which creates a navbar
+whose contents are built from a description provided as a Backbone Collection.
+See [Components](#components) below for more details.
+
+<a id="bootstrap-tags"></a>
 ### Bootstrap Tags
 
-The special Bootstrap methods are:
+The Bootstrap-enabled DOM generator methods are:
 
 #### alert
 
@@ -168,10 +180,10 @@ The `$$.breadcrumb()` method creates an `ol` tag decorated with the Bootstrap "b
 
 #### button
 
-The `$$.button()` method creates an HTML `button` tag decorated with the Bootstrap "btn" class,
+The `$$.button()` method creates a `button` tag decorated with the Bootstrap "btn" class,
 and optionally with "btn-*" classes for sizing and context.
 
-`$$.plain.button()` gives you a bare HTML `button` tag.
+`$$.plain.button()` gives you a bare `button` tag.
 
 #### buttonGroup
 
@@ -179,7 +191,8 @@ The `$$.buttonGroup()` method creates a `div` tag decorated with the Bootstrap "
 
 #### buttonToolbar
 
-The `$$.buttonToolbar()` method creates a `div` tag decorated with the Bootstrap "btn-toolbar" class and "toolbar" role.
+The `$$.buttonToolbar()` method creates a `div` tag decorated with the Bootstrap "btn-toolbar" class
+and also the attribute 'role="toolbar"'.
 
 #### container
 
@@ -190,9 +203,10 @@ and optionally with the "container-fluid" class for fluid layout.
 
 The `$$.css(url)` method is a shortcut for creating CSS stylesheet links.
 It creates an HTML `<link rel="stylesheet" type="text/css" href="url">` tag.
-Use it to load CSS from within your JS code, thus:
+Use it to load CSS from within your JS code.
+For example:
 
-	$('head').append($$.css(url));
+	$('head').append($$.css('/css/myStyles.css'));
 
 #### form
 
@@ -205,12 +219,15 @@ Use it to group form inputs with their labels, inside a form.
 
 #### glyph
 
-The `$$.glyph(name)` method creates a `span` tag decorated with the Bootstrap "glyphicon" and "glyphicon-{name}" classes.
+The `$$.glyph(name)` method creates an empty `span` tag decorated with the Bootstrap "glyphicon" and "glyphicon-{name}" classes.
+For example:
+
+	$$.glyph('star');
 
 #### grid
 
 The `$$.grid()` method creates a nested set of divs. Pass it a "layout" attribute
-in the attributes argument to format the grid. The "layout" attribute should contain
+in the attributes argument to define the grid cells. The "layout" attribute should contain
 an array of arrays of cell specifications. Each cell specification can be either
 a simple integer specifying the width (in columns) of the cell, or an object
 with properties for each device-size for which you want to set a column width.
@@ -225,6 +242,7 @@ the contents of the cell. For example:
 
 Pass grid a "fluid: true" attribute to get a fluid layout (using Bootstrap's
 "container-fluid" class instead of "container" on the top-level div).
+See [Bootstrap's grid doc](http://getbootstrap.com/css/#grid) for more info on using Bootstrap grids.
 
 We also add a few convenience methods on the top-level div:
 appendRows(layout), appendRow(layout), getRow(rowNum), and getCell(rowNum, colNum).
@@ -238,7 +256,7 @@ puts "Hello World" in the middle cell of the second row.
 
 #### input
 
-Creates an HTML `input` tag decorated with the Bootstrap "form-control" class,
+Creates an `input` tag decorated with the Bootstrap "form-control" class,
 and optionally with "input-*" classes for sizing and context.
 
 #### inputGroup
@@ -256,11 +274,12 @@ The `$$.jumbotron()` method creates a `div` tag decorated with the Bootstrap "ju
 <span id="label"></span>
 #### label
 
-The term "label" is, unfortunately, overloaded. The following methods are available:
+The `$$.label()` method creates a `label` tag decorated with the Bootstrap "label" class,
+and optionally with "label-*" classes for sizing and context.
 
-- `$$.label()` gives you an HTML `label` tag decorated with the Bootstrap "label" class.
-- `$$.spanLabel()` gives you an HTML `span` tag decorated with the Bootstrap "label" class.
-- `$$.plain.label()` gives you a bare HTML `label` tag.
+`$$.plain.label()` gives you a bare `label` tag.
+
+See also [$$.spanLabel](#spanlabel).
 
 #### linkList
 
@@ -291,26 +310,6 @@ Passit a DOM object as its "media" attribute, and an optional 'pull: "right"'
 if you want it pulled right instead of left.
 Its body will be further wrapped in a div with class "media-body".
 
-#### noConflict
-
-Provides a mechanism for reverting the definition of `$$`.
-Backstrap will attempt to register itself as a CommonJS module.
-But when that functionality is not available
-it defines the global `$$` instead.
-It is possible that your app would want to include
-some other package that also uses the global `$$`.
-In this case, load the Backstrap package after the other package;
-you can then use `$$.noConflict()` to define some other variable
-to hold the Backstrap object,
-and revert the definition of `$$` back to the other package.
-For example:
-
-	var Backstrap = $$.noConflict();
-
-Now `$$` is whatever it was before you loaded Backstrap,
-and you can use the variable `Backstrap` to access the Backstrap methods.
-You might want to pick a shorter variable name, like `$b`.
-
 #### pagination
 
 The `$$.pagination()` method creates a `ul` tag decorated with the Bootstrap "pagination" class.
@@ -326,6 +325,12 @@ to embed them within a `div` with the Bootstrap "panel-heading" or "panel-footer
 
 The `$$.pageHeader()` method creates a `div` tag decorated with the Bootstrap "page-header" class.
 
+<a id="spanlabel"></a>
+#### spanlabel
+
+The `$$.spanlabel()` method creates a `span` tag decorated with the Bootstrap "label" class,
+and optionally with "label-*" classes for sizing and context.
+
 #### thumbnail
 
 The `$$.thumbnail()` method creates a `div` tag decorated with the Bootstrap "thumbnail" class.
@@ -336,7 +341,7 @@ The `$$.well()` method creates a `div` tag with class "well",
 to make Bootstrap's simple well effect.
 
 
-<span id="Bootstrap Attributes"></span>
+<span id="bootstrap-attributes"></span>
 ### Bootstrap Attributes
 
 We define a few special attributes that can be passed to
@@ -351,6 +356,8 @@ For example:
 
 	$$.span({bgcontext: 'warning'})
 
+will create a span with class "bg-warning".
+
 #### context
 
 Sets the appropriate context-coloring class on the object.
@@ -362,16 +369,20 @@ For example:
 
 	$$.button({context: 'info'})
 
+will create a button with class "btn btn-info".
+
 #### size
 
 Sets the appropriate Bootstrap sizing class on the object.
-Supported size names are "large" or "lg", "small" or "sm", and "xs" or "extra-small".
+Supported size names are "large" or "lg", "default" (the default),
+"small" or "sm", and "xs" or "extra-small".
 For example:
 
 	$$.button({size: 'large'})
 
+will create a button with class "btn btn-lg".
 
-<a id="Components"></a>
+<a id="components"></a>
 ### Components
 
 The tag factory functions described above give you
@@ -379,16 +390,15 @@ an easy way to build nice static content.
 But here's where things get even more fun!
 The Backstrap object also provides constructors for several
 component classes that extend `Backbone.View`, to give you powerful
-(and good-looking!) data-driven, model-bound DOM widgets,
-using the power of Backbone-UI.
+(and good-looking!) data-driven, model-bound DOM components.
 
 The components are bound to either a Backbone Model or Collection.
 The components then automatically re-render when the bound model
 data changes.
 
-For efficiency, you should use the factory functions, like `$$.glyph()`,
-for static graphics. Use the object constructors, like `$$.Glyph()`,
-to bind a graphic object to a data model whose values may change
+For efficiency, you should use the factory functions, like `$$.button()`,
+for static graphics. Use the object constructors, like `$$.Button()`,
+to bind a graphic object to a data model whose value may change
 over the life of the page.
 
 #### Badge
@@ -396,8 +406,7 @@ over the life of the page.
 Creates a Bootstrap badge (a `span` tag with class="badge") whose content is model-bound.
 Give it a Model object and the name of the property you want to use as the
 badge's content.
-
-Example:
+For example:
 
 	var model = new Backbone.Model({item: 'tweets', count: 42});
 	var badge = new $$.Badge({model: model, content: 'count'}).render();
@@ -423,8 +432,7 @@ creates a navbar with three buttons.
 Creates a Bootstrap button (a `button` tag with class="btn") whose label is model-bound.
 You can pass "context" and "size" attributes to define
 the corresponding Bootstrap "btn-*" classNames.
-
-Example:
+For example:
 
 	var model = new Backbone.Model({name: 'Submit'});
 	var button = new $$.Button({model: model, content: 'name'}).render();
@@ -432,12 +440,12 @@ Example:
 	// Alter the displayed label.
 	model.set('name', 'Save as Draft');
 
+<a id="calendar"></a>
 #### Calendar
 
 Creates a month calendar diplay with the bound date value highlighted.
 Clicking on a date will set the Model's date to the chosen value.
-
-Example:
+For example:
 
 	var model = new Backbone.Model({when: new Date()});
 	var cal = new $$.Calendar({model: model, content: 'when'}).render();
@@ -446,8 +454,7 @@ Example:
 
 Creates a checkbox input.
 Clicking on the checkbox will set or unset the Model's state
-
-Example:
+For example:
 
 	var model = new Backbone.Model({state: true});
 	var input = new $$.Checkbox({model: model, content: 'state'}).render();
@@ -467,7 +474,7 @@ The value of "content" defaults to "context".
 
 #### DatePicker
 
-Combines a text box input with a Calendar component.
+Combines a text box input with a [Calendar](#calendar) component.
 
 #### Dropdown
 
@@ -492,8 +499,7 @@ You can also use a "separator" property - "separator" is a synonym for "divider"
 #### Glyph
 
 Creates a Bootstrap Glyphicon glyph (a `span` with class="glyphicon") whose icon is model-bound.
-
-A simple example:
+For example:
 
 	var model = new Backbone.Model({glyph: 'star'});
 	var glyph = new $$.Glyph({model: model, content: 'glyph'}).render();
@@ -513,24 +519,35 @@ instead of supplying a model object and property name.)
 
 Creates a Bootstrap label (a `label` tag with class="label") whose label text is model-bound.
 You can pass "context" and "size" attributes to define
-the corresponding Bootstrap "btn-*" classNames.
+the corresponding Bootstrap "label-*" classNames.
 
 #### Link
 
 Creates a URL link (an `a` tag) whose label text is model-bound.
 You can pass "context" and "size" attributes to define
-the corresponding Bootstrap "btn-*" classNames.
+the corresponding Bootstrap "link-*" classNames.
 
 #### List
 
 Creates a simple list display of a Collection.
+For example:
+
+	var list = new $$.List({
+		model: new Backbone.Collection({
+			{ id: 1, name: 'Alaska' },
+			{ id: 2, name: 'Maine' },
+			{ id: 3, name: 'Florida' },
+			{ id: 4, name: 'Nevada' }
+		}),
+		content: 'name'
+	});
 
 #### Menu
 
 Creates a scrolling menu list whose value is taken from the bound Model
 and whose choices are taken from the bound Collection of alternatives.
-
 For example:
+
 	var menu = new $$.Menu({
 		model: new Backbone.Model({place: 'Alaska'}),
 		content: 'place',
@@ -542,7 +559,7 @@ For example:
 		}),
 		altLabelContent: 'name',
 		altValueContent: 'id'
-	}).render();
+	});
 
 altValueContent defaults to altLabelContent.
 
@@ -591,8 +608,8 @@ Min and max default to 0 and 100; labelled defaults to false.
 
 Creates a group of radio buttons whose value is taken from the bound Model
 and whose choices are taken from the bound Collection of alternatives.
-
 For example:
+
 	var menu = new $$.RadioGroup({
 		model: new Backbone.Model({place: 'Alaska'}),
 		content: 'place',
@@ -626,8 +643,7 @@ responsive table with hover highlighting.
 #### TextArea
 
 A model-bound textarea.
-
-Example:
+For example:
 
 	new $$.TextArea({
 		model: new Bakcbone.Model({ description: 'some text' }),
@@ -637,8 +653,7 @@ Example:
 #### TextField
 
 A model-bound text input.
-
-Example:
+For example:
 
 	new $$.TextField({
 		model: new Bakcbone.Model({ description: 'some text' }),
@@ -652,8 +667,7 @@ Defaults to allowing choices in half-hour increments,
 which can be changed by setting the 'interval' option (in minutes).
 'Name' is the HTML name attribute for the form item.
 Format defaults to 'hh:mm a'.
-
-Example:
+For example:
 
 	new $$.TimePicker({
 		name: 'startTime',
@@ -662,3 +676,24 @@ Example:
 		model: new Backbone.Model({ when: new Date() }),
 		content: 'when'
 	}).render();
+
+<a id="noconflict"></a>
+### noConflict
+
+The `$$.noConflict()` method provides a mechanism for reverting the definition of `$$`.
+Backstrap will attempt to register itself as a CommonJS module.
+But when that functionality is not available
+it defines the global `$$` instead.
+It is possible that your app would want to include
+some other package that also uses the global `$$`.
+In this case, load the Backstrap package after the other package;
+you can then use `$$.noConflict()` to define some other variable
+to hold the Backstrap object,
+and revert the definition of `$$` back to the other package.
+For example:
+
+	var Backstrap = $$.noConflict();
+
+Now `$$` is whatever it was before you loaded Backstrap,
+and you can use the variable `Backstrap` to access the Backstrap methods.
+You might want to pick a shorter variable name, like `$b`.
