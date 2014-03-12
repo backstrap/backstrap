@@ -14,7 +14,7 @@ Look no further, you've found it:
 The Backstrap JavaScript library provides a layer of functionality
 tying together [Bootstrap][] and [Backbone][].
 It makes it easy to lay out a clean, well-designed user interface
-with interface widgets that are tightly bound to data model objects
+with interface components that are tightly bound to data model objects
 backed by a powerful model-view-control application framework.
 If you're wondering why that's such a great idea,
 take a look at this popular article by Christophe Coenraets:
@@ -32,13 +32,13 @@ Backstrap is available on [GitHub][]
 and as a Composer component on [Packagist][packagist].
 The project depends on Backbone, Bootstrap, jQuery and Underscore.
 Unless you've built your own Bootstrap theme, you'll also want to
-use the [bootstrap-default][] theme.
+use the [bootstrap-default][bsdefault] theme.
 With Composer, just add 
 
 	"backstrap/backstrap": ">0.1",
 	"components/bootstrap-theme": "~3.0"
 	
-to your composer.json "require".
+to your composer.json "require" to get started.
 
 The core Backstrap object is based heavily on
 Joe Stelmach's nifty [laconic.js][laconic] package,
@@ -49,33 +49,33 @@ higher-level data-bound components.
 To all of that we've added generators for
 Bootstrap-enhanced DOM objects and data-bound components,
 easy support for Bootstrap's sizing and context-coloring features;
-and methods for making complex widgets like
+and methods for making complex Bootstrap components like
 grids, navbars, button-groups, forms.
 
 Try out the [Examples Page][examples]!
+
 Also see an example of a ["No-HTML" web page][nohtml].
 
 In non-CommonJS environments, Backstrap defines the global namespace `$$`.
-It provides a `noConflict()` method to revert the definition of `$$` if needed.
+It provides a [`noConflict()`](#noconflict) method to revert the definition of `$$` if needed.
 It can also be used in a RequireJS context.
 
-Sample suggested use:
+Sample suggested usage:
 
-	require(['backstrap'], function ($$) {
-		$$.div(
-			$$.span({context: 'danger'},
-				'Hello, star! ',
-				$$.glyph('star')
-			),
-			$$.button({size: 'large'}, 'OK')
-		);
-	});
+	$$.div(
+		$$.span({context: 'danger'},
+			'Hello, star! ',
+			$$.glyph('star')
+		),
+		$$.button({size: 'large'}, 'OK')
+	);
 
 produces this DOM tree:
 
 	<div>
 	  <span class="text-danger">
-	    Hello, star! <span class="glyphicon glyphicon-star"></span>
+	    Hello, star!
+	    <span class="glyphicon glyphicon-star"></span>
 	  </span>
 	  <button class="btn btn-lg">OK</button>
 	</div>
@@ -91,17 +91,17 @@ produces this DOM tree:
 [bbuiLicense]: https://github.com/perka/backbone-ui/blob/master/LICENSE "Backbone-UI License"
 [b7f4861a96]:  https://github.com/joestelmach/laconic/commit/b7f4861a96153c213569ac8aa537e94312c71ce8
 [ece3ea14d7]:  https://github.com/perka/backbone-ui/commit/ece3ea14d71bf1bc8f8a0ce01103d74bfe29a10f
-[bootstrap-default]:   https://github.com/components/bootstrap-default "Bootstrap Default Theme on GitHub"
+[bsdefault]:   https://github.com/components/bootstrap-default "Bootstrap Default Theme on GitHub"
 [examples]:    http://backstrap.github.io/backstrap/examples.html "Backstrap Examples Page"
 [nohtml]:      http://backstrap.github.io/backstrap/nohtml.html "Backstrap No-HTML Example"
-[HTML Elements]: http://www.whatwg.org/specs/web-apps/current-work/multipage/section-index.html#elements-1 "HTML Element Spec"
+[elementspec]: http://www.whatwg.org/specs/web-apps/current-work/multipage/section-index.html#elements-1 "HTML Element Spec"
 
 ## Detailed usage
 
 ### HTML Tags
 
 Backstrap adds a method to the $$ namespace for each known
-[HTML Element][].
+[HTML Element][elementspec].
 These methods should be invoked with a variable-length list of child elements, strings, numbers, or arrays containing these types.
 An optional attributes object may be passed as the first argument.
 For example:
