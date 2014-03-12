@@ -277,7 +277,7 @@ and optionally with "label-*" classes for sizing and context.
 
 `$$.plain.label()` gives you a bare `label` tag.
 
-See also [$$.spanLabel](#spanlabel).
+See also [spanlabel](#spanlabel).
 
 #### linkList
 
@@ -463,7 +463,7 @@ A simple example - displays the text in a `span` with class "text-info":
 	var model = new Backbone.Model({context: 'info'});
 	var text = new $$.Context({model: model, content: 'context'}, 'This is some text').render();
 
-Passing `background: true` makes it use the "bg-*" classes instead of "text-*".
+Passing `background: true` makes it use the "bg-\*" classes instead of "text-\*".
 You can also pass it a "tagName" attribute to create something other than a `span`.
 The value of "content" defaults to "context".
 
