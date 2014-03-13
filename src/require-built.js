@@ -18793,9 +18793,10 @@ define('backstrap', function (require, exports, module) {
 		for (var c=0; c<layout.length; c++) {
 			var cell = layout[c];
 			var cellClass;
-			var content = ('content' in cell) ? cell.content : '';
+			var content = '';
 			if (cell !== null && typeof cell === 'object') {
 				cellClass = parseCellSpec(cell);
+				content = ('content' in cell) ? cell.content : '';
 			} else {
 				cellClass = 'col col-md-' + cell;
 			}
@@ -18930,7 +18931,7 @@ define('backstrap', function (require, exports, module) {
 			return $('> *:nth-child('+row+') ', el);
 		};
 		el.getCell = function (row, col) {
-			return $('> *:nth-child('+row+') > *:nth-child(' + cell + ') ', el);
+			return $('> *:nth-child('+row+') > *:nth-child(' + col + ') ', el);
 		};
 		el.appendRows(layout);
 		return el;
