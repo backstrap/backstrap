@@ -1,11 +1,11 @@
 require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	
 	var bicycles = new Backbone.Collection([
-	    { type: 'mountain',   color: 'red',    purchased: '12/24/2013' },
-	    { type: 'road',       color: 'silver', purchased: '03/11/2013' },
-	    { type: 'cyclocross', color: 'blue',   purchased: '10/10/2011' },
-	    { type: 'hybrid',     color: 'white',  purchased: '07/30/2012' },
-	    { type: 'recumbent',  color: 'yellow', purchased: '08/01/2012' }
+	    { type: 'mountain',   color: 'red',    purchased: new Date(2013, 12, 24) },
+	    { type: 'road',       color: 'silver', purchased: new Date(2013,  3, 11) },
+	    { type: 'cyclocross', color: 'blue',   purchased: new Date(2011, 10, 10) },
+	    { type: 'hybrid',     color: 'white',  purchased: new Date(2012,  7, 30) },
+	    { type: 'recumbent',  color: 'yellow', purchased: new Date(2012,  8,  1) }
 	]);
 	
 	var grid;
@@ -32,11 +32,11 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 		$$.p('For the rest of the page, we will bind this dataset to various components:'),
 		$$.blockquote($$.code($$.pre(
 			"var bicycles = new Backbone.Collection([\n",
-			"    { type: 'mountain',   color: 'red',    purchased: '12/24/2013' },\n",
-			"    { type: 'road',       color: 'silver', purchased: '03/11/2013' },\n",
-			"    { type: 'cyclocross', color: 'blue',   purchased: '10/10/2011' },\n",
-			"    { type: 'hybrid',     color: 'white',  purchased: '07/30/2012' },\n",
-			"    { type: 'recumbent',  color: 'yellow', purchased: '08/01/2012' }\n",
+			"    { id: 1, type: 'mountain',   color: 'red',    purchased: new Date(2013, 12, 24) },\n",
+			"    { id: 2, type: 'road',       color: 'silver', purchased: new Date(2013,  3, 11) },\n",
+			"    { id: 3, type: 'cyclocross', color: 'blue',   purchased: new Date(2011, 10, 10) },\n",
+			"    { id: 4, type: 'hybrid',     color: 'white',  purchased: new Date(2012,  7, 30) },\n",
+			"    { id: 5, type: 'recumbent',  color: 'yellow', purchased: new Date(2012,  8,  1) }\n",
 			"]);"
 		))),
 		$$.p('Note that the widgets are all sharing the same data model objects, ',
@@ -45,22 +45,22 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	
 	grid.getCell(2, 1).append(
 		$$.div({ context: 'primary' },
-			$$.plain.label('Mountain bike color: '),
-			$$.badge('red')
+			$$.plain.label('Type: '),
+			new $$.TextField({model: bicycles.at(0), content: 'type'}).render().el
 		)
 	);
 	
 	grid.getCell(2, 2).append(
 		$$.div({ context: 'primary' },
-			$$.plain.label('Mountain bike color: '),
-			$$.badge('red')
+			$$.plain.label('Purchased: '),
+			new $$.DatePicker({model: bicycles.at(0), content: 'purchased'}).render().el
 		)
 	);
 	
 	grid.getCell(2, 3).append(
 		$$.div({ context: 'primary' },
-			$$.plain.label('Mountain bike color: '),
-			$$.badge('red')
+			$$.plain.label('Color: '),
+			new $$.Badge({model: bicycles.at(0), content: 'color'}).render().el
 		)
 	);
 	
