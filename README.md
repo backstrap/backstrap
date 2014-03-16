@@ -470,6 +470,10 @@ Passing `background: true` makes it use the "bg-\*" classes instead of "text-\*"
 You can also pass it a "tagName" attribute to create something other than a `span`.
 The value of "content" defaults to "context".
 
+#### Container
+
+Creates a Backbone View whose DOM is a `div` decorated with the Bootstrap "container" class.
+
 #### DatePicker
 
 Combines a text box input with a [Calendar](#calendar) component.
@@ -604,6 +608,10 @@ or a BackBone.Collection for (multiple stacked progress bars).
 Model objects may contain context, min, max, labelled, and labelSuffix properties,
 in addition to a content property which should be numeric.
 Min and max default to 0 and 100; labelled defaults to false.
+
+#### Panel
+
+Creates a Backbone View whose DOM is a `div` decorated with the Bootstrap "panel" class.
 
 #### RadioGroup
 
