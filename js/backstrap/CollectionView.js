@@ -1,5 +1,5 @@
 /**
- * A generic Bootstrap View for displaying Collection data.
+ * A generic Backbone View for displaying Collection data.
  * From Backbone-UI CollectionView.
  * 
  * @license MIT

@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound URL link.
+ * A Backbone View that displays a model-bound URL link.
  * Largely from Backbone-UI's Link class,
  * with Bootstrap decoration.
  * 

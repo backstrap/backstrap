@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound text area.
+ * A Backbone View that displays a model-bound text area.
  * Largely from Backbone-UI's TextArea class,
  * with Bootstrap decoration.
  * 

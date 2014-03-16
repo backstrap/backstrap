@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a contextually-colored spanor other tag;
+ * A Backbone View that displays a Bootstrap contextually-colored span or other tag;
  * context name bound to model data.
  * 
  * @author Kevin Perry perry@princeton.edu

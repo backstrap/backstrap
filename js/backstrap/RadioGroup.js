@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound radio-button group.
+ * A Backbone View that displays a model-bound radio-button group.
  * Largely from Backbone-UI's RadioGroup class,
  * with Bootstrap decoration.
  * 

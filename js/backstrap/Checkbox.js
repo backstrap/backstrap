@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound checkbox.
+ * A Backbone View that displays a model-bound checkbox.
  * Largely from Backbone-UI's Checkbox class,
  * with Bootstrap decoration.
  * 

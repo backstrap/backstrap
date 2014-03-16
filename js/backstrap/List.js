@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound list.
+ * A Backbone View that displays a model-bound list.
  * Largely from Backbone-UI's ListView class,
  * with Bootstrap decoration.
  * 

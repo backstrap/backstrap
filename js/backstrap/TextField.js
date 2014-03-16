@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound text field.
+ * A Backbone View that displays a model-bound text field.
  * Largely from Backbone-UI's TextField class,
  * with Bootstrap decoration.
  * 

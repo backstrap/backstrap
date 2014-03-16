@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound button.
+ * A Backbone View that displays a model-bound button.
  * Largely from Backbone-UI's Button class,
  * with Bootstrap decoration.
  * 

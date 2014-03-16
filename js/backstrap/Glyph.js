@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound Bootstrap Glypicon glyph.
+ * A Backbone View that displays a model-bound Bootstrap Glypicon glyph.
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu

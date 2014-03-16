@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound menu.
+ * A Backbone View that displays a model-bound menu.
  * Largely from Backbone-UI's Menu class,
  * with Bootstrap decoration.
  * 

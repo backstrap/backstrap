@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound time picker.
+ * A Backbone View that displays a model-bound time picker.
  * Largely from Backbone-UI's TimePicker class,
  * with Bootstrap decoration.
  * 

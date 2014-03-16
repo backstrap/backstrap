@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound table.
+ * A Backbone View that displays a model-bound table.
  * Largely from Backbone-UI's TableView class,
  * with Bootstrap decoration.
  * 

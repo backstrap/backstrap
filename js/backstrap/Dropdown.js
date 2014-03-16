@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound dropdown list.
+ * A Backbone View that displays a model-bound dropdown list.
  * Largely from Backbone-UI's Pulldown class,
  * with Bootstrap decoration.
  * 
