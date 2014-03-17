@@ -38,8 +38,8 @@
 			},
 			
 			appendRow: function (layout) {
-				var rowdiv = $$.div({className: 'row'});
-				$(this).append(rowdiv);
+				var row = $$.div({className: 'row'});
+				this.$el.append(row);
 				for (var c=0; c<layout.length; c++) {
 					var cell = layout[c];
 					var cellClass;
@@ -50,7 +50,7 @@
 					} else {
 						cellClass = 'col col-md-' + cell;
 					}
-					$(rowdiv).append($$.div({className: cellClass}, content));
+					$$.div({className: cellClass}, content).appendTo(row);
 				}
 				return this;
 			},
