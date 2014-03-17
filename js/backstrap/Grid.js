@@ -24,7 +24,7 @@
 			fluid: false,
 			layout: [[ 12 ]],
 
-			initialize : function (options) {
+			initialize: function (options) {
 				$$.BaseView.prototype.initialize.call(this, options);
 				this.$el.addClass(this.options.fluid ? 'container-fluid' : 'container');
 				this.appendRows(this.options.layout);
