@@ -28,7 +28,6 @@
 				$$.BaseView.prototype.initialize.call(this, options);
 				this.$el.addClass(this.options.fluid ? 'container-fluid' : 'container');
 				this.appendRows(this.options.layout);
-				return this;
 			},
 			
 			appendRows: function (layout) {

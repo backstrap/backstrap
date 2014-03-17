@@ -54,7 +54,6 @@
 				if ('align' in this.options) {
 					this.align = this.options.align==='right' ? ' dropdown-menu-right' : ' dropdown-menu-left';
 				}
-				return this;
 			},
 	
 			render: function () {

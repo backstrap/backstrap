@@ -45,7 +45,6 @@
 
 				// listen for model changes
 				this._observeModel(_(this.render).bind(this));
-
 			},
 
 			render : function() {

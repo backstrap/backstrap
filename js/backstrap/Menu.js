@@ -37,11 +37,8 @@
 				$$.BaseView.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasAlternativeProperty, 
 					$$.HasFormLabel, $$.HasError]);
-
 				_(this).bindAll('render');
-
 				$(this.el).addClass('menu');
-
 			},
 
 
