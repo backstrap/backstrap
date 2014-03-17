@@ -435,7 +435,7 @@
 	// shortcut for creating Bootstrap grids.
 	backstrap.grid = function () {
 		var cn = 'container';
-		var layout = [];
+		var layout = [[ 12 ]];
 		if (typeof(arguments[0]) === 'object') {
 			if ('layout' in arguments[0]) {
 				layout = arguments[0].layout;
