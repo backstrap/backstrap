@@ -9,6 +9,17 @@
 (function(context) {
 	var fn = function($$)
 	{
+		var sizeMap = {
+				'large'        : 'lg',
+				'lg'           : 'lg',
+				'medium'       : 'md',
+				'md'           : 'md',
+				'small'        : 'sm',
+				'sm'           : 'sm',
+				'extra-small'  : 'xs',
+				'xs'           : 'xs'
+		};
+		
 		var parseCellSpec = function(spec) {
 			var str = 'col';
 			for (var prop in spec) {
