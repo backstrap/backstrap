@@ -520,6 +520,26 @@ in order to properly implement "size" and "context" attributes.
 Gives you a large red star (note that you can pass a literal value directly to content
 instead of supplying a model object and property name.)
 
+#### Grid
+
+Creates a Bootstrap grid layout (a `div` tag with class="container", containing "row" and "col" `div's`) as a Backbone View.
+Pass it a "layout" attribute in the attributes argument to define the grid cells.
+The "layout" attribute should contain an array of arrays of cell specifications.
+Each cell specification can be either a simple integer specifying the width (in columns) of the cell,
+or an object with properties for each device-size for which you want to set a column width.
+Use either Bootstrap's short names ("lg", "sm") or full names ("large", "small").
+It may also contain a "content" property containing a DOM object to use as
+the contents of the cell. For example:
+
+	$$.Grid({layout: [
+		[ 6, 6 ],
+		[ { xs: 12, md: 6, content: $$.div('Hello, World') } ]
+	]});
+
+Pass Grid a "fluid: true" attribute to get a fluid layout (using Bootstrap's
+"container-fluid" class instead of "container" on the top-level div).
+See [Bootstrap's grid doc](http://getbootstrap.com/css/#grid) for more info on using Bootstrap grids.
+
 #### Label
 
 Creates a Bootstrap label (a `label` tag with class="label") whose label text is model-bound.

@@ -20,7 +20,7 @@
 	
 	if (typeof context.define === "function" && context.define.amd &&
 			typeof context._$$_backstrap_built_flag === 'undefined') {
-		define("backstrap/Container", ["backstrap"], function ($$) {
+		define("backstrap/Panel", ["backstrap"], function ($$) {
 			return fn($$);
 		});
 	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
