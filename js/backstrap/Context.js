@@ -18,10 +18,10 @@
 			},
 	
 			initialize : function(options) {
-				this.options = _.extend({}, this.options, options);
+				$$.BaseView.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
-				this.prefix = this.options.background ? 'bg-' : 'text-';
 				_(this).bindAll('render');
+				this.prefix = this.options.background ? 'bg-' : 'text-';
 			},
 	
 			render : function() {

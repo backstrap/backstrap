@@ -12,6 +12,9 @@
 	{
 		var ItemView = $$.BaseView.extend({
 			initialize: function () {
+				$$.BaseView.prototype.initialize.call(this, options);
+				this.mixin([$$.HasModel]);
+				_(this).bindAll('render');
 				this.span = $$.span({className: this.model.labelled ? '' : 'sr-only'});
 				$(this.el).addClass('progress-bar').
 					attr('role', 'progressbar').

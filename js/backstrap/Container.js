@@ -10,9 +10,8 @@
 	var fn = function($$)
 	{
 		return ($$.Container = $$.BaseView.extend({
-
 			initialize : function(options) {
-				this.options = _.extend({}, this.options, options);
+				$$.BaseView.prototype.initialize.call(this, options);
 				this.$el.addClass('container');
 			}
 		}));

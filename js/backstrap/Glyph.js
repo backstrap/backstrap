@@ -15,7 +15,7 @@
 			},
 	
 			initialize : function(options) {
-				this.options = _.extend({}, this.options, options);
+				$$.BaseView.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
 				this.$el.addClass('glyphicon');
