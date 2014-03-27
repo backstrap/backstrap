@@ -19,13 +19,13 @@
       $(this.el).empty();
       this.itemViews = {};
 
-      this.collectionEl = $$.ul();
+      this.collectionEl = $$.ul({className: 'list-group'});
 
       // if the collection is empty, we render the empty content
       if((!_(this.model).exists()  || this.model.length === 0) && this.options.emptyContent) {
         this._emptyContent = _(this.options.emptyContent).isFunction() ? 
           this.options.emptyContent() : this.options.emptyContent;
-        this._emptyContent = $$.li(this._emptyContent);
+        this._emptyContent = $$.li({className: 'list-group-item'}, this._emptyContent);
 
         if(!!this._emptyContent) {
           this.collectionEl.appendChild(this._emptyContent);
@@ -64,7 +64,7 @@
         }
       }
 
-      var item = $$.li(content);
+      var item = $$.li({className: 'list-group-item'}, content);
 
       // bind the item click callback if given
       if(this.options.onItemClick) {

@@ -81,7 +81,7 @@
 				// add focusin / focusout
 				this.setupFocus(this.input, this._parent);
 							
-				this.$el.append(this.wrapWithFormLabel(''), this._parent);
+				this.$el.append(this.wrapWithFormLabel($$.span()), this._parent);
 				
 				this.setEnabled(!this.options.disabled);
 

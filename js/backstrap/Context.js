@@ -25,7 +25,7 @@
 			},
 	
 			render : function() {
-				var contextName = this.resolveContent();
+				var contextName = this.resolveContent(this.options.model, this.options.contentMap);
 				this._observeModel(this.render);
 				this.$el.removeClass(this.prefix + this.context).addClass(this.prefix + contextName);
 				return this;
