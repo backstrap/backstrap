@@ -15,7 +15,8 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 			$$.pageHeader($$.h1('Backstrap Examples')),
 			grid = $$.grid({ layout: [
 			    [ 12 ],
-			    [ 4, 4, 4 ]
+			    [ 4, 4, 4 ],
+			    [ 12 ]
 			]})
 		)
 	);
@@ -61,6 +62,16 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 		$$.div({ context: 'primary' },
 			$$.plain.label('Color: '),
 			new $$.Badge({model: bicycles.at(0), content: 'color'}).render().el
+		)
+	);
+	
+	grid.getCell(3,1).append(
+		$$.div({},
+			"My ",
+			new $$.Button({model: bicycles.at(0), content: 'type'}).render().el,
+			" bike is ",
+			new $$.Button({model: bicycles.at(0), content: 'color'}).render().el,
+			"."
 		)
 	);
 	
