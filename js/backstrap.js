@@ -307,6 +307,9 @@
 			if (prop in sizeMap) {
 				str += ' col-' + sizeMap[prop] + '-' + spec[prop];
 			}
+            if (prop === 'className') {
+                str += ' ' + spec[prop];
+            }
 		}
 		return str;
 	};
@@ -447,7 +450,7 @@
 			}
 		}
 		var el = backstrap.apply(this,
-				['div'].concat(Array.prototype.slice.call(arguments)));
+				['div', null].concat(Array.prototype.slice.call(arguments)));
 		$(el).addClass(cn);
 		el.appendRows = appendGridRows;
 		el.appendRow = appendGridRow;

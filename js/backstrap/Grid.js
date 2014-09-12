@@ -26,6 +26,9 @@
 				if (prop in sizeMap) {
 					str += ' col-' + sizeMap[prop] + '-' + spec[prop];
 				}
+				if (prop === 'className') {
+	                str += ' ' + spec[prop];
+	            }
 			}
 			return str;
 		};
