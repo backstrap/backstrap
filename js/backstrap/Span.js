@@ -6,7 +6,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Span = $$.BaseView.extend({
+		return ($$.Span = $$.View.extend({
 			options : {
 				size: 'default',
 				context: 'default'
@@ -15,7 +15,7 @@
 			tagName : 'span',
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph]);
 				_(this).bindAll('render');
 				this.$el.addClass('text-' + $$._mapSize(this.options.size));

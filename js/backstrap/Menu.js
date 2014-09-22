@@ -10,7 +10,7 @@
 	{
 		// TODO: Major overhaul - should not use <select>
 		var noop = function(){};
-		return ($$.Menu = $$.BaseView.extend({
+		return ($$.Menu = $$.View.extend({
 
 			options : {
 
@@ -34,7 +34,7 @@
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasAlternativeProperty, 
 					$$.HasFormLabel, $$.HasError]);
 				_(this).bindAll('render');

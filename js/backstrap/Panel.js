@@ -9,9 +9,9 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Panel = $$.BaseView.extend({
+		return ($$.Panel = $$.View.extend({
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.$el.addClass('panel');
 			}
 		}));

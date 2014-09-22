@@ -9,17 +9,17 @@
 
   var noop = function(){};
 
-  return ($$.CollectionView = $$.BaseView.extend({
+  return ($$.CollectionView = $$.View.extend({
     options : {
-      // The Backbone.Collection instance the view is bound to
+      // The Collection instance the view is bound to
       model : null,
 
-      // The Backbone.View class responsible for rendering a single item 
+      // The View class responsible for rendering a single item 
       // in the collection. For simple use cases, you can pass a String instead 
       // which will be interpreted as the property of the model to display.
       itemView : null,
       
-      // Options to pass into the Backbone.View responsible for rendering the single item
+      // Options to pass into the View responsible for rendering the single item
       itemViewOptions : null,
 
       // A string, element, or function describing what should be displayed
@@ -46,7 +46,7 @@
     _renderItem : noop,
 
     initialize : function(options) {
-      $$.BaseView.prototype.initialize.call(this, options);
+      $$.View.prototype.initialize.call(this, options);
       if(this.model) {
         this.model.bind('add', _.bind(this._onItemAdded, this));
         if(this.options.renderOnChange){

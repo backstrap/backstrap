@@ -34,12 +34,12 @@
 		};
 		
 		// Defaults to 1x1 non-fluid layout.
-		return ($$.Grid = $$.BaseView.extend({
+		return ($$.Grid = $$.View.extend({
 			fluid: false,
 			layout: [[ 12 ]],
 
 			initialize: function (options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.$el.addClass(this.options.fluid ? 'container-fluid' : 'container');
 				this.appendRows(this.options.layout);
 			},

@@ -1,4 +1,4 @@
-require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
+require(['jquery', 'backstrap'], function($, $$) {
 
 	var n = 1;
 	
@@ -163,7 +163,7 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 
 	testObj(new $$.Button({size: 'lg', context: 'info', content: 'Hello'}), 'Button');
 	
-	testObj(new $$.BasicNavbar({brand: 'Wow!', model: new Backbone.Collection([
+	testObj(new $$.BasicNavbar({brand: 'Wow!', model: new $$.Collection([
 		{ name: 'first', href: '#first', label: 'First' },
 		{ name: 'second', href: '#second', label: 'Second' },
 		{ name: 'third', href: '#third', label: 'Third' }
@@ -178,7 +178,7 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	obj.$el.append(new $$.Badge({content: '33'}).render().el);
 	testObj(obj, 'Context(bg) + Glyph + Badge');
 
-	testObj(new $$.Dropdown({buttonLabel: 'Things', buttonId: 'button1', align: 'left', model: new Backbone.Collection([
+	testObj(new $$.Dropdown({buttonLabel: 'Things', buttonId: 'button1', align: 'left', model: new $$.Collection([
 		{ name: 'first', href: '#first', label: 'First' },
 		{ header: true, label: 'More things'},
 		{ name: 'second', href: '#second', label: 'Second' },
@@ -186,13 +186,13 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 		{ name: 'third', href: '#third', label: 'Third' }
 	])}), 'Dropdown');
 
-	testObj(new $$.NavPills({context: 'primary', model: new Backbone.Collection([
+	testObj(new $$.NavPills({context: 'primary', model: new $$.Collection([
 		{ name: 'first', href: '#first', label: 'First' },
 		{ name: 'second', href: '#second', label: 'Second' },
 		{ name: 'third', href: '#third', label: 'Third' }
 	])}), 'NavPills');
 	
-	testObj(new $$.NavTabs({model: new Backbone.Collection([
+	testObj(new $$.NavTabs({model: new $$.Collection([
 		{ name: 'first', href: '#first', label: 'First' },
 		{ name: 'second', href: '#second', label: 'Second' },
 		{ name: 'third', href: '#third', label: 'Third' }
@@ -204,7 +204,7 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 			{ title: 'Value', content: 'b' },
 			{ title: 'Detail', content: 'c' }
 		],
-		model: new Backbone.Collection([
+		model: new $$.Collection([
 			{ a: 'abcde', b: 'bcdef', c: 'cdefg' },
 			{ a: 'ab123', b: 'b123', c: '123' },
 			{ a: 'ab234', b: 'b3456', c: '34567' },
@@ -216,7 +216,7 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	
 	test($$.form(
 	  new $$.Checkbox({
-		model: new Backbone.Model({
+		model: new $$.Model({
 			label: 'Use Checkbox?',
 			value: true
 		}),
@@ -225,21 +225,21 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	}).render().el), 'Checkbox');
 
 	testObj(new $$.Calendar({
-		model: new Backbone.Model({
+		model: new $$.Model({
 			name: 'Christmas', date: new Date(2014, 12, 25)
 		}),
 		content: 'date'
 	}), 'Calendar');
 	
 	testObj(new $$.DatePicker({
-		model: new Backbone.Model({
+		model: new $$.Model({
 			name: 'Christmas', date: new Date(2014, 12, 31)
 		}),
 		content: 'date'
 	}), 'DatePicker');
 	
 	testObj(new $$.TimePicker({
-		model: new Backbone.Model({
+		model: new $$.Model({
 			name: 'Christmas', date: new Date(2014, 12, 31, 6, 17)
 		}),
 		content: 'date',
@@ -247,7 +247,7 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	}), 'TimePicker');
 	
 	testObj(new $$.Link({
-		model: new Backbone.Model({
+		model: new $$.Model({
 			name: 'Someplace'
 		}),
 		content: 'name',
@@ -255,28 +255,28 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	}), 'Link');
 	
 	testObj(new $$.TextArea({
-		model: new Backbone.Model({
+		model: new $$.Model({
 			name: 'First M. Last', description: 'lorem ipsum quod erat and all that jazz.'
 		}),
 		content: 'description'
 	}), 'TextArea');
 
 	testObj(new $$.TextField({
-		model: new Backbone.Model({
+		model: new $$.Model({
 			name: 'First M. Last', description: 'lorem ipsum quod erat and all that jazz.'
 		}),
 		content: 'name'
 	}), 'TextField');
 
 	testObj(new $$.Label({
-		model: new Backbone.Model({ descrip: 'lorem ipsum' }),
+		model: new $$.Model({ descrip: 'lorem ipsum' }),
 		labelContent: 'descrip'
 	}), 'Label');
 
 	testObj(new $$.Menu({
-		model: new Backbone.Model({ value: 'e' }),
+		model: new $$.Model({ value: 'e' }),
 		content: 'value',
-		alternatives: new Backbone.Collection(
+		alternatives: new $$.Collection(
 			[
 			 { name: 'Adam',    value: 'a' },
 			 { name: 'Bert',    value: 'b' },
@@ -292,9 +292,9 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	}), 'Menu');
 	
 	testObj(new $$.RadioGroup({
-		model: new Backbone.Model({ value: 'c' }),
+		model: new $$.Model({ value: 'c' }),
 		content: 'value',
-		alternatives: new Backbone.Collection(
+		alternatives: new $$.Collection(
 			[
 			 { name: 'Adam',    value: 'a' },
 			 { name: 'Bert',    value: 'b' },

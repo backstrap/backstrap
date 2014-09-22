@@ -8,7 +8,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Checkbox = $$.BaseView.extend({
+		return ($$.Checkbox = $$.View.extend({
 			options : {
 				// The property of the model describing the label that 
 				// should be placed next to the checkbox
@@ -18,7 +18,7 @@
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph, $$.HasError]);
 				_(this).bindAll('_refreshCheck');
 				this.$el.addClass('checkbox');

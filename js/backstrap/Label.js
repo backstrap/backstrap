@@ -10,7 +10,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Label = $$.BaseView.extend({
+		return ($$.Label = $$.View.extend({
     
 			options : {
 				emptyContent : '',
@@ -21,7 +21,7 @@
 			tagName : 'label',
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
 				this.$el.addClass('label label-' + $$._mapSize(this.options.size));

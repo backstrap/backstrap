@@ -8,7 +8,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		var ItemView = $$.BaseView.extend({
+		var ItemView = $$.View.extend({
 			tagName: function () {
 				if (this.model.get('divider') || this.model.get('separator') || this.model.get('header')) {
 					return 'span';

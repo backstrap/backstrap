@@ -9,7 +9,7 @@
 	var fn = function($$)
 	{
 		var noop = function(){};
-		return ($$.TextArea = $$.BaseView.extend({
+		return ($$.TextArea = $$.View.extend({
 			options : {
 				className : 'text_area',
 
@@ -32,7 +32,7 @@
 			textArea : null,
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasFormLabel,
 					$$.HasError, $$.HasFocus]);
 

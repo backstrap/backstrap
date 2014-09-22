@@ -8,7 +8,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Link = $$.BaseView.extend({
+		return ($$.Link = $$.View.extend({
 			options : {
 				// disables the link (non-clickable) 
 				disabled : false,
@@ -23,7 +23,7 @@
 			tagName : 'a',
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph]);
 				_(this).bindAll('render');
 				this.$el.addClass('link text-' + $$._mapSize(this.options.size));

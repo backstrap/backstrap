@@ -9,7 +9,7 @@
 	var fn = function($$)
 	{
 		var noop = function(){};
-		return ($$.TextField = $$.BaseView.extend({
+		return ($$.TextField = $$.View.extend({
 			options : {
 				// disables the input text
 				disabled : false,
@@ -35,7 +35,7 @@
 			input : null,
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph, 
 					$$.HasFormLabel, $$.HasError, $$.HasFocus]);
 				_(this).bindAll('_refreshValue');

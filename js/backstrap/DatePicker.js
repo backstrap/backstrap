@@ -10,7 +10,7 @@
 	{
 		var KEY_RETURN = 13;
 
-		return ($$.DatePicker = $$.BaseView.extend({
+		return ($$.DatePicker = $$.View.extend({
 
 			options : {
 				// a moment.js format : http://momentjs.com/docs/#/display/format
@@ -23,7 +23,7 @@
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasFormLabel, $$.HasError]);
 				this.$el.addClass('date_picker');
 

@@ -10,7 +10,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Context = $$.BaseView.extend({
+		return ($$.Context = $$.View.extend({
 			options : {
 				tagName: 'span',
 				content: 'context',
@@ -18,7 +18,7 @@
 			},
 	
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
 				this.prefix = this.options.background ? 'bg-' : 'text-';

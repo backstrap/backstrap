@@ -9,7 +9,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Glyph = $$.BaseView.extend({
+		return ($$.Glyph = $$.View.extend({
 			options : {
 				context: 'default',
 				contextMap: null,
@@ -22,7 +22,7 @@
 	
 			initialize : function(options) {
 				options.tagName = 'span';
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
 				this.prefix = this.options.background ? 'bg-' : 'text-';

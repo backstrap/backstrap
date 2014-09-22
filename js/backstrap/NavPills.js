@@ -9,7 +9,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		var ItemView = $$.BaseView.extend({
+		var ItemView = $$.View.extend({
 			tagName: 'a',
 			className: 'nav-item',
 			

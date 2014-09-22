@@ -9,7 +9,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		var ItemView = $$.BaseView.extend({
+		var ItemView = $$.View.extend({
 			tagName: 'a',
 			className: 'nav-item',
 			
@@ -90,12 +90,12 @@
 		    }
 		});
 	
-		return ($$.BasicNavbar = $$.BaseView.extend({
+		return ($$.BasicNavbar = $$.View.extend({
 			className: 'navbar navbar-default',
 			brand: '',
 	
 			initialize: function (options) {
-				$$.BaseView.prototype.initialize.apply(this, arguments);
+				$$.View.prototype.initialize.apply(this, arguments);
 				if ('navbarType' in options) {
 					this.$el.addClass('navbar-'+options.navbarType);
 				}

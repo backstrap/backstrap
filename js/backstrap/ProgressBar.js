@@ -10,9 +10,9 @@
 (function(context) {
 	var fn = function($$)
 	{
-		var ItemView = $$.BaseView.extend({
+		var ItemView = $$.View.extend({
 			initialize: function () {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
 				this.span = $$.span({className: this.model.labelled ? '' : 'sr-only'});
@@ -46,12 +46,12 @@
 			},
 	
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
 				$(this.el).addClass('progress');
 				if (typeof this.model !== 'Collection') {
-					this.model = new Backbone.Collection(this.model);	
+					this.model = new $$.Collection(this.model);	
 				}
 			},
 	

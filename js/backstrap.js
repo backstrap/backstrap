@@ -32,8 +32,7 @@
 (function (context) {
   var fn = function (context) {
 
-	var $ = context.$,
-		BBView = context.Backbone.View;
+	var $ = context.$;
 
 	// properly-cased attribute names for IE setAttribute support
 	var attributeMap = {
@@ -503,15 +502,21 @@
 	};
 	*/
 
-	backstrap.BaseView = BBView.extend({
+	backstrap.View = context.Backbone.View.extend({
 		initialize : function(options) {
 			this.options = this.options ? _({}).extend(this.options, options) : options;
 		}
 	});
 
+	backstrap.Events = Backbone.Events.extend({});
+
+	backstrap.Router = Backbone.Router.extend({});
+
+	backstrap.history = Backbone.history;
+
 	/************* Add some utility methods to Backbone.View **********/
 
-	_(BBView.prototype).extend({
+	_(context.Backbone.View.prototype).extend({
 	  
 	  // resolves the appropriate content from the given choices
 	  resolveContent : function(model, content, defaultOption) {

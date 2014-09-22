@@ -9,7 +9,7 @@
 	var fn = function($$)
 	{
 		var noop = function(){};
-		return ($$.RadioGroup = $$.BaseView.extend({
+		return ($$.RadioGroup = $$.View.extend({
 
 			options : {
 				// used to group the radio inputs
@@ -23,7 +23,7 @@
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, 
 					$$.HasAlternativeProperty, $$.HasGlyph, 
 					$$.HasFormLabel, $$.HasError]);
