@@ -508,7 +508,7 @@
 		}
 	});
 
-	backstrap.Events = Backbone.Events.extend({});
+	backstrap.Events = _.extend({}, Backbone.Events);
 
 	backstrap.Router = Backbone.Router.extend({});
 
