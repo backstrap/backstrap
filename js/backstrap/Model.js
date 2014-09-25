@@ -13,7 +13,7 @@
         },
 
         initialize: function(options) {
-	    $$.Model.prototype.initialize.call(this, options);
+	    Backbone.Model.prototype.initialize.call(this, options);
             if(this.options.autoRefresh) {
               this.resumeAutoRefresh();
             }  
