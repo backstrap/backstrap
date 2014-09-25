@@ -7,7 +7,6 @@
         var touchTime = (new Date()).getTime();
 
         var touch = function () {
-            console.log('touch');
             touchTime = (new Date()).getTime();
             if (touchTime - lastRefresh > dispatcher.minInterval) {
                 activeInterval = dispatcher.minInterval;
