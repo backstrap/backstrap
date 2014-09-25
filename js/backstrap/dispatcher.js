@@ -68,7 +68,7 @@
 		context.module.exports = fn(require('backstrap'), require('backbone'), require('jquery'));
 	} else {
 		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-		if (typeof context.Backbone !== 'function') throw new Error('Backbone environment not loaded');
+		if (typeof context.Backbone.View === 'undefined') throw new Error('Backbone environment not loaded');
 		if (typeof context.$ !== 'function') throw new Error('jQuery environment not loaded');
 		fn(context.$$, context.Backbone, context.$);
 	}

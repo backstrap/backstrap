@@ -43,8 +43,8 @@
 		module.exports = fn(require("backstrap"), require('backstrap/dispatcher'), require('Backbone'));
 	} else {
 		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-		if (typeof context.$$ !== 'object') throw new Error('Backstrap dispatcher not loaded');
-		if (typeof context.Backbone !== 'function') throw new Error('Backbone environment not loaded');
+		if (typeof context.$$.dispatcher !== 'object') throw new Error('Backstrap dispatcher not loaded');
+		if (typeof context.Backbone.View === 'undefined') throw new Error('Backbone environment not loaded');
 		fn(context.$$, context.$$.dispatcher, context.Backbone);
 	}
 }(this));
