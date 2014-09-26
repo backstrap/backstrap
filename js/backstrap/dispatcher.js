@@ -2,6 +2,12 @@
     var fn = function($$, $)
     {
         var timeout = null;
+        var dispatcher = {
+                minInterval: 10,
+                maxInterval: 1000,
+                decayFrequency: 4,
+                decayFactor: 2
+        };
         var activeInterval = 0;
         var lastRefresh = 99999999999;
         var touchTime = (new Date()).getTime();
@@ -20,18 +26,18 @@
             if (activeInterval < dispatcher.minInterval) {
                 activeInterval = dispatcher.minInterval;
             }
-            if (now - touchTime > activeInterval*dispatcher.decayFrequency && activeInterval < dispatcher.maxInterval) {
-                activeInterval = Math.min(activeInterval*dispatcher.decayFactor, dispatcher.maxInterval);
+            if ((now - touchTime)/1000 > activeInterval * dispatcher.decayFrequency && activeInterval < dispatcher.maxInterval) {
+                activeInterval = Math.min(activeInterval * dispatcher.decayFactor, dispatcher.maxInterval);
             }
             if (timeout) {
-                clearTimeout();
+                clearTimeout(timeout);
             }
             timeout = setTimeout(doRefresh, activeInterval*1000);
             lastRefresh = (new Date()).getTime();
             dispatcher.trigger('refresh');
         };
 
-        var dispatcher = $$.dispatcher = _.extend({
+        dispatcher = $$.dispatcher = _.extend({
             minInterval: 10,
             maxInterval: 1000,
             decayFrequency: 4,
