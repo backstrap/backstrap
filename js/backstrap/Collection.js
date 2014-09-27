@@ -15,7 +15,7 @@
         initialize: function(options) {
 	    Backbone.Collection.prototype.initialize.call(this, options);
             if(this.options.autoRefresh) {
-              this.resumeAutoRefresh();
+              dispatcher.startRefresh(this);
             }  
         },
     

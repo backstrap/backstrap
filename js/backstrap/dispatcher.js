@@ -14,19 +14,30 @@
 
         var touch = function () {
             touchTime = (new Date()).getTime();
-            if (touchTime - lastRefresh > dispatcher.minInterval) {
+            if ((touchTime - lastRefresh)/1000 > dispatcher.minInterval) {
                 activeInterval = dispatcher.minInterval;
                 doRefresh();
             }
         };
 
         var doRefresh = function doRefresh() {
-            var now = (new Date()).getTime();
-            
+            if (!(dispatcher.minInterval > 0)) {
+                console.log('$$.dispatcher.minInterval must be positive');
+                return;
+            }
+            if (!(dispatcher.maxInterval >= dispatcher.minInterval)) {
+                console.log('$$.dispatcher.maxInterval must be >= than minInterval');
+                return;
+            }
+            if (!(dispatcher.decayFrequency >= 1 && dispatcher.decayFactor >= 1)) {
+                console.log('$$.dispatcher decay parameters must be >= 1');
+                return;
+            }
             if (activeInterval < dispatcher.minInterval) {
                 activeInterval = dispatcher.minInterval;
             }
-            if ((now - touchTime)/1000 > activeInterval * dispatcher.decayFrequency && activeInterval < dispatcher.maxInterval) {
+            if (((new Date()).getTime() - touchTime)/1000 > activeInterval * dispatcher.decayFrequency
+                    && activeInterval < dispatcher.maxInterval) {
                 activeInterval = Math.min(activeInterval * dispatcher.decayFactor, dispatcher.maxInterval);
             }
             if (timeout) {
@@ -40,7 +51,7 @@
         dispatcher = $$.dispatcher = _.extend({
             minInterval: 10,
             maxInterval: 1000,
-            decayFrequency: 4,
+            decayFrequency: 6,
             decayFactor: 2,
 
             refresh: function () {
@@ -49,6 +60,7 @@
 
             /* Not normally used, but can be called OOB. */
             refreshMe: function () {
+                lastRefresh = (new Date()).getTime();
                 this.trigger('refresh');
             },
 
