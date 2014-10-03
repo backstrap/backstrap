@@ -52,6 +52,7 @@ take a look at this popular article by Christophe Coenraets:
 <li><a href="#bootstrap-tags">Bootstrap Tags</a></li>
 <li><a href="#bootstrap-attributes">Bootstrap Attributes</a></li>
 <li><a href="#components">Components</a></li>
+<li><a href="#backbone-extensions">Backbone Extensions</a></li>
 <li><a href="#noconflict">noConflict</a></li>
 </ul><p>Backstrap is available on <a href="https://github.com/backstrap/backstrap" title="Backstrap on GitHub">GitHub</a>
 and as a Composer component on <a href="https://packagist.org/packages/backstrap/backstrap" title="Backstrap on Packagist">Packagist</a>.
@@ -525,6 +526,27 @@ var input = new $$.Checkbox({model: model, content: 'state'}).render();
 </code></pre>
 
 <h4>
+<a name="collectionView" class="anchor" href="#collectionView"><span class="octicon octicon-link"></span></a>CollectionView</h4>
+
+<p>A generic Collection-aware view. Listens to add, remove, and change events on the Collection, and provides a basic rendering framework.
+Example:</p>
+
+<pre><code>new $$.CollectionView({
+    model: someCollection,
+    itemView: $$.View.extend({ /* view for individual item */ }),
+    emptyContent: 'No items to show',
+    placeItem: function (itemview) {
+        // If you require special handling to place itemViews on the page.
+    },
+    placeEmpty: function (emptycontent) {
+        // If you require special handling to place emptyContent on the page.
+    }
+});
+</code></pre>
+
+<p>Both $$.List and $$.Table extend this component.</p>
+
+<h4>
 <a name="context-1" class="anchor" href="#context-1"><span class="octicon octicon-link"></span></a>Context</h4>
 
 <p>Creates a <code>span</code> whose Bootstrap context-color is model-bound.</p>
@@ -647,6 +669,12 @@ For example:</p>
 </code></pre>
 
 <p>altValueContent defaults to altLabelContent.</p>
+
+<h4>
+<a name="modelview" class="anchor" href="#modelview"><span class="octicon octicon-link"></span></a>ModelView</h4>
+
+<p>A generic Model-aware view. Listens to change events on the Model, which cause it to re-render itself.
+</p>
 
 <h4>
 <a name="navpills" class="anchor" href="#navpills"><span class="octicon octicon-link"></span></a>NavPills</h4>
@@ -775,6 +803,59 @@ For example:</p>
     content: 'when'
 }).render();
 </code></pre>
+
+<h3>
+<a name="backbone-extensions" class="anchor" href="#backbone-extensions"><span class="octicon octicon-link"></span></a>Backbone Extensions</h3>
+
+<p>Backstrap has objects for virtually all of the Backbone objects you'll need, too.</p>
+
+<h4>
+<a name="events" class="anchor" href="#events"><span class="octicon octicon-link"></span></a>Events</h4>
+
+<p>$$.Events is a simple extension of Backbone.Events.</p>
+
+<h4>
+<a name="model" class="anchor" href="#model"><span class="octicon octicon-link"></span></a>Model</h4>
+
+<p>$$.Model extends Backbone.Model and adds an autoRefresh option.
+If autoRefresh is true, the Backstrap dispatcher will call model.fetch() on a regular basis
+to refresh the model data from the server.
+The interval is tunable (see <a href="#dispatcher">dispatcher</a>), and can be configured to slow down over time.</p>
+
+<h4>
+<a name="collection" class="anchor" href="#collection"><span class="octicon octicon-link"></span></a>Collection</h4>
+
+<p>$$.Collection extends Backbone.Collection and adds an autoRefresh option.
+If autoRefresh is true, the Backstrap dispatcher will call collection.fetch() on a regular basis
+to refresh the model data from the server.
+The interval is tunable (see <a href="#dispatcher">dispatcher</a>), and can be configured to slow down over time.</p>
+
+<h4>
+<a name="view" class="anchor" href="#view"><span class="octicon octicon-link"></span></a>View</h4>
+
+<p>$$.View is a simple extension of Backbone.View.</p>
+
+<h4>
+<a name="router" class="anchor" href="#router"><span class="octicon octicon-link"></span></a>Router</h4>
+
+<p>$$.Router is a simple extension of Backbone.Router.</p>
+
+<h4>
+<a name="history" class="anchor" href="#history"><span class="octicon octicon-link"></span></a>history</h4>
+
+<p>$$.history is an alias for Backbone.history.</p>
+
+<h4>
+<a name="dispatcher" class="anchor" href="#dispatcher"><span class="octicon octicon-link"></span></a>dispatcher</h4>
+
+<p>$$.dispatcher is an Events object which provides the autoRefresh functionality for Models and Collections. Tunable parameters are:</p>
+
+<ul>
+<li>minInterval The base interval between refreshes (in seconds)</li>
+<li>maxInterval The maximum interval between refreshes, after decay (in seconds)</li>
+<li>decayFrequency How many refreshes to do at a particular interval before increasing the interval</li>
+<li>decayFactor How much to increase the interval by, when decaying</li>
+</ul>
 
 <h3>
 <a name="noconflict" class="anchor" href="#noconflict"><span class="octicon octicon-link"></span></a>noConflict</h3>
