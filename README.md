@@ -26,6 +26,7 @@ Skip to...
 - [Bootstrap Tags](#bootstrap-tags)
 - [Bootstrap Attributes](#bootstrap-attributes)
 - [Components](#components)
+- [Backbone Extensions](#backbone-extensions)
 - [noConflict](#noconflict)
 
 Backstrap is available on [GitHub][]
@@ -454,6 +455,25 @@ For example:
 	var model = new Backbone.Model({state: true});
 	var input = new $$.Checkbox({model: model, content: 'state'}).render();
 
+#### CollectionView
+
+A generic Collection-aware view. Listens to add, remove, and change events on the Collection,
+and provides a basic rendering framework. Example:
+
+	new $$.CollectionView({
+		model: someCollection,
+		itemView: $$.View.extend({ /* view for individual item */ }),
+		emptyContent: 'No items to show',
+		placeItem: function () {
+			// If you require special handling to place itemViews on the page.
+		},
+		placeEmpty: function () {
+			// If you require special handling to place emptyContent on the page.
+		}
+	});
+	
+Both $$.List and $$.Table extend this component.
+
 #### Context
 
 Creates a `span` whose Bootstrap context-color is model-bound.
@@ -588,6 +608,11 @@ For example:
 
 altValueContent defaults to altLabelContent.
 
+#### ModelView
+
+A generic Model-aware view. Listens to change events on the Model,
+which cause it to re-render itself.
+
 #### NavPills
 
 Creates a Bootstrap "pills" nav whose buttons are model-bound.
@@ -705,6 +730,51 @@ For example:
 		model: new Backbone.Model({ when: new Date() }),
 		content: 'when'
 	}).render();
+
+### Backbone Extensions
+
+Backstrap has objects for virtually all of the Backbone objects you'll need, too.
+
+#### Events
+
+$$.Events is a simple extension of Backbone.Events.
+
+#### Model
+
+$$.Model extends Backbone.Model and adds an autoRefresh option.
+If autoRefresh is on, the Backstrap dispatcher will call model.fetch()
+on a regular basis to refresh the model data from the server.
+The interval is tunable (see [dispatcher](#dispatcher)), and can be
+configured to slow down over time.
+
+#### Collection
+
+$$.Collection extends Backbone.Collection and adds an autoRefresh option.
+If autoRefresh is on, the Backstrap dispatcher will call collection.fetch()
+on a regular basis to refresh the model data from the server.
+The interval is tunable (see [dispatcher](#dispatcher)), and can be
+configured to slow down over time.
+
+#### View
+
+$$.View is a simple extension of Backbone.View.
+
+#### Router
+
+$$.Router is a simple extension of Backbone.Router.
+
+#### history
+
+$$.history is an alias for Backbone.history.
+
+#### dispatcher
+
+$$.dispatcher is an Events object which provides the autoRefresh functionality
+for Models and Collections. Tunable parameters are 
+  - minInterval The base interval between refreshes (in seconds)
+  - maxInterval The maximum interval between refreshes, after decay (in seconds)
+  - decayFrequency How many refreshes to do at a particular interval before increasing the interval
+  - decayFactor How much to increase the interval by, when decaying
 
 ### noConflict
 

@@ -3,7 +3,7 @@
     {
         var timeout = null;
         var dispatcher = {
-                minInterval: 10,
+                minInterval: 30,
                 maxInterval: 1000,
                 decayFrequency: 4,
                 decayFactor: 2
