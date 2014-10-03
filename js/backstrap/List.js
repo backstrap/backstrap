@@ -1,91 +1,122 @@
 /**
  * A Backbone View that displays a model-bound list.
- * Largely from Backbone-UI's ListView class,
+ * Based on Backbone-UI's ListView,
  * with Bootstrap decoration.
  * 
  * @license MIT
  */
-(function(context){
-  var fn = function($$){
-		
-  return ($$.List = $$.CollectionView.extend({
-  
-    initialize : function(options) {
-      $$.CollectionView.prototype.initialize.call(this, options);
-      $(this.el).addClass('list');
-    },
+(function (context)
+{
+    var fn = function ($$)
+    {
+        var updateClassNames = function () {
+            if (this.options.generateRowClassNames) {
+                var children = this.collectionEl.childNodes;
+                if (children.length > 0) {
+                    _(children).each(
+                        function (child, index)
+                        {
+                            $(child).removeClass('first last')
+                                    .addClass(index % 2 === 0 ? 'even' : 'odd');
+                        });
+                    $(children[0]).addClass('first');
+                    $(children[children.length - 1]).addClass('last');
+                }
+            }
+        };
 
-    render : function() {
-      $(this.el).empty();
-      this.itemViews = {};
+        var ensureProperPosition = function (model) {
+            if (_(this.model.comparator).isFunction()) {
+                this.model.sort({silent: true});
+                var itemEl = this.itemViews[model.cid].el.parentNode;
+                var currentIndex = _(this.collectionEl.childNodes).indexOf(itemEl, true);
+                var properIndex = this.model.indexOf(model);
+                if (currentIndex !== properIndex) {
+                    itemEl.parentNode.removeChild(itemEl);
+                    var refNode = this.collectionEl.childNodes[properIndex];
+                    if (refNode) {
+                        this.collectionEl.insertBefore(itemEl, refNode);
+                    } else {
+                        this.collectionEl.appendChild(itemEl);
+                    }
+                }
+            }
+        };
 
-      this.collectionEl = $$.ul({className: 'list-group'});
+        var ensureProperPositions = function (collection) {
+            collection.models.forEach(function (model, index) {
+                var itemEl = this.itemViews[model.cid].el.parentNode;
+                itemEl.parentNode.removeChild(itemEl);
+                var refNode = this.collectionEl.childNodes[index];
+                if (refNode) {
+                    this.collectionEl.insertBefore(itemEl, refNode);
+                } else {
+                    this.collectionEl.appendChild(itemEl);
+                }
+            }, this);
+            updateClassNames.call(this);
+        };
 
-      // if the collection is empty, we render the empty content
-      if((!_(this.model).exists()  || this.model.length === 0) && this.options.emptyContent) {
-        this._emptyContent = _(this.options.emptyContent).isFunction() ? 
-          this.options.emptyContent() : this.options.emptyContent;
-        this._emptyContent = $$.li({className: 'list-group-item'}, this._emptyContent);
+        return ($$.List = $$.CollectionView.extend({
+            options: {
+                // Set this to true to generate first, last, even, and odd classnames on rows.
+                generateRowClassNames: false
+            },
+            
+            initialize: function (options) {
+                $$.CollectionView.prototype.initialize.call(this, options);
 
-        if(!!this._emptyContent) {
-          this.collectionEl.appendChild(this._emptyContent);
-        }
-      }
+                if (this.model) {
+                    this.model.bind('sort', ensureProperPositions, this);
+                }
 
-      // otherwise, we render each row
-      else {
-        _(this.model.models).each(function(model, index) {
-          var item = this._renderItem(model, index);
-          this.collectionEl.appendChild(item);
-        }, this);
-      }
+                $(this.el).addClass('list');
+                this.collectionEl = $$.ul({className: 'list-group'});
+            },
 
-      this.el.appendChild(this.collectionEl);
-      this._updateClassNames();
+            render: function () {
+                $(this.collectionEl).empty();
 
-      return this;
-    },
+                $$.CollectionView.prototype.render.call(this);
 
-    // renders an item for the given model, at the given index
-    _renderItem : function(model, index) {
-      var content = null;
-      if(_(this.options.itemView).exists()) {
+                updateClassNames.call(this);
+                this.el.appendChild(this.collectionEl);
 
-        if(_(this.options.itemView).isString()) {
-          content = this.resolveContent(model, this.options.itemView);
-        }
+                return this;
+            },
 
-        else {
-          var view = new this.options.itemView(_({ model : model }).extend(
-            this.options.itemViewOptions));
-          view.render();
-          this.itemViews[model.cid] = view;
-          content = view.el;
-        }
-      }
+            // Renders an item for the given model, at the given index.
+            placeItem: function (content, model, index) {
+                this.collectionEl.appendChild($$.li({className: 'list-group-item'}, content));
+            },
 
-      var item = $$.li({className: 'list-group-item'}, content);
+            placeEmpty: function (content) {
+                this.collectionEl.appendChild($$.li({className: 'list-group-item'}, content));
+            },
 
-      // bind the item click callback if given
-      if(this.options.onItemClick) {
-        $(item).click(_(this.options.onItemClick).bind(this, model));
-      }
+            onItemAdded: function () {
+                updateClassNames.call(this);
+            },
 
-      return item;
+            onItemRemoved: function () {
+                updateClassNames.call(this);
+            },
+
+            onItemChanged: function () {
+                ensureProperPosition.call(this);
+            }
+        }));
+    };
+
+    if (typeof context.define === "function" && context.define.amd &&
+            typeof context._$$_backstrap_built_flag === 'undefined') {
+        define("backstrap/List", ["backstrap"], function ($$) {
+            return fn($$);
+        });
+    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
+        module.exports = fn(require("backstrap"));
+    } else {
+        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        fn(context.$$);
     }
-
-  }));
-  };
-  
-	if (typeof context.define === "function" && context.define.amd &&
-			typeof context._$$_backstrap_built_flag === 'undefined') {
-		define("backstrap/List", ["backstrap"], function ($$) {
-			return fn($$);
-		});
-	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-		module.exports = fn(require("backstrap"));
-	} else {
-		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-		fn(context.$$);
-	}
 }(this));

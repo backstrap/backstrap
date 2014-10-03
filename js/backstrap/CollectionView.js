@@ -1,167 +1,196 @@
 /**
  * A generic Backbone View for displaying Collection data.
- * From Backbone-UI CollectionView.
+ * Based on Backbone-UI CollectionView.
  * 
+ * @author Kevin Perry, perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
-(function(context){
-  var fn = function($$){
+(function (context)
+{
+    var fn = function ($$)
+    {
+        /*
+         * Render an item for the given model, at the given index.
+         */
+        var renderItem = function (model, index) {
+            var content = null;
+            if (_(this.options.itemView).exists()) {
+                if (_(this.options.itemView).isString()) {
+                    content = this.resolveContent(model, this.options.itemView);
+                } else {
+                    var view = new this.options.itemView(_({ model: model }).extend(
+                        this.options.itemViewOptions));
+                    view.render();
+                    this.itemViews[model.cid] = view;
+                    content = view.el;
+                }
+            }
 
-  var noop = function(){};
+            // Bind the item click callback if given.
+            if (this.options.onItemClick) {
+                $(content).click(_(this.options.onItemClick).bind(this, model));
+            }
 
-  return ($$.CollectionView = $$.View.extend({
-    options : {
-      // The Collection instance the view is bound to
-      model : null,
+            this.placeItem(content, model, index);
+        };
 
-      // The View class responsible for rendering a single item 
-      // in the collection. For simple use cases, you can pass a String instead 
-      // which will be interpreted as the property of the model to display.
-      itemView : null,
+        var onItemAdded = function (model, list, options) {
+            // First ensure that we haven't already rendered an item for this model.
+            if (this.itemViews[model.cid]) {
+                return;
+            }
+
+            // Remove empty content if it exists.
+            if (this._emptyContent) {
+                if (this._emptyContent.parentNode) this._emptyContent.parentNode.removeChild(this._emptyContent);
+                this._emptyContent = null;
+            }
+   
+            // Render the new item.
+            renderItem.call(this, model, list.indexOf(model));
+            
+            if (_.isFunction(this.onItemAdded)) {
+                this.onItemAdded(model, list, options);
+            }
+        };
+
+        var onItemChanged = function (model) {
+            var view = this.itemViews[model.cid];
+            // Re-render the individual item view if it's a backbone view.
+            if (view && view.el && view.el.parentNode) {
+                view.render();
+            } else { // Otherwise, we re-render the entire collection.
+                this.render();
+            }
+
+            if (_.isFunction(this.onItemChanged)) {
+                this.onItemChanged(model, list, options);
+            }
+        };
+
+        var onItemRemoved = function (model) {
+            var view = this.itemViews[model.cid];
+            var liOrTrElement = view.el.parentNode;
+            if (view && liOrTrElement && liOrTrElement.parentNode) {
+                liOrTrElement.parentNode.removeChild(liOrTrElement);
+            }
+            delete(this.itemViews[model.cid]);
+            if (this.itemViews.length === 0) {
+                // Need to render the empty content.
+                this.render();
+            }
+
+            if (_.isFunction(this.onItemRemoved)) {
+                this.onItemRemoved(model, list, options);
+            }
+        };
+        
+        return ($$.CollectionView = $$.View.extend({
+            options: {
+                // The Collection instance the view is bound to.
+                model: null,
+
+                // The View class responsible for rendering a single item 
+                // in the collection. For simple use cases, you can pass a String instead 
+                // which will be interpreted as the property of the model to display.
+                itemView: null,
       
-      // Options to pass into the View responsible for rendering the single item
-      itemViewOptions : null,
+                // Options to pass into the View responsible for rendering the single item.
+                itemViewOptions: null,
 
-      // A string, element, or function describing what should be displayed
-      // when the list is empty.
-      emptyContent : null,
+                // A string, element, or function describing what should be displayed
+                // when the list is empty.
+                emptyContent: null,
 
-      // A callback to invoke when a row is clicked.  The associated model will be
-      // passed as the first argument.
-      onItemClick : noop,
+                // A callback to invoke when a row is clicked.  The associated model will be
+                // passed as the first argument.
+                onItemClick: function () {},
 
-      // The maximum height in pixels that this table show grow to.  If the
-      // content exceeds this height, it will become scrollable.
-      maxHeight : null,
+                // The maximum height in pixels that this table show grow to.  If the
+                // content exceeds this height, it will become scrollable.
+                maxHeight: null,
       
-      // Render the the collection view on change in model
-      renderOnChange : true
-    },
+                // Render the the collection view on change in model.
+                renderOnChange: true
+            },
 
-    itemViews : {},
+            itemViews: {},
 
-    _emptyContent : null,
+            _emptyContent: null,
 
-    // must be over-ridden to describe how an item is rendered
-    _renderItem : noop,
+            initialize: function (options) {
+                $$.View.prototype.initialize.call(this, options);
+                if (this.model) {
+                    this.model.on('add', onItemAdded, this);
+                    if (this.options.renderOnChange){
+                        var renderOnChange = this.options.renderOnChange;
+                        if (is_array(renderOnChange)) {
+                            renderOnChange.forEach(function (property) {
+                                this.model.on('change:' + property, onItemChanged, this);
+                            }, this);
+                        } else if (renderOnChange === true) {
+                            this.model.on('change', onItemChanged, this);
+                        } else { // Assume string
+                            this.model.on('change:' + renderOnChange, onItemChanged, this);
+                        }
+                    }  
+                    this.model.on('remove', onItemRemoved, this);
+                    this.model.on('reset', this.render, this);
+                }
+            },
 
-    initialize : function(options) {
-      $$.View.prototype.initialize.call(this, options);
-      if(this.model) {
-        this.model.bind('add', _.bind(this._onItemAdded, this));
-        if(this.options.renderOnChange){
-          this.model.bind('change', _.bind(this._onItemChanged, this));
-        }  
-        this.model.bind('remove', _.bind(this._onItemRemoved, this));
-        this.model.bind('refresh', _.bind(this.render, this));
-        this.model.bind('reset', _.bind(this.render, this));
-      }
-    },
+            render: function () {
+                $(this.el).empty();
+                this.itemViews = {};
 
-    _onItemAdded : function(model, list, options) {
+                if (this.options.emptyContent) {
+                    this._emptyContent = _(this.options.emptyContent).isFunction() ? 
+                        this.options.emptyContent() : this.options.emptyContent;
+                }
 
-      // first ensure that our collection element has been initialized,
-      // and we haven't already rendered an item for this model
-      if(!this.collectionEl || !!this.itemViews[model.cid]) {
-        return;
-      }
+                if (_(this.model).exists() && this.model.length > 0) {
+                    _(this.model.models).each(renderItem, this);
+                } else {
+                    this.placeEmpty(this._emptyContent);
+                }
+                
+                return this;
+            },
 
-      // remove empty content if it exists
-      if(!!this._emptyContent) {
-        if(!!this._emptyContent.parentNode) this._emptyContent.parentNode.removeChild(this._emptyContent);
-        this._emptyContent = null;
-      }
-       
-      // render the new item
-      var properIndex = list.indexOf(model);
-      var el = this._renderItem(model, properIndex);
+            /**
+             * Place an individual item's view on the page.
+             * 
+             * Extensions of CollectionView may wish to override this method
+             * to define how an item is put into the DOM.
+             */
+            placeItem: function (itemElement, model, index) {
+                this.$el.append(itemElement);
+            },
+            
+            /**
+             * Place the "empty" content, if any, on the page.
+             * 
+             * Extensions of CollectionView may wish to override this method.
+             */
+            placeEmpty: function (emptyContent) {    
+                // Render the empty content.
+                if (emptyContent) {
+                    this.$el.append(emptyContent);
+                }
+            }
+        }));
+    };
 
-      // insert it into the DOM position that matches it's position in the model
-      var anchorNode = this.collectionEl.childNodes[properIndex];
-      this.collectionEl.insertBefore(el, _(anchorNode).isUndefined() ? null : anchorNode);
-
-      // update the first / last class names
-      this._updateClassNames();
-    },
-
-    _onItemChanged : function(model) {
-      // ensure our collection element has been initialized
-      if(!this.collectionEl) return;
-
-      var view = this.itemViews[model.cid];
-      // re-render the individual item view if it's a backbone view
-      if(!!view && view.el && view.el.parentNode) {
-        this._ensureProperPosition(view);
-        view.render();
-      }
-
-      // otherwise, we re-render the entire collection
-      else {
-        this.render();
-      }
-    },
-
-    _onItemRemoved : function(model) {
-      // ensure our collection element has been initialized
-      if(!this.collectionEl) return;
-
-      var view = this.itemViews[model.cid];
-      var liOrTrElement = view.el.parentNode;
-      if(!!view && !!liOrTrElement && !!liOrTrElement.parentNode) {
-        liOrTrElement.parentNode.removeChild(liOrTrElement);
-      }
-      delete(this.itemViews[model.cid]);
-
-      // update the first / last class names
-      this._updateClassNames();
-    },
-
-    _updateClassNames : function() {
-      var children = this.collectionEl.childNodes;
-      if(children.length > 0) {
-        _(children).each(function(child, index) {
-          $(child).removeClass('first');
-          $(child).removeClass('last');
-          $(child).addClass(index % 2 === 0 ? 'even' : 'odd');
+    if (typeof context.define === "function" && context.define.amd &&
+            typeof context._$$_backstrap_built_flag === 'undefined') {
+        define("backstrap/CollectionView", ["backstrap"], function ($$) {
+            return fn($$);
         });
-        $(children[0]).addClass('first');
-        $(children[children.length - 1]).addClass('last');
-      }
-    },
-
-    _ensureProperPosition : function(view) {
-      if(_(this.model.comparator).isFunction()) {
-        this.model.sort({silent : true});
-        var itemEl = view.el.parentNode;
-        var currentIndex = _(this.collectionEl.childNodes).indexOf(itemEl, true);
-        var properIndex = this.model.indexOf(view.model);
-        if(currentIndex !== properIndex) {
-          itemEl.parentNode.removeChild(itemEl);
-          var refNode = this.collectionEl.childNodes[properIndex];
-          if(refNode) {
-            this.collectionEl.insertBefore(itemEl, refNode);
-          }
-          else {
-            this.collectionEl.appendChild(itemEl);
-          }
-        }
-      }
+    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
+        module.exports = fn(require("backstrap"));
+    } else {
+        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        fn(context.$$);
     }
-
-  }));
-  };
-
-	if (typeof context.define === "function" && context.define.amd &&
-			typeof context._$$_backstrap_built_flag === 'undefined') {
-		define("backstrap/CollectionView", ["backstrap"], function ($$) {
-			return fn($$);
-		});
-	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-		module.exports = fn(require("backstrap"));
-	} else {
-		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-		fn(context.$$);
-	}
 }(this));
-
-
