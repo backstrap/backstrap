@@ -464,10 +464,10 @@ and provides a basic rendering framework. Example:
 		model: someCollection,
 		itemView: $$.View.extend({ /* view for individual item */ }),
 		emptyContent: 'No items to show',
-		placeItem: function () {
+		placeItem: function (itemview) {
 			// If you require special handling to place itemViews on the page.
 		},
-		placeEmpty: function () {
+		placeEmpty: function (emptycontent) {
 			// If you require special handling to place emptyContent on the page.
 		}
 	});
@@ -742,7 +742,7 @@ $$.Events is a simple extension of Backbone.Events.
 #### Model
 
 $$.Model extends Backbone.Model and adds an autoRefresh option.
-If autoRefresh is on, the Backstrap dispatcher will call model.fetch()
+If autoRefresh is true, the Backstrap dispatcher will call model.fetch()
 on a regular basis to refresh the model data from the server.
 The interval is tunable (see [dispatcher](#dispatcher)), and can be
 configured to slow down over time.
@@ -750,7 +750,7 @@ configured to slow down over time.
 #### Collection
 
 $$.Collection extends Backbone.Collection and adds an autoRefresh option.
-If autoRefresh is on, the Backstrap dispatcher will call collection.fetch()
+If autoRefresh is true, the Backstrap dispatcher will call collection.fetch()
 on a regular basis to refresh the model data from the server.
 The interval is tunable (see [dispatcher](#dispatcher)), and can be
 configured to slow down over time.
