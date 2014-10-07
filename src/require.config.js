@@ -65,7 +65,7 @@ var components = {
             "exports": "_"
         }
     },
-    "baseUrl": "min/components"
+    "baseUrl": "components"
 };
 if (typeof require !== "undefined" && require.config) {
     require.config(components);
