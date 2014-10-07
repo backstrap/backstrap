@@ -362,10 +362,12 @@ Its body will be further wrapped in a div with class "media-body".</p>
 and also the attribute 'role="navigation"' (can be overridden if necessary), to implement a Bootstrap navbar.
 It accepts several special attributes for configuration of the navbar:</p>
 <ul>
-<li>brand - Branding content for left end of navbar.
-<li>position - Allowed values 'fixed-top', 'fixed-bottom' or 'static-top'.
-<li>inverse - Set to true to invert color scheme
-<li>sr_toggle_text - For screen-readers, defaults to 'Toggle navigation', can be overridden e.g. for internationalization.
+<li>brandContent - Branding visual for left end of navbar (a DOM object or string, default: '').</li>
+<li>brandUrl - URL for brand href (default: '#").</li>
+<li>position - Allowed values '' (default), 'fixed-top', 'fixed-bottom' or 'static-top'.</li>
+<li>inverse - Set to true to invert color scheme.</li>
+<li>toggleContent - Alternate visual for navbar collapse toggle (a DOM object; defaults to a 3-bar hamburger).</li>
+<li>sr_toggle_text - For screen-readers, defaults to 'Toggle navigation', can be overridden e.g. for internationalization.</li>
 </ul>
 
 <h4>
