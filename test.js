@@ -37,7 +37,7 @@ require(['jquery', 'backstrap'], function($, $$) {
     setInterval(function () { kptest1.comparator = (kptest1.comparator === 'index') ? 'value' : 'index'; kptest1.sort(); }, 2000);
     
     test($$.navbar(
-        { brand: 'KP' },
+        { brandContent: 'KP' },
         $$.ul({ className: 'nav navbar-nav'},
             $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#boo' }, 'Boo!')),
             $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#logout' }, 'Logout'))

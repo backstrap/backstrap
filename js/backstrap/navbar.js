@@ -2,10 +2,11 @@
  * A 'tag' that defines a Bootstrap navbar component.
  *
  * Options:
- *     brand: '' - Branding for left-hand icon.
- *     brandUrl: '#' - URL for brand icon href.
+ *     brandContent: '' - Branding visual (a DOM object).
+ *     brandUrl: '#' - URL for brand href.
  *     position: '' - Allowed: 'fixed-top', 'fixed-bottom' or 'static-top'.
  *     inverse: false - Invert color scheme
+ *     toggleContent: Alternate visual for navbar collapse toggle (a DOM object; defaults to a 3-bar hamburger).
  *     sr_toggle_text: 'Toggle navigation' - For screen-readers
  *     role: 'navigation' - For accessibility
  *
@@ -18,20 +19,21 @@
     {
         return($$[moduleName] = function (attrs)
             {
-                var el, content, collapser;
+                var el, content, collapser, toggleContent = '';
                 var offset = 0;
-                var brand = '';
+                var brandContent = '';
                 var brandUrl = '#';
                 var className = 'navbar-default';
                 var sr_toggle_text = 'Toggle navigation';
+                var collapserId = _.uniqueId('Bkp');
 
                 if (typeof attrs !== 'object' || attrs.nodeType === 1) {
                     attrs = {};
                 } else {
                     offset = 1;
-                    if ('brand' in attrs) {
-                        brand = attrs.brand;
-                        delete(attrs.brand);
+                    if ('brandContent' in attrs) {
+                        brandContent = attrs.brandContent;
+                        delete(attrs.brandContent);
                     }
                     if ('brandUrl' in attrs) {
                         brandUrl = attrs.brandUrl;
@@ -50,6 +52,16 @@
                         }
                         delete(attrs.position);
                     }
+                    if ('toggleContent' in attrs) {
+                        toggleContent = attrs.toggleContent;
+                        delete(attrs.toggleContent);
+                    } else {
+                        toggleContent = $$.span(
+                            $$.span({className: 'icon-bar'}),
+                            $$.span({className: 'icon-bar'}),
+                            $$.span({className: 'icon-bar'})
+                        );
+                    }
                     if ('sr_toggle_text' in attrs) {
                         sr_toggle_text = attrs.sr_toggle_text;
                         delete(attrs.sr_toggle_text);
@@ -61,7 +73,7 @@
 
                 el = $$.apply(this, ['nav', 'navbar', attrs]);
                 content = Array.prototype.slice.call(arguments, offset);
-                collapser = $$.div({className: 'collapse navbar-collapse', id: _.uniqueId('_BS_')}, content);
+                collapser = $$.div({className: 'collapse navbar-collapse', id: collapserId}, content);
 
                 $(el).addClass(className).append(
                     $$.div({className: 'container container-fluid'},
@@ -70,17 +82,15 @@
                                     type: 'button',
                                     className: 'navbar-toggle collapsed',
                                     'data-toggle': 'collapse',
-                                    'data-target': '#' + $(collapser).attr('id')
+                                    'data-target': '#' + collapserId
                                 },
                                 $$.span({className: 'sr-only'}, sr_toggle_text),
-                                $$.span({className: 'icon-bar'}),
-                                $$.span({className: 'icon-bar'}),
-                                $$.span({className: 'icon-bar'})
+                                toggleContent
                             ),
                             $$.a({
                                     className: 'navbar-brand',
                                     href: brandUrl
-                                }, brand
+                                }, brandContent
                             )
                         ),
                         collapser
