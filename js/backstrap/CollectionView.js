@@ -112,7 +112,10 @@
                 maxHeight: null,
       
                 // Render the the collection view on change in model.
-                renderOnChange: true
+                renderOnChange: true,
+                
+                // Set this to true to generate first, last, even, and odd classnames on rows.
+                generateRowClassNames: false
             },
 
             itemViews: {},
@@ -125,7 +128,7 @@
                     this.model.on('add', onItemAdded, this);
                     if (this.options.renderOnChange){
                         var renderOnChange = this.options.renderOnChange;
-                        if (is_array(renderOnChange)) {
+                        if (_.isArray(renderOnChange)) {
                             renderOnChange.forEach(function (property) {
                                 this.model.on('change:' + property, onItemChanged, this);
                             }, this);
@@ -157,6 +160,25 @@
                 
                 return this;
             },
+            
+            /**
+             * Render first, last, even and odd classnames on row items.
+             */
+            renderClassNames: function (collectionEl) {
+                if (this.options.generateRowClassNames) {
+                    var children = (collectionEl ? collectionEl : this.el).childNodes;
+                    if (children.length > 0) {
+                        _(children).each(
+                            function (child, index)
+                            {
+                                $(child).removeClass('first last')
+                                        .addClass(index % 2 === 0 ? 'even' : 'odd');
+                            });
+                        $(children[0]).addClass('first');
+                        $(children[children.length - 1]).addClass('last');
+                    }
+                }
+            },
 
             /**
              * Place an individual item's view on the page.
@@ -182,11 +204,14 @@
         }));
     };
 
-    if (typeof context.define === 'function' && context.define.amd
-            && !context._$$_backstrap_built_flag) {
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
         context.define('backstrap/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
-            && typeof context.module.exports === 'object') {
+        && typeof context.module.exports === 'object'
+    ) {
         context.module.exports = fn.call(requirements.map(
             function (reqName)
             {
@@ -200,4 +225,3 @@
         fn(context.$$);
     }
 }(this, 'CollectionView', [ 'backstrap', 'backstrap/View' ]));
-

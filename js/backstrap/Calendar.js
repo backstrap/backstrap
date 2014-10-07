@@ -7,7 +7,8 @@
  * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
-(function(context, moduleName, requirements) {
+(function(context, moduleName, requirements)
+{
     var fn = function($$, moment)
     {
         var monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
@@ -244,6 +245,9 @@
     } else {
         if (typeof context.$$ !== 'function') {
             throw new Error('Backstrap not loaded');
+        }
+        if (typeof context.moment !== 'function') {
+            throw new Error('Moment not loaded');
         }
         fn(context.$$, context.moment);
     }

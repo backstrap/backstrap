@@ -11,22 +11,6 @@
 {
     var fn = function ($$)
     {
-        var updateClassNames = function () {
-            if (this.options.generateRowClassNames) {
-                var children = this.collectionEl.childNodes;
-                if (children.length > 0) {
-                    _(children).each(
-                        function (child, index)
-                        {
-                            $(child).removeClass('first last')
-                                    .addClass(index % 2 === 0 ? 'even' : 'odd');
-                        });
-                    $(children[0]).addClass('first');
-                    $(children[children.length - 1]).addClass('last');
-                }
-            }
-        };
-
         var ensureProperPosition = function (model) {
             if (_(this.model.comparator).isFunction()) {
                 this.model.sort({silent: true});
@@ -56,15 +40,10 @@
                     this.collectionEl.appendChild(itemEl);
                 }
             }, this);
-            updateClassNames.call(this);
+            this.renderClassNames(this.collectionEl);
         };
 
         return ($$[moduleName] = $$.CollectionView.extend({
-            options: {
-                // Set this to true to generate first, last, even, and odd classnames on rows.
-                generateRowClassNames: false
-            },
-            
             initialize: function (options) {
                 $$.CollectionView.prototype.initialize.call(this, options);
 
@@ -81,7 +60,7 @@
 
                 $$.CollectionView.prototype.render.call(this);
 
-                updateClassNames.call(this);
+                this.renderClassNames(this.collectionEl);
                 this.el.appendChild(this.collectionEl);
 
                 return this;
@@ -97,11 +76,11 @@
             },
 
             onItemAdded: function () {
-                updateClassNames.call(this);
+                this.renderClassNames(this.collectionEl);
             },
 
             onItemRemoved: function () {
-                updateClassNames.call(this);
+                this.renderClassNames(this.collectionEl);
             },
 
             onItemChanged: function () {
@@ -110,16 +89,14 @@
         }));
     };
 
-    if (typeof context.define === 'function' && context.define.amd
-            && !context._$$_backstrap_built_flag) {
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
         context.define('backstrap/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
-
-    if (typeof context.define === 'function' && context.define.amd
-            && !context._$$_backstrap_built_flag) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-            && typeof context.module.exports === 'object') {
+        && typeof context.module.exports === 'object'
+    ) {
         context.module.exports = fn.call(requirements.map(
             function (reqName)
             {
@@ -133,4 +110,3 @@
         fn(context.$$);
     }
 }(this, 'List', [ 'backstrap', 'backstrap/CollectionView' ]));
-

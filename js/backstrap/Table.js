@@ -163,7 +163,7 @@
                     container
                 );
 
-                this._updateClassNames();
+                this.renderClassNames(this.collectionEl);
 
                 return this;
             },
@@ -192,11 +192,14 @@
         }));
     };
 
-    if (typeof context.define === 'function' && context.define.amd
-            && !context._$$_backstrap_built_flag) {
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
         context.define('backstrap/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
-            && typeof context.module.exports === 'object') {
+        && typeof context.module.exports === 'object'
+    ) {
         context.module.exports = fn.call(requirements.map(
             function (reqName)
             {
@@ -210,4 +213,3 @@
         fn(context.$$);
     }
 }(this, 'Table', [ 'backstrap', 'backstrap/CollectionView' ]));
-

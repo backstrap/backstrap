@@ -1,20 +1,18 @@
 /**
- * A Backbone View that displays a Bootstrap container div.
+ * /*= Description Goes Here. =*/
  * 
  * @author Kevin Perry perry@princeton.edu
  * @copyright 2014 The Trustees of Princeton University.
- * @license MIT
  */
 (function(context, moduleName, requirements)
 {
     var fn = function($$)
     {
-        return ($$[moduleName] = $$.View.extend({
-            initialize : function(options) {
-                $$.View.prototype.initialize.call(this, options);
-                this.$el.addClass('container');
-            }
-        }));
+        /*= Declarations Go Here =*/
+
+        return($$[moduleName] = 
+            /*= Definition Goes Here =*/
+        );
     };
 
     if (typeof context.define === 'function'
@@ -37,4 +35,4 @@
         }
         fn(context.$$);
     }
-}(this, 'Container', [ 'backstrap', 'backstrap/View' ]));
+}(this, '/*= ModuleName Goes Here =*/', [ 'backstrap' /*= Requirements Go Here =*/ ]));
