@@ -8,7 +8,7 @@
  * @license MIT
  */
 (function(context, moduleName, requirements) {
-    var fn = function($$)
+    var fn = function($$, moment)
     {
         var KEY_RETURN = 13;
 
@@ -173,10 +173,11 @@
         if (typeof context.$$ !== 'function') {
             throw new Error('Backstrap not loaded');
         }
-        fn(context.$$);
+        fn(context.$$, context.moment);
     }
 }(this, 'DatePicker', [
     'backstrap',
+    'moment',
     'backstrap/Calendar',
     'backstrap/HasError',
     'backstrap/HasFormLabel',
