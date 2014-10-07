@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a contextually-colored spanor other tag;
+ * A Backbone View that displays a Bootstrap contextually-colored span or other tag;
  * context name bound to model data.
  * 
  * @author Kevin Perry perry@princeton.edu
@@ -10,7 +10,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Context = $$.BaseView.extend({
+		return ($$.Context = $$.View.extend({
 			options : {
 				tagName: 'span',
 				content: 'context',
@@ -18,14 +18,14 @@
 			},
 	
 			initialize : function(options) {
-				this.options = _.extend({}, this.options, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
-				this.prefix = this.options.background ? 'bg-' : 'text-';
 				_(this).bindAll('render');
+				this.prefix = this.options.background ? 'bg-' : 'text-';
 			},
 	
 			render : function() {
-				var contextName = this.resolveContent();
+				var contextName = this.resolveContent(this.options.model, this.options.contentMap);
 				this._observeModel(this.render);
 				this.$el.removeClass(this.prefix + this.context).addClass(this.prefix + contextName);
 				return this;

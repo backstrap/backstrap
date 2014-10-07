@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound time picker.
+ * A Backbone View that displays a model-bound time picker.
  * Largely from Backbone-UI's TimePicker class,
  * with Bootstrap decoration.
  * 
@@ -9,7 +9,7 @@
 	var fn = function($$)
 	{
 		var KEY_RETURN = 13;
-		return ($$.TimePicker = $$.BaseView.extend({
+		return ($$.TimePicker = $$.View.extend({
 
 			options : {
 				// a moment.js format : http://momentjs.com/docs/#/display/format
@@ -26,7 +26,7 @@
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasFormLabel, $$.HasError]);
 				$(this.el).addClass('time_picker');
 

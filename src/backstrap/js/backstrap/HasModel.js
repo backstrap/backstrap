@@ -4,7 +4,7 @@
 	{
 		return ($$.HasModel = {
 			options : {
-				// The Backbone.Model instance the view is bound to
+				// The Model instance the view is bound to
 				model : null,
 
 				// The property of the bound model this component should render / update.
@@ -13,10 +13,15 @@
 				// property may be a string or function describing the content to be rendered
 				content : null,
 
-				// If provided this content will wrap the component with additional label.
-				// The text displayed by the label is determined the same way the content attribute.
-				// This option is a no-op when applied to Button, Calendar, Checkbox, Link components.
-				formLabelContent : null,
+                // If provided this content will wrap the component with additional label.
+                // The text displayed by the label is determined the same way the content attribute.
+                // For Checkbox and Label.
+                labelContent : null,
+
+                // If provided this content will wrap the component with additional label.
+                // The text displayed by the label is determined the same way the content attribute.
+                // This option is a no-op when applied to Button, Calendar, Checkbox, Link components.
+                formLabelContent : null,
 
 				// If present, a square glyph area will be added to the left side of this 
 				// component, and the given string will be used as the class name
@@ -31,7 +36,7 @@
 
 			_observeModel : function(callback) {
 				if(_(this.model).exists() && _(this.model.unbind).isFunction()) {
-					_(['content', 'labelContent']).each(function(prop) {
+					_(['content', 'labelContent', 'formLabelContent']).each(function(prop) {
 						var key = this.options[prop];
 						if(_(key).exists()) {
 							key = 'change:' + key;
@@ -44,7 +49,7 @@
 
 			_unobserveModel : function(callback) {
 				if(_(this.model).exists() && _(this.model.unbind).isFunction()) {
-					_(['content', 'labelContent']).each(function(prop) {
+					_(['content', 'labelContent', 'formLabelContent']).each(function(prop) {
 						var key = this.options[prop];
 						if(_(key).exists()) {
 							key = 'change:' + key;

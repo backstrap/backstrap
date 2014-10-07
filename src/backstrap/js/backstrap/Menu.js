@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound menu.
+ * A Backbone View that displays a model-bound menu.
  * Largely from Backbone-UI's Menu class,
  * with Bootstrap decoration.
  * 
@@ -10,7 +10,7 @@
 	{
 		// TODO: Major overhaul - should not use <select>
 		var noop = function(){};
-		return ($$.Menu = $$.BaseView.extend({
+		return ($$.Menu = $$.View.extend({
 
 			options : {
 
@@ -34,14 +34,11 @@
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasAlternativeProperty, 
 					$$.HasFormLabel, $$.HasError]);
-
 				_(this).bindAll('render');
-
 				$(this.el).addClass('menu');
-
 			},
 
 

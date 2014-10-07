@@ -32,8 +32,7 @@
 (function (context) {
   var fn = function (context) {
 
-	var $ = context.$,
-		BBView = context.Backbone.View;
+	var $ = context.$;
 
 	// properly-cased attribute names for IE setAttribute support
 	var attributeMap = {
@@ -307,6 +306,9 @@
 			if (prop in sizeMap) {
 				str += ' col-' + sizeMap[prop] + '-' + spec[prop];
 			}
+            if (prop === 'className') {
+                str += ' ' + spec[prop];
+            }
 		}
 		return str;
 	};
@@ -435,7 +437,7 @@
 	// shortcut for creating Bootstrap grids.
 	backstrap.grid = function () {
 		var cn = 'container';
-		var layout = [];
+		var layout = [[ 12 ]];
 		if (typeof(arguments[0]) === 'object') {
 			if ('layout' in arguments[0]) {
 				layout = arguments[0].layout;
@@ -447,7 +449,7 @@
 			}
 		}
 		var el = backstrap.apply(this,
-				['div'].concat(Array.prototype.slice.call(arguments)));
+				['div', null].concat(Array.prototype.slice.call(arguments)));
 		$(el).addClass(cn);
 		el.appendRows = appendGridRows;
 		el.appendRow = appendGridRow;
@@ -500,15 +502,21 @@
 	};
 	*/
 
-	backstrap.BaseView = BBView.extend({
+	backstrap.View = context.Backbone.View.extend({
 		initialize : function(options) {
 			this.options = this.options ? _({}).extend(this.options, options) : options;
 		}
 	});
 
+	backstrap.Events = _.extend({}, Backbone.Events);
+
+	backstrap.Router = Backbone.Router.extend({});
+
+	backstrap.history = Backbone.history;
+
 	/************* Add some utility methods to Backbone.View **********/
 
-	_(BBView.prototype).extend({
+	_(context.Backbone.View.prototype).extend({
 	  
 	  // resolves the appropriate content from the given choices
 	  resolveContent : function(model, content, defaultOption) {

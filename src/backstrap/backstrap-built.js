@@ -53,8 +53,7 @@
 (function (context) {
   var fn = function (context) {
 
-	var $ = context.$,
-		BBView = context.Backbone.View;
+	var $ = context.$;
 
 	// properly-cased attribute names for IE setAttribute support
 	var attributeMap = {
@@ -328,6 +327,9 @@
 			if (prop in sizeMap) {
 				str += ' col-' + sizeMap[prop] + '-' + spec[prop];
 			}
+            if (prop === 'className') {
+                str += ' ' + spec[prop];
+            }
 		}
 		return str;
 	};
@@ -456,7 +458,7 @@
 	// shortcut for creating Bootstrap grids.
 	backstrap.grid = function () {
 		var cn = 'container';
-		var layout = [];
+		var layout = [[ 12 ]];
 		if (typeof(arguments[0]) === 'object') {
 			if ('layout' in arguments[0]) {
 				layout = arguments[0].layout;
@@ -468,7 +470,7 @@
 			}
 		}
 		var el = backstrap.apply(this,
-				['div'].concat(Array.prototype.slice.call(arguments)));
+				['div', null].concat(Array.prototype.slice.call(arguments)));
 		$(el).addClass(cn);
 		el.appendRows = appendGridRows;
 		el.appendRow = appendGridRow;
@@ -521,15 +523,21 @@
 	};
 	*/
 
-	backstrap.BaseView = BBView.extend({
+	backstrap.View = context.Backbone.View.extend({
 		initialize : function(options) {
 			this.options = this.options ? _({}).extend(this.options, options) : options;
 		}
 	});
 
+	backstrap.Events = _.extend({}, Backbone.Events);
+
+	backstrap.Router = Backbone.Router.extend({});
+
+	backstrap.history = Backbone.history;
+
 	/************* Add some utility methods to Backbone.View **********/
 
-	_(BBView.prototype).extend({
+	_(context.Backbone.View.prototype).extend({
 	  
 	  // resolves the appropriate content from the given choices
 	  resolveContent : function(model, content, defaultOption) {
@@ -998,173 +1006,406 @@ if(window.jQuery) {
   })(window.jQuery);
 }
 
+(function(context) {
+    var fn = function($$, $)
+    {
+        var timeout = null;
+        var dispatcher = {
+                minInterval: 30,
+                maxInterval: 1000,
+                decayFrequency: 4,
+                decayFactor: 2
+        };
+        var activeInterval = 0;
+        var lastRefresh = 99999999999;
+        var touchTime = (new Date()).getTime();
+
+        var touch = function () {
+            touchTime = (new Date()).getTime();
+            if ((touchTime - lastRefresh)/1000 > dispatcher.minInterval) {
+                activeInterval = dispatcher.minInterval;
+                doRefresh();
+            }
+        };
+
+        var doRefresh = function doRefresh() {
+            if (!(dispatcher.minInterval > 0)) {
+                console.log('$$.dispatcher.minInterval must be positive');
+                return;
+            }
+            if (!(dispatcher.maxInterval >= dispatcher.minInterval)) {
+                console.log('$$.dispatcher.maxInterval must be >= than minInterval');
+                return;
+            }
+            if (!(dispatcher.decayFrequency >= 1 && dispatcher.decayFactor >= 1)) {
+                console.log('$$.dispatcher decay parameters must be >= 1');
+                return;
+            }
+            if (activeInterval < dispatcher.minInterval) {
+                activeInterval = dispatcher.minInterval;
+            }
+            if (((new Date()).getTime() - touchTime)/1000 > activeInterval * dispatcher.decayFrequency
+                    && activeInterval < dispatcher.maxInterval) {
+                activeInterval = Math.min(activeInterval * dispatcher.decayFactor, dispatcher.maxInterval);
+            }
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+            timeout = setTimeout(doRefresh, activeInterval*1000);
+            lastRefresh = (new Date()).getTime();
+            dispatcher.trigger('refresh');
+        };
+
+        dispatcher = $$.dispatcher = _.extend({
+            minInterval: 10,
+            maxInterval: 1000,
+            decayFrequency: 6,
+            decayFactor: 2,
+
+            refresh: function () {
+                console.log('refresh!');
+            },
+
+            /* Not normally used, but can be called OOB. */
+            refreshMe: function () {
+                lastRefresh = (new Date()).getTime();
+                this.trigger('refresh');
+            },
+
+            startRefresh: function (model) {
+                model.listenTo(this, 'refresh', model.refresh);
+                if (!timeout) {
+                    timeout = setTimeout(doRefresh, activeInterval*1000);
+                }
+            },
+
+            stopRefresh: function (model) {
+                model.stopListening(this, 'refresh', model.refresh);
+            }
+        }, $$.Events);
+
+        $('html').on('click focus touchstart', function () {
+            touch();
+        });
+        
+        return dispatcher;
+    };
+
+    if (typeof context.define === 'function' && context.define.amd &&
+            typeof context._$$_backstrap_built_flag === 'undefined') {
+        context.define('backstrap/dispatcher', ['backstrap', 'backbone', 'jquery'], fn);
+    } else if (typeof context.module === 'object' && typeof context.module.exports === 'object') {
+        context.module.exports = fn(require('backstrap'), require('backbone'), require('jquery'));
+    } else {
+        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        if (typeof context.$ !== 'function') throw new Error('jQuery environment not loaded');
+        fn(context.$$, context.$);
+    }
+}(this));
+
 /**
- * A generic Bootstrap View for displaying Collection data.
- * From Backbone-UI CollectionView.
+ * A generic Backbone Model object, with extensions.
  * 
  * @license MIT
  */
 (function(context){
-  var fn = function($$){
+  var fn = function($$, dispatcher, Backbone) {
 
-  var noop = function(){};
+    return ($$.Model = Backbone.Model.extend({
+        options: {
+          // Whether the Model should automatically refresh at regular intervals.
+          autoRefresh: false
+        },
 
-  return ($$.CollectionView = $$.BaseView.extend({
-    options : {
-      // The Backbone.Collection instance the view is bound to
-      model : null,
+        initialize: function(options) {
+	    Backbone.Model.prototype.initialize.call(this, options);
+            if(this.options.autoRefresh) {
+              this.resumeAutoRefresh();
+            }  
+        },
+    
+        pauseAutoRefresh: function () {
+              dispatcher.stopRefresh(this);
+        },
 
-      // The Backbone.View class responsible for rendering a single item 
-      // in the collection. For simple use cases, you can pass a String instead 
-      // which will be interpreted as the property of the model to display.
-      itemView : null,
-      
-      // Options to pass into the Backbone.View responsible for rendering the single item
-      itemViewOptions : null,
+        resumeAutoRefresh: function () {
+              dispatcher.startRefresh(this);
+        },
 
-      // A string, element, or function describing what should be displayed
-      // when the list is empty.
-      emptyContent : null,
+	refresh: function () {
+		this.fetch();
+	}
 
-      // A callback to invoke when a row is clicked.  The associated model will be
-      // passed as the first argument.
-      onItemClick : noop,
-
-      // The maximum height in pixels that this table show grow to.  If the
-      // content exceeds this height, it will become scrollable.
-      maxHeight : null,
-      
-      // Render the the collection view on change in model
-      renderOnChange : true
-    },
-
-    itemViews : {},
-
-    _emptyContent : null,
-
-    // must be over-ridden to describe how an item is rendered
-    _renderItem : noop,
-
-    initialize : function(options) {
-      $$.BaseView.prototype.initialize.call(this, options);
-      if(this.model) {
-        this.model.bind('add', _.bind(this._onItemAdded, this));
-        if(this.options.renderOnChange){
-          this.model.bind('change', _.bind(this._onItemChanged, this));
-        }  
-        this.model.bind('remove', _.bind(this._onItemRemoved, this));
-        this.model.bind('refresh', _.bind(this.render, this));
-        this.model.bind('reset', _.bind(this.render, this));
-      }
-    },
-
-    _onItemAdded : function(model, list, options) {
-
-      // first ensure that our collection element has been initialized,
-      // and we haven't already rendered an item for this model
-      if(!this.collectionEl || !!this.itemViews[model.cid]) {
-        return;
-      }
-
-      // remove empty content if it exists
-      if(!!this._emptyContent) {
-        if(!!this._emptyContent.parentNode) this._emptyContent.parentNode.removeChild(this._emptyContent);
-        this._emptyContent = null;
-      }
-       
-      // render the new item
-      var properIndex = list.indexOf(model);
-      var el = this._renderItem(model, properIndex);
-
-      // insert it into the DOM position that matches it's position in the model
-      var anchorNode = this.collectionEl.childNodes[properIndex];
-      this.collectionEl.insertBefore(el, _(anchorNode).isUndefined() ? null : anchorNode);
-
-      // update the first / last class names
-      this._updateClassNames();
-    },
-
-    _onItemChanged : function(model) {
-      // ensure our collection element has been initialized
-      if(!this.collectionEl) return;
-
-      var view = this.itemViews[model.cid];
-      // re-render the individual item view if it's a backbone view
-      if(!!view && view.el && view.el.parentNode) {
-        this._ensureProperPosition(view);
-        view.render();
-      }
-
-      // otherwise, we re-render the entire collection
-      else {
-        this.render();
-      }
-    },
-
-    _onItemRemoved : function(model) {
-      // ensure our collection element has been initialized
-      if(!this.collectionEl) return;
-
-      var view = this.itemViews[model.cid];
-      var liOrTrElement = view.el.parentNode;
-      if(!!view && !!liOrTrElement && !!liOrTrElement.parentNode) {
-        liOrTrElement.parentNode.removeChild(liOrTrElement);
-      }
-      delete(this.itemViews[model.cid]);
-
-      // update the first / last class names
-      this._updateClassNames();
-    },
-
-    _updateClassNames : function() {
-      var children = this.collectionEl.childNodes;
-      if(children.length > 0) {
-        _(children).each(function(child, index) {
-          $(child).removeClass('first');
-          $(child).removeClass('last');
-          $(child).addClass(index % 2 === 0 ? 'even' : 'odd');
-        });
-        $(children[0]).addClass('first');
-        $(children[children.length - 1]).addClass('last');
-      }
-    },
-
-    _ensureProperPosition : function(view) {
-      if(_(this.model.comparator).isFunction()) {
-        this.model.sort({silent : true});
-        var itemEl = view.el.parentNode;
-        var currentIndex = _(this.collectionEl.childNodes).indexOf(itemEl, true);
-        var properIndex = this.model.indexOf(view.model);
-        if(currentIndex !== properIndex) {
-          itemEl.parentNode.removeChild(itemEl);
-          var refNode = this.collectionEl.childNodes[properIndex];
-          if(refNode) {
-            this.collectionEl.insertBefore(itemEl, refNode);
-          }
-          else {
-            this.collectionEl.appendChild(itemEl);
-          }
-        }
-      }
-    }
-
-  }));
+    }));
   };
 
 	if (typeof context.define === "function" && context.define.amd &&
 			typeof context._$$_backstrap_built_flag === 'undefined') {
-		define("backstrap/CollectionView", ["backstrap"], function ($$) {
+		define("backstrap/Model", ["backstrap", "backstrap/dispatcher", "backbone"], function ($$) {
 			return fn($$);
 		});
 	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-		module.exports = fn(require("backstrap"));
+		module.exports = fn(require("backstrap"), require('backstrap/dispatcher'), require('Backbone'));
 	} else {
 		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-		fn(context.$$);
+		if (typeof context.$$.dispatcher !== 'object') throw new Error('Backstrap dispatcher not loaded');
+		if (typeof context.Backbone.View === 'undefined') throw new Error('Backbone environment not loaded');
+		fn(context.$$, context.$$.dispatcher, context.Backbone);
 	}
 }(this));
 
 
+
+/**
+ * A generic Backbone Collection object, with extensions.
+ * 
+ * @license MIT
+ */
+(function(context){
+  var fn = function($$, dispatcher, Backbone) {
+
+    return ($$.Collection = Backbone.Collection.extend({
+        options: {
+          // Whether the Collection should automatically refresh at regular intervals.
+          autoRefresh: false
+        },
+
+        initialize: function(model, options) {
+            // NOOP Backbone.Collection.prototype.initialize.call(this, model, options);
+            this.options = this.options ? _({}).extend(this.options, options) : options;
+            if (this.options.autoRefresh) {
+              dispatcher.startRefresh(this);
+            }  
+        },
+    
+        pauseAutoRefresh: function () {
+              dispatcher.stopRefresh(this);
+        },
+
+        resumeAutoRefresh: function () {
+              dispatcher.startRefresh(this);
+        },
+
+        refresh: function () {
+            this.fetch();
+        }
+
+    }));
+  };
+
+    if (typeof context.define === "function" && context.define.amd &&
+            typeof context._$$_backstrap_built_flag === 'undefined') {
+        define("backstrap/Collection", ["backstrap", "backstrap/dispatcher", "backbone"], function ($$) {
+            return fn($$);
+        });
+    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
+        module.exports = fn(require("backstrap"), require('backstrap/dispatcher'), require('Backbone'));
+    } else {
+        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        if (typeof context.$$.dispatcher !== 'object') throw new Error('Backstrap dispatcher not loaded');
+        if (typeof context.Backbone.View === 'undefined') throw new Error('Backbone environment not loaded');
+        fn(context.$$, context.$$.dispatcher, context.Backbone);
+    }
+}(this));
+
+
+
+/**
+ * A generic Backbone View for displaying Collection data.
+ * Based on Backbone-UI CollectionView.
+ * 
+ * @author Kevin Perry, perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
+ * @license MIT
+ */
+(function (context)
+{
+    var fn = function ($$)
+    {
+        /*
+         * Render an item for the given model, at the given index.
+         */
+        var renderItem = function (model, index) {
+            var content = null;
+            if (_(this.options.itemView).exists()) {
+                if (_(this.options.itemView).isString()) {
+                    content = this.resolveContent(model, this.options.itemView);
+                } else {
+                    var view = new this.options.itemView(_({ model: model }).extend(
+                        this.options.itemViewOptions));
+                    view.render();
+                    this.itemViews[model.cid] = view;
+                    content = view.el;
+                }
+            }
+
+            // Bind the item click callback if given.
+            if (this.options.onItemClick) {
+                $(content).click(_(this.options.onItemClick).bind(this, model));
+            }
+
+            this.placeItem(content, model, index);
+        };
+
+        var onItemAdded = function (model, list, options) {
+            // First ensure that we haven't already rendered an item for this model.
+            if (this.itemViews[model.cid]) {
+                return;
+            }
+
+            // Remove empty content if it exists.
+            if (this._emptyContent) {
+                if (this._emptyContent.parentNode) this._emptyContent.parentNode.removeChild(this._emptyContent);
+                this._emptyContent = null;
+            }
+   
+            // Render the new item.
+            renderItem.call(this, model, list.indexOf(model));
+            
+            if (_.isFunction(this.onItemAdded)) {
+                this.onItemAdded(model, list, options);
+            }
+        };
+
+        var onItemChanged = function (model) {
+            var view = this.itemViews[model.cid];
+            // Re-render the individual item view if it's a backbone view.
+            if (view && view.el && view.el.parentNode) {
+                view.render();
+            } else { // Otherwise, we re-render the entire collection.
+                this.render();
+            }
+
+            if (_.isFunction(this.onItemChanged)) {
+                this.onItemChanged(model, list, options);
+            }
+        };
+
+        var onItemRemoved = function (model) {
+            var view = this.itemViews[model.cid];
+            var liOrTrElement = view.el.parentNode;
+            if (view && liOrTrElement && liOrTrElement.parentNode) {
+                liOrTrElement.parentNode.removeChild(liOrTrElement);
+            }
+            delete(this.itemViews[model.cid]);
+            if (this.itemViews.length === 0) {
+                // Need to render the empty content.
+                this.render();
+            }
+
+            if (_.isFunction(this.onItemRemoved)) {
+                this.onItemRemoved(model, list, options);
+            }
+        };
+        
+        return ($$.CollectionView = $$.View.extend({
+            options: {
+                // The Collection instance the view is bound to.
+                model: null,
+
+                // The View class responsible for rendering a single item 
+                // in the collection. For simple use cases, you can pass a String instead 
+                // which will be interpreted as the property of the model to display.
+                itemView: null,
+      
+                // Options to pass into the View responsible for rendering the single item.
+                itemViewOptions: null,
+
+                // A string, element, or function describing what should be displayed
+                // when the list is empty.
+                emptyContent: null,
+
+                // A callback to invoke when a row is clicked.  The associated model will be
+                // passed as the first argument.
+                onItemClick: function () {},
+
+                // The maximum height in pixels that this table show grow to.  If the
+                // content exceeds this height, it will become scrollable.
+                maxHeight: null,
+      
+                // Render the the collection view on change in model.
+                renderOnChange: true
+            },
+
+            itemViews: {},
+
+            _emptyContent: null,
+
+            initialize: function (options) {
+                $$.View.prototype.initialize.call(this, options);
+                if (this.model) {
+                    this.model.on('add', onItemAdded, this);
+                    if (this.options.renderOnChange){
+                        var renderOnChange = this.options.renderOnChange;
+                        if (is_array(renderOnChange)) {
+                            renderOnChange.forEach(function (property) {
+                                this.model.on('change:' + property, onItemChanged, this);
+                            }, this);
+                        } else if (renderOnChange === true) {
+                            this.model.on('change', onItemChanged, this);
+                        } else { // Assume string
+                            this.model.on('change:' + renderOnChange, onItemChanged, this);
+                        }
+                    }  
+                    this.model.on('remove', onItemRemoved, this);
+                    this.model.on('reset', this.render, this);
+                }
+            },
+
+            render: function () {
+                $(this.el).empty();
+                this.itemViews = {};
+
+                if (this.options.emptyContent) {
+                    this._emptyContent = _(this.options.emptyContent).isFunction() ? 
+                        this.options.emptyContent() : this.options.emptyContent;
+                }
+
+                if (_(this.model).exists() && this.model.length > 0) {
+                    _(this.model.models).each(renderItem, this);
+                } else {
+                    this.placeEmpty(this._emptyContent);
+                }
+                
+                return this;
+            },
+
+            /**
+             * Place an individual item's view on the page.
+             * 
+             * Extensions of CollectionView may wish to override this method
+             * to define how an item is put into the DOM.
+             */
+            placeItem: function (itemElement, model, index) {
+                this.$el.append(itemElement);
+            },
+            
+            /**
+             * Place the "empty" content, if any, on the page.
+             * 
+             * Extensions of CollectionView may wish to override this method.
+             */
+            placeEmpty: function (emptyContent) {    
+                // Render the empty content.
+                if (emptyContent) {
+                    this.$el.append(emptyContent);
+                }
+            }
+        }));
+    };
+
+    if (typeof context.define === "function" && context.define.amd &&
+            typeof context._$$_backstrap_built_flag === 'undefined') {
+        define("backstrap/CollectionView", ["backstrap"], function ($$) {
+            return fn($$);
+        });
+    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
+        module.exports = fn(require("backstrap"));
+    } else {
+        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        fn(context.$$);
+    }
+}(this));
 
  // A mixin for dealing with collection alternatives
 (function(context) {
@@ -1402,7 +1643,7 @@ if(window.jQuery) {
 	{
 		return ($$.HasFormLabel = {
 			wrapWithFormLabel : function(content) {
-				var wrapped = $$.plain.label();
+				var wrapped = $$.plain.label({'for': this.options.name});
 				
 				var formLabelText = this.options.formLabelContent ? 
 					this.resolveContent(this.model, this.options.formLabelContent, 
@@ -1489,7 +1730,7 @@ if(window.jQuery) {
 	{
 		return ($$.HasModel = {
 			options : {
-				// The Backbone.Model instance the view is bound to
+				// The Model instance the view is bound to
 				model : null,
 
 				// The property of the bound model this component should render / update.
@@ -1498,10 +1739,15 @@ if(window.jQuery) {
 				// property may be a string or function describing the content to be rendered
 				content : null,
 
-				// If provided this content will wrap the component with additional label.
-				// The text displayed by the label is determined the same way the content attribute.
-				// This option is a no-op when applied to Button, Calendar, Checkbox, Link components.
-				formLabelContent : null,
+                // If provided this content will wrap the component with additional label.
+                // The text displayed by the label is determined the same way the content attribute.
+                // For Checkbox and Label.
+                labelContent : null,
+
+                // If provided this content will wrap the component with additional label.
+                // The text displayed by the label is determined the same way the content attribute.
+                // This option is a no-op when applied to Button, Calendar, Checkbox, Link components.
+                formLabelContent : null,
 
 				// If present, a square glyph area will be added to the left side of this 
 				// component, and the given string will be used as the class name
@@ -1516,7 +1762,7 @@ if(window.jQuery) {
 
 			_observeModel : function(callback) {
 				if(_(this.model).exists() && _(this.model.unbind).isFunction()) {
-					_(['content', 'labelContent']).each(function(prop) {
+					_(['content', 'labelContent', 'formLabelContent']).each(function(prop) {
 						var key = this.options[prop];
 						if(_(key).exists()) {
 							key = 'change:' + key;
@@ -1529,7 +1775,7 @@ if(window.jQuery) {
 
 			_unobserveModel : function(callback) {
 				if(_(this.model).exists() && _(this.model.unbind).isFunction()) {
-					_(['content', 'labelContent']).each(function(prop) {
+					_(['content', 'labelContent', 'formLabelContent']).each(function(prop) {
 						var key = this.options[prop];
 						if(_(key).exists()) {
 							key = 'change:' + key;
@@ -1557,95 +1803,126 @@ if(window.jQuery) {
 
 
 /**
- * A Bootstrap View that displays a model-bound list.
- * Largely from Backbone-UI's ListView class,
+ * A Backbone View that displays a model-bound list.
+ * Based on Backbone-UI's ListView,
  * with Bootstrap decoration.
  * 
  * @license MIT
  */
-(function(context){
-  var fn = function($$){
-		
-  return ($$.List = $$.CollectionView.extend({
-  
-    initialize : function(options) {
-      $$.CollectionView.prototype.initialize.call(this, options);
-      $(this.el).addClass('list');
-    },
+(function (context)
+{
+    var fn = function ($$)
+    {
+        var updateClassNames = function () {
+            if (this.options.generateRowClassNames) {
+                var children = this.collectionEl.childNodes;
+                if (children.length > 0) {
+                    _(children).each(
+                        function (child, index)
+                        {
+                            $(child).removeClass('first last')
+                                    .addClass(index % 2 === 0 ? 'even' : 'odd');
+                        });
+                    $(children[0]).addClass('first');
+                    $(children[children.length - 1]).addClass('last');
+                }
+            }
+        };
 
-    render : function() {
-      $(this.el).empty();
-      this.itemViews = {};
+        var ensureProperPosition = function (model) {
+            if (_(this.model.comparator).isFunction()) {
+                this.model.sort({silent: true});
+                var itemEl = this.itemViews[model.cid].el.parentNode;
+                var currentIndex = _(this.collectionEl.childNodes).indexOf(itemEl, true);
+                var properIndex = this.model.indexOf(model);
+                if (currentIndex !== properIndex) {
+                    itemEl.parentNode.removeChild(itemEl);
+                    var refNode = this.collectionEl.childNodes[properIndex];
+                    if (refNode) {
+                        this.collectionEl.insertBefore(itemEl, refNode);
+                    } else {
+                        this.collectionEl.appendChild(itemEl);
+                    }
+                }
+            }
+        };
 
-      this.collectionEl = $$.ul();
+        var ensureProperPositions = function (collection) {
+            collection.models.forEach(function (model, index) {
+                var itemEl = this.itemViews[model.cid].el.parentNode;
+                itemEl.parentNode.removeChild(itemEl);
+                var refNode = this.collectionEl.childNodes[index];
+                if (refNode) {
+                    this.collectionEl.insertBefore(itemEl, refNode);
+                } else {
+                    this.collectionEl.appendChild(itemEl);
+                }
+            }, this);
+            updateClassNames.call(this);
+        };
 
-      // if the collection is empty, we render the empty content
-      if((!_(this.model).exists()  || this.model.length === 0) && this.options.emptyContent) {
-        this._emptyContent = _(this.options.emptyContent).isFunction() ? 
-          this.options.emptyContent() : this.options.emptyContent;
-        this._emptyContent = $$.li(this._emptyContent);
+        return ($$.List = $$.CollectionView.extend({
+            options: {
+                // Set this to true to generate first, last, even, and odd classnames on rows.
+                generateRowClassNames: false
+            },
+            
+            initialize: function (options) {
+                $$.CollectionView.prototype.initialize.call(this, options);
 
-        if(!!this._emptyContent) {
-          this.collectionEl.appendChild(this._emptyContent);
-        }
-      }
+                if (this.model) {
+                    this.model.bind('sort', ensureProperPositions, this);
+                }
 
-      // otherwise, we render each row
-      else {
-        _(this.model.models).each(function(model, index) {
-          var item = this._renderItem(model, index);
-          this.collectionEl.appendChild(item);
-        }, this);
-      }
+                $(this.el).addClass('list');
+                this.collectionEl = $$.ul({className: 'list-group'});
+            },
 
-      this.el.appendChild(this.collectionEl);
-      this._updateClassNames();
+            render: function () {
+                $(this.collectionEl).empty();
 
-      return this;
-    },
+                $$.CollectionView.prototype.render.call(this);
 
-    // renders an item for the given model, at the given index
-    _renderItem : function(model, index) {
-      var content = null;
-      if(_(this.options.itemView).exists()) {
+                updateClassNames.call(this);
+                this.el.appendChild(this.collectionEl);
 
-        if(_(this.options.itemView).isString()) {
-          content = this.resolveContent(model, this.options.itemView);
-        }
+                return this;
+            },
 
-        else {
-          var view = new this.options.itemView(_({ model : model }).extend(
-            this.options.itemViewOptions));
-          view.render();
-          this.itemViews[model.cid] = view;
-          content = view.el;
-        }
-      }
+            // Renders an item for the given model, at the given index.
+            placeItem: function (content, model, index) {
+                this.collectionEl.appendChild($$.li({className: 'list-group-item'}, content));
+            },
 
-      var item = $$.li(content);
+            placeEmpty: function (content) {
+                this.collectionEl.appendChild($$.li({className: 'list-group-item'}, content));
+            },
 
-      // bind the item click callback if given
-      if(this.options.onItemClick) {
-        $(item).click(_(this.options.onItemClick).bind(this, model));
-      }
+            onItemAdded: function () {
+                updateClassNames.call(this);
+            },
 
-      return item;
+            onItemRemoved: function () {
+                updateClassNames.call(this);
+            },
+
+            onItemChanged: function () {
+                ensureProperPosition.call(this);
+            }
+        }));
+    };
+
+    if (typeof context.define === "function" && context.define.amd &&
+            typeof context._$$_backstrap_built_flag === 'undefined') {
+        define("backstrap/List", ["backstrap"], function ($$) {
+            return fn($$);
+        });
+    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
+        module.exports = fn(require("backstrap"));
+    } else {
+        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        fn(context.$$);
     }
-
-  }));
-  };
-  
-	if (typeof context.define === "function" && context.define.amd &&
-			typeof context._$$_backstrap_built_flag === 'undefined') {
-		define("backstrap/List", ["backstrap"], function ($$) {
-			return fn($$);
-		});
-	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-		module.exports = fn(require("backstrap"));
-	} else {
-		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-		fn(context.$$);
-	}
 }(this));
 
 /**
@@ -1661,11 +1938,11 @@ if(window.jQuery) {
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Badge = $$.BaseView.extend({
+		return ($$.Badge = $$.View.extend({
 			tagName: 'span',
 	
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
 				this.$el.addClass('badge');
@@ -1702,7 +1979,7 @@ if(window.jQuery) {
 (function(context) {
 	var fn = function($$)
 	{
-		var ItemView = $$.BaseView.extend({
+		var ItemView = $$.View.extend({
 			tagName: 'a',
 			className: 'nav-item',
 			
@@ -1713,23 +1990,82 @@ if(window.jQuery) {
 				return this;
 			}
 		});
-		
-		var NavList = $$.List.extend({
+
+		var NavList = $$.CollectionView.extend({
 			className: 'navbar-collapse collapse',
-	
-			render: function () {
-				$$.List.prototype.render.apply(this, arguments);
-				this.$('> ul').addClass('nav navbar-nav');
-				return this;
-			}
+			
+			initialize : function(options) {
+				$$.CollectionView.prototype.initialize.call(this, options);
+				$(this.el).addClass('list');
+				_(this).bindAll('render');
+			},
+			
+		    render : function() {
+		    	$(this.el).empty();
+		    	this.itemViews = {};
+
+		    	this.collectionEl = $$.ul({className: 'nav navbar-nav'});
+
+		    	// if the collection is empty, we render the empty content
+		      if((!_(this.model).exists()  || this.model.length === 0) && this.options.emptyContent) {
+		        this._emptyContent = _(this.options.emptyContent).isFunction() ? 
+		          this.options.emptyContent() : this.options.emptyContent;
+		        this._emptyContent = $$.li(this._emptyContent);
+
+		        if(!!this._emptyContent) {
+		          this.collectionEl.appendChild(this._emptyContent);
+		        }
+		      }
+
+		      // otherwise, we render each row
+		      else {
+		        _(this.model.models).each(function(model, index) {
+		          var item = this._renderItem(model, index);
+		          this.collectionEl.appendChild(item);
+		        }, this);
+		      }
+
+		      this.el.appendChild(this.collectionEl);
+		      this._updateClassNames();
+
+		      return this;
+		    },
+
+		    // renders an item for the given model, at the given index
+		    _renderItem : function(model, index) {
+		      var content = null;
+		      if(_(this.options.itemView).exists()) {
+
+		        if(_(this.options.itemView).isString()) {
+		          content = this.resolveContent(model, this.options.itemView);
+		        }
+
+		        else {
+		          var view = new this.options.itemView(_({ model : model }).extend(
+		            this.options.itemViewOptions));
+		          view.render();
+		          this.itemViews[model.cid] = view;
+		          content = view.el;
+		        }
+		      }
+
+		      var item = $$.li(content);
+
+		      // bind the item click callback if given
+		      if(this.options.onItemClick) {
+		        $(item).click(_(this.options.onItemClick).bind(this, model));
+		      }
+
+		      return item;
+		    }
 		});
 	
-		return ($$.BasicNavbar = $$.BaseView.extend({
+		return ($$.BasicNavbar = $$.View.extend({
 			className: 'navbar navbar-default',
 			brand: '',
 	
 			initialize: function (options) {
-				$$.BaseView.prototype.initialize.apply(this, arguments);
+				$$.View.prototype.initialize.apply(this, arguments);
 				if ('navbarType' in options) {
 					this.$el.addClass('navbar-'+options.navbarType);
 				}
@@ -1779,7 +2115,7 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound button.
+ * A Backbone View that displays a model-bound button.
  * Largely from Backbone-UI's Button class,
  * with Bootstrap decoration.
  * 
@@ -1788,7 +2124,7 @@ if(window.jQuery) {
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Button = $$.BaseView.extend({
+		return ($$.Button = $$.View.extend({
 			options : {
 				tagName : 'button',
 				size    : 'default', // added.
@@ -1809,7 +2145,7 @@ if(window.jQuery) {
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph]);
 				_(this).bindAll('render');
 
@@ -1882,7 +2218,7 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound calendar.
+ * A Backbone View that displays a model-bound calendar.
  * Largely from Backbone-UI's Calendar class,
  * with Bootstrap decoration.
  * 
@@ -1927,7 +2263,7 @@ if(window.jQuery) {
 		return compareDate.getTime() > maxDate.getTime();
 	};
 
-	return ($$.Calendar = $$.BaseView.extend({
+	return ($$.Calendar = $$.View.extend({
 		options : {
 			// the selected calendar date
 			date : null, 
@@ -1954,7 +2290,7 @@ if(window.jQuery) {
 		date : null, 
 
 		initialize : function(options) {
-			$$.BaseView.prototype.initialize.call(this, options);
+			$$.View.prototype.initialize.call(this, options);
 			this.$el.addClass('calendar calendar-default');
 			_(this).bindAll('render');
 		},
@@ -2120,7 +2456,7 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound checkbox.
+ * A Backbone View that displays a model-bound checkbox.
  * Largely from Backbone-UI's Checkbox class,
  * with Bootstrap decoration.
  * 
@@ -2129,7 +2465,7 @@ if(window.jQuery) {
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Checkbox = $$.BaseView.extend({
+		return ($$.Checkbox = $$.View.extend({
 			options : {
 				// The property of the model describing the label that 
 				// should be placed next to the checkbox
@@ -2139,7 +2475,7 @@ if(window.jQuery) {
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph, $$.HasError]);
 				_(this).bindAll('_refreshCheck');
 				this.$el.addClass('checkbox');
@@ -2234,7 +2570,7 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a contextually-colored spanor other tag;
+ * A Backbone View that displays a Bootstrap contextually-colored span or other tag;
  * context name bound to model data.
  * 
  * @author Kevin Perry perry@princeton.edu
@@ -2245,7 +2581,7 @@ if(window.jQuery) {
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Context = $$.BaseView.extend({
+		return ($$.Context = $$.View.extend({
 			options : {
 				tagName: 'span',
 				content: 'context',
@@ -2253,14 +2589,14 @@ if(window.jQuery) {
 			},
 	
 			initialize : function(options) {
-				this.options = _.extend({}, this.options, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
-				this.prefix = this.options.background ? 'bg-' : 'text-';
 				_(this).bindAll('render');
+				this.prefix = this.options.background ? 'bg-' : 'text-';
 			},
 	
 			render : function() {
-				var contextName = this.resolveContent();
+				var contextName = this.resolveContent(this.options.model, this.options.contentMap);
 				this._observeModel(this.render);
 				this.$el.removeClass(this.prefix + this.context).addClass(this.prefix + contextName);
 				return this;
@@ -2282,7 +2618,39 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound date picker.
+ * A Backbone View that displays a Bootstrap container div.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
+ * @license MIT
+ * 
+ */
+(function(context) {
+	var fn = function($$)
+	{
+		return ($$.Container = $$.View.extend({
+			initialize : function(options) {
+				$$.View.prototype.initialize.call(this, options);
+				this.$el.addClass('container');
+			}
+		}));
+	};
+	
+	if (typeof context.define === "function" && context.define.amd &&
+			typeof context._$$_backstrap_built_flag === 'undefined') {
+		define("backstrap/Container", ["backstrap"], function ($$) {
+			return fn($$);
+		});
+	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
+		module.exports = fn(require("backstrap"));
+	} else {
+		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+		fn(context.$$);
+	}
+}(this));
+
+/**
+ * A Backbone View that displays a model-bound date picker.
  * Largely from Backbone-UI's DatePicker class,
  * with Bootstrap decoration.
  * 
@@ -2293,7 +2661,7 @@ if(window.jQuery) {
 	{
 		var KEY_RETURN = 13;
 
-		return ($$.DatePicker = $$.BaseView.extend({
+		return ($$.DatePicker = $$.View.extend({
 
 			options : {
 				// a moment.js format : http://momentjs.com/docs/#/display/format
@@ -2306,7 +2674,7 @@ if(window.jQuery) {
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasFormLabel, $$.HasError]);
 				this.$el.addClass('date_picker');
 
@@ -2328,7 +2696,6 @@ if(window.jQuery) {
 
 				// listen for model changes
 				this._observeModel(_(this.render).bind(this));
-
 			},
 
 			render : function() {
@@ -2456,7 +2823,7 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound dropdown list.
+ * A Backbone View that displays a model-bound dropdown list.
  * Largely from Backbone-UI's Pulldown class,
  * with Bootstrap decoration.
  * 
@@ -2465,7 +2832,7 @@ if(window.jQuery) {
 (function(context) {
 	var fn = function($$)
 	{
-		var ItemView = $$.BaseView.extend({
+		var ItemView = $$.View.extend({
 			tagName: function () {
 				if (this.model.get('divider') || this.model.get('separator') || this.model.get('header')) {
 					return 'span';
@@ -2511,7 +2878,6 @@ if(window.jQuery) {
 				if ('align' in this.options) {
 					this.align = this.options.align==='right' ? ' dropdown-menu-right' : ' dropdown-menu-left';
 				}
-				return this;
 			},
 	
 			render: function () {
@@ -2553,8 +2919,8 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound Bootstrap Glypicon glyph.
- * with Bootstrap decoration.
+ * A Backbone View that displays a Bootstrap contextually-colored glyphicon glyph.
+ * context name bound to model data.
  * 
  * @author Kevin Perry perry@princeton.edu
  * @copyright 2014 The Trustees of Princeton University.
@@ -2563,23 +2929,39 @@ if(window.jQuery) {
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Glyph = $$.BaseView.extend({
+		return ($$.Glyph = $$.View.extend({
 			options : {
-				tagName : 'span',
+				context: 'default',
+				contextMap: null,
+				content: 'ok',
+				contentMap: null,
+				background: false
 			},
+			context: 'default',
+			content: '',
 	
 			initialize : function(options) {
-				this.options = _.extend({}, this.options, options);
+				options.tagName = 'span';
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
-				this.$el.addClass('glyphicon');
+				this.prefix = this.options.background ? 'bg-' : 'text-';
+				this.glyph = $$.glyph(this.content);
+				this.$el.append(this.glyph);
 			},
 	
 			render : function() {
-				var glyph = this.resolveContent();
+				var contextName = this.resolveContent(this.options.model, this.options.contextMap ? this.options.contextMap : this.options.context);
+				var contentName = this.resolveContent(this.options.model, this.options.contentMap);
 				this._observeModel(this.render);
-				this.$el.empty();
-				this.$el.addClass('glyphicon-' + glyph);
+				if (contextName !== this.context) {
+					this.$el.removeClass(this.prefix + this.context).addClass(this.prefix + contextName);
+					this.context = contextName;
+				}
+				if (contentName !== this.content) {
+					$(this.glyph).removeClass('glyphicon-' + this.content).addClass('glyphicon-' + contentName);
+					this.content = contentName;
+				}
 				return this;
 			}
 		}));
@@ -2599,7 +2981,101 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound label
+ * A Backbone View that displays a Bootstrap grid.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
+ * @license MIT
+ * 
+ */
+(function(context) {
+	var fn = function($$)
+	{
+		var sizeMap = {
+				'large'        : 'lg',
+				'lg'           : 'lg',
+				'medium'       : 'md',
+				'md'           : 'md',
+				'small'        : 'sm',
+				'sm'           : 'sm',
+				'extra-small'  : 'xs',
+				'xs'           : 'xs'
+		};
+		
+		var parseCellSpec = function(spec) {
+			var str = 'col';
+			for (var prop in spec) {
+				if (prop in sizeMap) {
+					str += ' col-' + sizeMap[prop] + '-' + spec[prop];
+				}
+				if (prop === 'className') {
+	                str += ' ' + spec[prop];
+	            }
+			}
+			return str;
+		};
+		
+		// Defaults to 1x1 non-fluid layout.
+		return ($$.Grid = $$.View.extend({
+			fluid: false,
+			layout: [[ 12 ]],
+
+			initialize: function (options) {
+				$$.View.prototype.initialize.call(this, options);
+				this.$el.addClass(this.options.fluid ? 'container-fluid' : 'container');
+				this.appendRows(this.options.layout);
+			},
+			
+			appendRows: function (layout) {
+				for (var r=0; r<layout.length; r++) {
+					this.appendRow(layout[r]);
+				}
+				return this;
+			},
+			
+			appendRow: function (layout) {
+				var row = $$.div({className: 'row'});
+				this.$el.append(row);
+				for (var c=0; c<layout.length; c++) {
+					var cell = layout[c];
+					var cellClass;
+					var content = '';
+					if (cell !== null && typeof cell === 'object') {
+						cellClass = parseCellSpec(cell);
+						content = ('content' in cell) ? cell.content : '';
+					} else {
+						cellClass = 'col col-md-' + cell;
+					}
+					$$.div({className: cellClass}, content).appendTo(row);
+				}
+				return this;
+			},
+			
+			getRow: function () {
+				return $('> *:nth-child('+row+') ', this.el);
+			},
+			
+			getCell: function (row, col) {
+				return $('> *:nth-child('+row+') > *:nth-child(' + col + ') ', this.el);
+			}
+		}));
+	};
+	
+	if (typeof context.define === "function" && context.define.amd &&
+			typeof context._$$_backstrap_built_flag === 'undefined') {
+		define("backstrap/Grid", ["backstrap"], function ($$) {
+			return fn($$);
+		});
+	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
+		module.exports = fn(require("backstrap"));
+	} else {
+		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+		fn(context.$$);
+	}
+}(this));
+
+/**
+ * A Backbone View that displays a model-bound label
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
@@ -2610,7 +3086,7 @@ if(window.jQuery) {
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Label = $$.BaseView.extend({
+		return ($$.Label = $$.View.extend({
     
 			options : {
 				emptyContent : '',
@@ -2621,7 +3097,7 @@ if(window.jQuery) {
 			tagName : 'label',
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
 				this.$el.addClass('label label-' + $$._mapSize(this.options.size));
@@ -2664,7 +3140,7 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound URL link.
+ * A Backbone View that displays a model-bound URL link.
  * Largely from Backbone-UI's Link class,
  * with Bootstrap decoration.
  * 
@@ -2673,7 +3149,7 @@ if(window.jQuery) {
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Link = $$.BaseView.extend({
+		return ($$.Link = $$.View.extend({
 			options : {
 				// disables the link (non-clickable) 
 				disabled : false,
@@ -2688,7 +3164,7 @@ if(window.jQuery) {
 			tagName : 'a',
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph]);
 				_(this).bindAll('render');
 				this.$el.addClass('link text-' + $$._mapSize(this.options.size));
@@ -2746,7 +3222,7 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound menu.
+ * A Backbone View that displays a model-bound menu.
  * Largely from Backbone-UI's Menu class,
  * with Bootstrap decoration.
  * 
@@ -2757,7 +3233,7 @@ if(window.jQuery) {
 	{
 		// TODO: Major overhaul - should not use <select>
 		var noop = function(){};
-		return ($$.Menu = $$.BaseView.extend({
+		return ($$.Menu = $$.View.extend({
 
 			options : {
 
@@ -2781,14 +3257,11 @@ if(window.jQuery) {
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasAlternativeProperty, 
 					$$.HasFormLabel, $$.HasError]);
-
 				_(this).bindAll('render');
-
 				$(this.el).addClass('menu');
-
 			},
 
 
@@ -2953,7 +3426,7 @@ if(window.jQuery) {
 (function(context) {
 	var fn = function($$)
 	{
-		var ItemView = $$.BaseView.extend({
+		var ItemView = $$.View.extend({
 			tagName: 'a',
 			className: 'nav-item',
 			
@@ -3004,7 +3477,7 @@ if(window.jQuery) {
 (function(context) {
 	var fn = function($$)
 	{
-		var ItemView = $$.BaseView.extend({
+		var ItemView = $$.View.extend({
 			tagName: 'a',
 			className: 'nav-item',
 			
@@ -3045,7 +3518,39 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound radio-button group.
+ * A Backbone View that displays a Bootstrap panel div.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
+ * @license MIT
+ * 
+ */
+(function(context) {
+	var fn = function($$)
+	{
+		return ($$.Panel = $$.View.extend({
+			initialize : function(options) {
+				$$.View.prototype.initialize.call(this, options);
+				this.$el.addClass('panel');
+			}
+		}));
+	};
+	
+	if (typeof context.define === "function" && context.define.amd &&
+			typeof context._$$_backstrap_built_flag === 'undefined') {
+		define("backstrap/Panel", ["backstrap"], function ($$) {
+			return fn($$);
+		});
+	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
+		module.exports = fn(require("backstrap"));
+	} else {
+		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+		fn(context.$$);
+	}
+}(this));
+
+/**
+ * A Backbone View that displays a model-bound radio-button group.
  * Largely from Backbone-UI's RadioGroup class,
  * with Bootstrap decoration.
  * 
@@ -3055,7 +3560,7 @@ if(window.jQuery) {
 	var fn = function($$)
 	{
 		var noop = function(){};
-		return ($$.RadioGroup = $$.BaseView.extend({
+		return ($$.RadioGroup = $$.View.extend({
 
 			options : {
 				// used to group the radio inputs
@@ -3069,7 +3574,7 @@ if(window.jQuery) {
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, 
 					$$.HasAlternativeProperty, $$.HasGlyph, 
 					$$.HasFormLabel, $$.HasError]);
@@ -3177,225 +3682,212 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound table.
+ * A Backbone View that displays a model-bound table.
  * Largely from Backbone-UI's TableView class,
  * with Bootstrap decoration.
  * 
  * @license MIT
  */
-(function(context){
-	var fn = function($$)
-	{
-		var noop = function(){};
-		return ($$.Table = $$.CollectionView.extend({
-			options : {
-				// Each column should contain a <code>title</code> property to
-				// describe the column's heading, a <code>content</code> property to
-				// declare which property the cell is bound to, an optional two-argument
-				// <code>comparator</code> with which to sort each column if the
-				// table is sortable, and an optional <code>width</code> property to
-				// declare the width of the column in pixels.
-				columns : [],
+(function (context)
+{
+    var fn = function ($$)
+    {
+        var noop = function () {};
+        
+        return ($$.Table = $$.CollectionView.extend({
+            options: {
+                // Each column should contain a <code>title</code> property to
+                // describe the column's heading, a <code>content</code> property to
+                // declare which property the cell is bound to, an optional two-argument
+                // <code>comparator</code> with which to sort each column if the
+                // table is sortable, and an optional <code>width</code> property to
+                // declare the width of the column in pixels.
+                columns: [],
 
-				// A string, element, or function describing what should be displayed
-				// when the table is empty.
-				emptyContent : 'no entries',
+                // A string, element, or function describing what should be displayed
+                // when the table is empty.
+                emptyContent: 'no entries',
 
-				// A callback to invoke when a row is clicked. If this callback
-				// is present, the rows will highlight on hover.
-				onItemClick : noop,
+                // An itemView that renders a table row.
+                itemView: $$.View.extend({
+                    tagName: 'tr',
 
-				// Clicking on the column headers will sort the table. See
-				// <code>comparator</code> property description on columns.
-				// The table is sorted by the first column by default.
-				sortable : false,
+                    render: function () {
+                        
+                        var row = this.el;
 
-				// A callback to invoke when the table is to be sorted and sortable is enabled. The callback will
-				// be passed the <code>column</code> on which to sort.
-				onSort : null,
+                        // TODO Need parent "this" for options and itemViews.
 
-				striped: false,
-				bordered: false,
-				hover: false,
-				condensed: false,
-				responsive: false
-			},
+                        // for each model, we walk through each column and generate the content
+                        _(this.options.columns).each(function (column, index, list) {
+                            var width = !!column.width ? parseInt(column.width, 10) + 5 : null;
+                            var style = width ? 'width:' + width + 'px; max-width:' + width + 'px': null;
+                            var content = this.resolveContent(model, column.content);
+                            row.appendChild($$.td({
+                                className: _(list).nameForIndex(index), 
+                                style: style
+                            }, $$.div({className: 'wrapper', style: style}, content)));
+                        }, this);
+        
+                        // bind the item click callback if given
+                        if (this.options.onItemClick) {
+                            $(row).click(_(this.options.onItemClick).bind(this, model));
+                        }
+        
+                        this.itemViews[model.cid] = row;
 
-			initialize : function(options) {
-				$$.CollectionView.prototype.initialize.call(this, options);
-				$(this.el).addClass('table_view');
-				this._sortState = {reverse : true};
-			},
+                        return this;
+                    }
+                }),
 
-			render : function() {
-				$(this.el).empty();
-				this.itemViews = {};
+                // Clicking on the column headers will sort the table. See
+                // <code>comparator</code> property description on columns.
+                // The table is sorted by the first column by default.
+                sortable: false,
 
-				var table;
-				var container = $$.div({
-						className : 'content' + (this.options.responsive ? ' table-responsive' : '')
-					},
-					table = $$.table({
-						cellPadding : '0',
-						cellSpacing : '0'
-					})
-				);
+                // A callback to invoke when the table is to be sorted and sortable is enabled. The callback will
+                // be passed the <code>column</code> on which to sort.
+                onSort: null,
 
-				$(table).addClass('table' +
-						(this.options.striped ? ' table-striped' : '') +
-						(this.options.bordered ? ' table-bordered' : '') +
-						(this.options.hover ? ' table-hover' : '') +
-						(this.options.condensed ? ' table-condensed' : '')
-				);
+                striped: false,
+                bordered: false,
+                hover: false,
+                condensed: false,
+                responsive: false
+            },
 
-				$(this.el).toggleClass('clickable', this.options.onItemClick !== noop);
+            initialize: function (options) {
+                $$.CollectionView.prototype.initialize.call(this, options);
+                $(this.el).addClass('table_view');
+                this._sortState = {reverse: true};
+            },
 
-				// generate a table row for our headings
-				var headingRow = $$.tr();
-				var sortFirstColumn = false;
-				var firstHeading = null;
-				_(this.options.columns).each(_(function(column, index, list) {
-					var label = _(column.title).isFunction() ? column.title() : column.title;
-					var width = !!column.width ? parseInt(column.width, 10) + 5 : null;
-					var style = width ? 'width:' + width + 'px; max-width:' + width + 'px; ' : '';
-					style += this.options.sortable ? 'cursor: pointer; ' : '';
-					column.comparator = _(column.comparator).isFunction() ? column.comparator : function(item1, item2) {
-						return item1.get(column.content) < item2.get(column.content) ? -1 :
-							item1.get(column.content) > item2.get(column.content) ? 1 : 0;
-					};
+            render: function () {
 
-					var firstSort = (sortFirstColumn && firstHeading === null);
-					var sortHeader = this._sortState.content === column.content || firstSort;
-					var sortClass = sortHeader ? (this._sortState.reverse && !firstSort ? ' asc' : ' desc') : '';
-					var sortLabel = $$.div({className : 'glyph'}, 
-						sortClass === ' asc' ? '\u25b2 ' : sortClass === ' desc' ? '\u25bc ' : '');
+                var table;
+                var container = $$.div({
+                        className: 'content' + (this.options.responsive ? ' table-responsive' : '')
+                    },
+                    table = $$.table({
+                        className: 'table' +
+                                (this.options.striped ? ' table-striped' : '') +
+                                (this.options.bordered ? ' table-bordered' : '') +
+                                (this.options.hover ? ' table-hover' : '') +
+                                (this.options.condensed ? ' table-condensed' : ''),
+                        cellPadding: '0',
+                        cellSpacing: '0'
+                    })
+                );
 
-					var onclick = this.options.sortable ? (_(this.options.onSort).isFunction() ?
-						_(function(e) { this.options.onSort(column); }).bind(this) :
-						_(function(e, silent) { this._sort(column, silent); }).bind(this)) : noop;
+                $(this.el).toggleClass('clickable', this.options.onItemClick !== noop);
 
-					var th = $$.th({
-							className : _(list).nameForIndex(index) + (sortHeader ? ' sorted' : ''), 
-							style : style, 
-							onclick : onclick
-						}, 
-						$$.div({className : 'wrapper' + (sortHeader ? ' sorted' : '')}, label),
-						sortHeader ? $$.div({className : 'sort_wrapper' + sortClass}, sortLabel) : null).appendTo(headingRow);
+                // generate a table row for our headings
+                var headingRow = $$.tr();
+                var sortFirstColumn = false;
+                var firstHeading = null;
+                _(this.options.columns).each(_(function (column, index, list) {
+                    var label = _(column.title).isFunction() ? column.title() : column.title;
+                    var width = !!column.width ? parseInt(column.width, 10) + 5 : null;
+                    var style = width ? 'width:' + width + 'px; max-width:' + width + 'px; ' : '';
+                    style += this.options.sortable ? 'cursor: pointer; ' : '';
+                    column.comparator = _(column.comparator).isFunction() ? column.comparator : function (item1, item2) {
+                        return item1.get(column.content) < item2.get(column.content) ? -1 :
+                            item1.get(column.content) > item2.get(column.content) ? 1 : 0;
+                    };
 
-					if (firstHeading === null) firstHeading = th;
-				}).bind(this));
-				if (sortFirstColumn && !!firstHeading) {
-					firstHeading.onclick(null, true);
-				}
+                    var firstSort = (sortFirstColumn && firstHeading === null);
+                    var sortHeader = this._sortState.content === column.content || firstSort;
+                    var sortClass = sortHeader ? (this._sortState.reverse && !firstSort ? ' asc' : ' desc') : '';
+                    var sortLabel = $$.div({className: 'glyph'}, 
+                        sortClass === ' asc' ? '\u25b2 ' : sortClass === ' desc' ? '\u25bc ' : '');
 
-				// Add the heading row to it's very own table so we can allow the
-				// actual table to scroll with a fixed heading.
-				this.el.appendChild($$.table({
-						className : 'heading',
-						cellPadding : '0',
-						cellSpacing : '0'
-					}, $$.thead(headingRow)));
+                    var onclick = this.options.sortable ? (_(this.options.onSort).isFunction() ?
+                        _(function (e) { this.options.onSort(column); }).bind(this) :
+                        _(function (e, silent) { this._sort(column, silent); }).bind(this)) : noop;
 
-				// now we'll generate the body of the content table, with a row
-				// for each model in the bound collection
-				this.collectionEl = $$.tbody();
-				table.appendChild(this.collectionEl);
+                    var th = $$.th({
+                            className: _(list).nameForIndex(index) + (sortHeader ? ' sorted' : ''), 
+                            style: style, 
+                            onclick: onclick
+                        }, 
+                        $$.div({className: 'wrapper' + (sortHeader ? ' sorted': '')}, label),
+                        sortHeader ? $$.div({className: 'sort_wrapper' + sortClass}, sortLabel) : null).appendTo(headingRow);
 
-				// if the collection is empty, we render the empty content
-				if(!_(this.model).exists() || this.model.length === 0) {
-					this._emptyContent = _(this.options.emptyContent).isFunction() ?
-						this.options.emptyContent() : this.options.emptyContent;
-					this._emptyContent = $$.tr($$.td(this._emptyContent));
+                    if (firstHeading === null) firstHeading = th;
+                }).bind(this));
+                if (sortFirstColumn && !!firstHeading) {
+                    firstHeading.onclick(null, true);
+                }
 
-					if(!!this._emptyContent) {
-						this.collectionEl.appendChild(this._emptyContent);
-					}
-				}
+                // now we'll generate the body of the content table, with a row
+                // for each model in the bound collection
+                this.collectionEl = $$.tbody();
+                table.appendChild(this.collectionEl);
 
-				// otherwise, we render each row
-				else {
-					_(this.model.models).each(function(model, index, collection) {
-						var item = this._renderItem(model, index);
+                $$.CollectionView.prototype.render.call(this);
 
-						// add some useful class names
-						$(item).addClass(index % 2 === 0 ? 'even' : 'odd');
-						if(index === 0) $(item).addClass('first');
-						if(index === collection.length - 1) $(item).addClass('last');
+                // wrap the list in a scroller
+                if (_(this.options.maxHeight).exists()) {
+                    var style = 'overflow:auto; max-height:' + this.options.maxHeight + 'px';
+                    container = $$.div({style: style}, container);
+                }
 
-						this.collectionEl.appendChild(item);
-					}, this);
-				}
+                // Add the heading row to its very own table so we can allow the
+                // actual table to scroll with a fixed heading.
+                this.$el.append(
+                    $$.table({
+                            className: 'heading',
+                            cellPadding: '0',
+                            cellSpacing: '0'
+                        },
+                        $$.thead(headingRow)),
+                    container
+                );
 
-				// wrap the list in a scroller
-				if(_(this.options.maxHeight).exists()) {
-					var style = 'overflow:auto; max-height:' + this.options.maxHeight + 'px';
-					var scroller = $$.div({style : style}, container);
-					this.el.appendChild(scroller.el);
-				}
-				else {
-					this.el.appendChild(container);
-				}
+                this._updateClassNames();
 
-				this._updateClassNames();
+                return this;
+            },
 
-				return this;
-			},
+            placeItem: function (item) {
+                this.collectionEl.append(item);
+            },
 
-			_renderItem : function(model, index) {
-				var row = $$.tr();
+            placeEmpty: function (content) {
+                this.collectionEl.append($$.tr($$.td(content)));
+            },
 
-				// for each model, we walk through each column and generate the content
-				_(this.options.columns).each(function(column, index, list) {
-					var width = !!column.width ? parseInt(column.width, 10) + 5 : null;
-					var style = width ? 'width:' + width + 'px; max-width:' + width + 'px': null;
-					var content = this.resolveContent(model, column.content);
-					row.appendChild($$.td({
-						className : _(list).nameForIndex(index), 
-						style : style
-					}, $$.div({className : 'wrapper', style : style}, content)));
-				}, this);
+            _sort: function (column, silent) {
+                this._sortState.reverse = !this._sortState.reverse;
+                this._sortState.content = column.content;
+                var comp = column.comparator;
+                if (this._sortState.reverse) {
+                    comp = function (item1, item2) {
+                        return -column.comparator(item1, item2);
+                    };
+                }
+                this.model.comparator = comp;
+                this.model.reset(this.model.models, {silent: !!silent});
+            }
 
-				// bind the item click callback if given
-				if(this.options.onItemClick) {
-					$(row).click(_(this.options.onItemClick).bind(this, model));
-				}
+        }));
+    };
 
-				this.itemViews[model.cid] = row;
-
-				return row;
-			},
-
-			_sort : function(column, silent) {
-				this._sortState.reverse = !this._sortState.reverse;
-				this._sortState.content = column.content;
-				var comp = column.comparator;
-				if (this._sortState.reverse) {
-					comp = function(item1, item2) {
-						return -column.comparator(item1, item2);
-					};
-				}
-				this.model.comparator = comp;
-				this.model.reset(this.model.models, {silent : !!silent});
-			}
-
-		}));
-	};
-
-	if (typeof context.define === "function" && context.define.amd &&
-			typeof context._$$_backstrap_built_flag === 'undefined') {
-		define("backstrap/Table", ["backstrap", "backstrap/CollectionView"], function ($$) {
-			return fn($$);
-		});
-	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-		module.exports = fn(require("backstrap"));
-	} else {
-		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-		fn(context.$$);
-	}
+    if (typeof context.define === "function" && context.define.amd &&
+            typeof context._$$_backstrap_built_flag === 'undefined') {
+        define("backstrap/Table", ["backstrap", "backstrap/CollectionView"], function ($$) {
+            return fn($$);
+        });
+    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
+        module.exports = fn(require("backstrap"));
+    } else {
+        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        fn(context.$$);
+    }
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound text area.
+ * A Backbone View that displays a model-bound text area.
  * Largely from Backbone-UI's TextArea class,
  * with Bootstrap decoration.
  * 
@@ -3405,7 +3897,7 @@ if(window.jQuery) {
 	var fn = function($$)
 	{
 		var noop = function(){};
-		return ($$.TextArea = $$.BaseView.extend({
+		return ($$.TextArea = $$.View.extend({
 			options : {
 				className : 'text_area',
 
@@ -3428,7 +3920,7 @@ if(window.jQuery) {
 			textArea : null,
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasFormLabel,
 					$$.HasError, $$.HasFocus]);
 
@@ -3519,7 +4011,7 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound text field.
+ * A Backbone View that displays a model-bound text field.
  * Largely from Backbone-UI's TextField class,
  * with Bootstrap decoration.
  * 
@@ -3529,7 +4021,7 @@ if(window.jQuery) {
 	var fn = function($$)
 	{
 		var noop = function(){};
-		return ($$.TextField = $$.BaseView.extend({
+		return ($$.TextField = $$.View.extend({
 			options : {
 				// disables the input text
 				disabled : false,
@@ -3555,12 +4047,12 @@ if(window.jQuery) {
 			input : null,
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph, 
 					$$.HasFormLabel, $$.HasError, $$.HasFocus]);
 				_(this).bindAll('_refreshValue');
 			
-				$(this.el).addClass('text_field');
+				$(this.el).addClass('text_field form-group');
 				if(this.options.name){
 					$(this.el).addClass(this.options.name);
 				}
@@ -3571,9 +4063,7 @@ if(window.jQuery) {
 					if(_(this.options.onKeyPress).exists() && _(this.options.onKeyPress).isFunction()) {
 						this.options.onKeyPress(e, this);
 					}
-				}).bind(this));
-
-				$(this.input).input(_(this._updateModel).bind(this));
+				}).bind(this)).input(_(this._updateModel).bind(this));
 
 				this._observeModel(this._refreshValue);
 			},
@@ -3582,7 +4072,7 @@ if(window.jQuery) {
 				var value = (this.input && this.input.value.length) > 0 ? 
 					this.input.value : this.resolveContent();
 
-				$(this.el).empty();
+				this.$el.empty();
 
 				$(this.input).attr({
 					type : this.options.type ? this.options.type : 'text',
@@ -3603,7 +4093,7 @@ if(window.jQuery) {
 				// add focusin / focusout
 				this.setupFocus(this.input, this._parent);
 							
-				this.el.appendChild(this.wrapWithFormLabel(this._parent));
+				this.$el.append(this.wrapWithFormLabel($$.span()), this._parent);
 				
 				this.setEnabled(!this.options.disabled);
 
@@ -3657,7 +4147,7 @@ if(window.jQuery) {
 }(this));
 
 /**
- * A Bootstrap View that displays a model-bound time picker.
+ * A Backbone View that displays a model-bound time picker.
  * Largely from Backbone-UI's TimePicker class,
  * with Bootstrap decoration.
  * 
@@ -3667,7 +4157,7 @@ if(window.jQuery) {
 	var fn = function($$)
 	{
 		var KEY_RETURN = 13;
-		return ($$.TimePicker = $$.BaseView.extend({
+		return ($$.TimePicker = $$.View.extend({
 
 			options : {
 				// a moment.js format : http://momentjs.com/docs/#/display/format
@@ -3684,7 +4174,7 @@ if(window.jQuery) {
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasFormLabel, $$.HasError]);
 				$(this.el).addClass('time_picker');
 

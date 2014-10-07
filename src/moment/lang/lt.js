@@ -23,7 +23,7 @@
         "y" : "metai_metų_metus",
         "yy": "metai_metų_metus"
     },
-    weekDays = "pirmadienis_antradienis_trečiadienis_ketvirtadienis_penktadienis_šeštadienis_sekmadienis".split("_");
+    weekDays = "sekmadienis_pirmadienis_antradienis_trečiadienis_ketvirtadienis_penktadienis_šeštadienis".split("_");
 
     function translateSeconds(number, withoutSuffix, key, isFuture) {
         if (withoutSuffix) {
@@ -62,13 +62,13 @@
 
     function relativeWeekDay(moment, format) {
         var nominative = format.indexOf('dddd HH:mm') === -1,
-            weekDay = weekDays[moment.weekday()];
+            weekDay = weekDays[moment.day()];
 
         return nominative ? weekDay : weekDay.substring(0, weekDay.length - 2) + "į";
     }
 
     return moment.lang("lt", {
-        months : "sausio_vasario_kovo_balandžio_gegužės_biržėlio_liepos_rugpjūčio_rugsėjo_spalio_lapkričio_gruodžio".split("_"),
+        months : "sausio_vasario_kovo_balandžio_gegužės_birželio_liepos_rugpjūčio_rugsėjo_spalio_lapkričio_gruodžio".split("_"),
         monthsShort : "sau_vas_kov_bal_geg_bir_lie_rgp_rgs_spa_lap_grd".split("_"),
         weekdays : relativeWeekDay,
         weekdaysShort : "Sek_Pir_Ant_Tre_Ket_Pen_Šeš".split("_"),

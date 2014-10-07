@@ -2020,6 +2020,10 @@ var requirejs, require, define;
 var components = {
     "packages": [
         {
+            "name": "backstrap",
+            "main": "backstrap-built.js"
+        },
+        {
             "name": "backbone",
             "main": "backbone-built.js"
         },
@@ -2032,19 +2036,28 @@ var components = {
             "main": "jquery-built.js"
         },
         {
+            "name": "jquery-ui",
+            "main": "jquery-ui-built.js"
+        },
+        {
             "name": "underscore",
             "main": "underscore-built.js"
         },
         {
             "name": "moment",
             "main": "moment-built.js"
-        },
-        {
-            "name": "backstrap",
-            "main": "backstrap-built.js"
         }
     ],
     "shim": {
+        "backstrap": {
+            "deps": [
+                "jquery",
+                "underscore",
+                "bootstrap",
+                "backbone",
+                "moment"
+            ]
+        },
         "backbone": {
             "deps": [
                 "underscore"
@@ -2056,26 +2069,22 @@ var components = {
                 "jquery"
             ]
         },
-        "underscore": {
-            "exports": "_"
-        },
         "bootstrap-default": {
             "deps": [
                 "bootstrap"
             ]
         },
-        "backstrap": {
+        "jquery-ui": {
             "deps": [
-                "jquery",
-                "underscore",
-                "bootstrap",
-                "backbone",
-                "moment"
-            ]
+                "jquery"
+            ],
+            "exports": "jQuery"
+        },
+        "underscore": {
+            "exports": "_"
         }
     },
-    "baseUrl": "src",
-    "noGlobal": false
+    "baseUrl": "min/components"
 };
 if (typeof require !== "undefined" && require.config) {
     require.config(components);

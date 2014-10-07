@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound date picker.
+ * A Backbone View that displays a model-bound date picker.
  * Largely from Backbone-UI's DatePicker class,
  * with Bootstrap decoration.
  * 
@@ -10,7 +10,7 @@
 	{
 		var KEY_RETURN = 13;
 
-		return ($$.DatePicker = $$.BaseView.extend({
+		return ($$.DatePicker = $$.View.extend({
 
 			options : {
 				// a moment.js format : http://momentjs.com/docs/#/display/format
@@ -23,7 +23,7 @@
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasFormLabel, $$.HasError]);
 				this.$el.addClass('date_picker');
 
@@ -45,7 +45,6 @@
 
 				// listen for model changes
 				this._observeModel(_(this.render).bind(this));
-
 			},
 
 			render : function() {

@@ -11,11 +11,11 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Badge = $$.BaseView.extend({
+		return ($$.Badge = $$.View.extend({
 			tagName: 'span',
 	
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel]);
 				_(this).bindAll('render');
 				this.$el.addClass('badge');

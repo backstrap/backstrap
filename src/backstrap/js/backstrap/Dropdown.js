@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound dropdown list.
+ * A Backbone View that displays a model-bound dropdown list.
  * Largely from Backbone-UI's Pulldown class,
  * with Bootstrap decoration.
  * 
@@ -8,7 +8,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		var ItemView = $$.BaseView.extend({
+		var ItemView = $$.View.extend({
 			tagName: function () {
 				if (this.model.get('divider') || this.model.get('separator') || this.model.get('header')) {
 					return 'span';
@@ -54,7 +54,6 @@
 				if ('align' in this.options) {
 					this.align = this.options.align==='right' ? ' dropdown-menu-right' : ' dropdown-menu-left';
 				}
-				return this;
 			},
 	
 			render: function () {

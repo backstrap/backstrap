@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound calendar.
+ * A Backbone View that displays a model-bound calendar.
  * Largely from Backbone-UI's Calendar class,
  * with Bootstrap decoration.
  * 
@@ -44,7 +44,7 @@
 		return compareDate.getTime() > maxDate.getTime();
 	};
 
-	return ($$.Calendar = $$.BaseView.extend({
+	return ($$.Calendar = $$.View.extend({
 		options : {
 			// the selected calendar date
 			date : null, 
@@ -71,7 +71,7 @@
 		date : null, 
 
 		initialize : function(options) {
-			$$.BaseView.prototype.initialize.call(this, options);
+			$$.View.prototype.initialize.call(this, options);
 			this.$el.addClass('calendar calendar-default');
 			_(this).bindAll('render');
 		},

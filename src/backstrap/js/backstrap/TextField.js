@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound text field.
+ * A Backbone View that displays a model-bound text field.
  * Largely from Backbone-UI's TextField class,
  * with Bootstrap decoration.
  * 
@@ -9,7 +9,7 @@
 	var fn = function($$)
 	{
 		var noop = function(){};
-		return ($$.TextField = $$.BaseView.extend({
+		return ($$.TextField = $$.View.extend({
 			options : {
 				// disables the input text
 				disabled : false,
@@ -35,12 +35,12 @@
 			input : null,
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph, 
 					$$.HasFormLabel, $$.HasError, $$.HasFocus]);
 				_(this).bindAll('_refreshValue');
 			
-				$(this.el).addClass('text_field');
+				$(this.el).addClass('text_field form-group');
 				if(this.options.name){
 					$(this.el).addClass(this.options.name);
 				}
@@ -51,9 +51,7 @@
 					if(_(this.options.onKeyPress).exists() && _(this.options.onKeyPress).isFunction()) {
 						this.options.onKeyPress(e, this);
 					}
-				}).bind(this));
-
-				$(this.input).input(_(this._updateModel).bind(this));
+				}).bind(this)).input(_(this._updateModel).bind(this));
 
 				this._observeModel(this._refreshValue);
 			},
@@ -62,7 +60,7 @@
 				var value = (this.input && this.input.value.length) > 0 ? 
 					this.input.value : this.resolveContent();
 
-				$(this.el).empty();
+				this.$el.empty();
 
 				$(this.input).attr({
 					type : this.options.type ? this.options.type : 'text',
@@ -83,7 +81,7 @@
 				// add focusin / focusout
 				this.setupFocus(this.input, this._parent);
 							
-				this.el.appendChild(this.wrapWithFormLabel(this._parent));
+				this.$el.append(this.wrapWithFormLabel($$.span()), this._parent);
 				
 				this.setEnabled(!this.options.disabled);
 

@@ -1,5 +1,5 @@
 /**
- * A Bootstrap View that displays a model-bound button.
+ * A Backbone View that displays a model-bound button.
  * Largely from Backbone-UI's Button class,
  * with Bootstrap decoration.
  * 
@@ -8,7 +8,7 @@
 (function(context) {
 	var fn = function($$)
 	{
-		return ($$.Button = $$.BaseView.extend({
+		return ($$.Button = $$.View.extend({
 			options : {
 				tagName : 'button',
 				size    : 'default', // added.
@@ -29,7 +29,7 @@
 			},
 
 			initialize : function(options) {
-				$$.BaseView.prototype.initialize.call(this, options);
+				$$.View.prototype.initialize.call(this, options);
 				this.mixin([$$.HasModel, $$.HasGlyph]);
 				_(this).bindAll('render');
 
