@@ -35,13 +35,13 @@
                         
                         var row = this.el;
 
-                        // TODO Need parent "this" for options and itemViews.
+                        // TODO Need parent "this" for options.
 
                         // for each model, we walk through each column and generate the content
-                        _(this.options.columns).each(function (column, index, list) {
+                        _(this.parentView.options.columns).each(function (column, index, list) {
                             var width = !!column.width ? parseInt(column.width, 10) + 5 : null;
                             var style = width ? 'width:' + width + 'px; max-width:' + width + 'px': null;
-                            var content = this.resolveContent(model, column.content);
+                            var content = this.resolveContent(this.model, column.content);
                             row.appendChild($$.td({
                                 className: _(list).nameForIndex(index), 
                                 style: style
@@ -49,11 +49,9 @@
                         }, this);
         
                         // bind the item click callback if given
-                        if (this.options.onItemClick) {
-                            $(row).click(_(this.options.onItemClick).bind(this, model));
+                        if (this.parentView.options.onItemClick) {
+                            $(row).click(_(this.parentView.options.onItemClick).bind(this, this.model));
                         }
-        
-                        this.itemViews[model.cid] = row;
 
                         return this;
                     }
@@ -77,12 +75,12 @@
 
             initialize: function (options) {
                 $$.CollectionView.prototype.initialize.call(this, options);
+                this.options.itemViewOptions.columns = this.options.columns;
                 $(this.el).addClass('table_view');
                 this._sortState = {reverse: true};
             },
 
             render: function () {
-
                 var table;
                 var container = $$.div({
                         className: 'content' + (this.options.responsive ? ' table-responsive' : '')

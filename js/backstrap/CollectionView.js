@@ -97,7 +97,7 @@
                 itemView: null,
       
                 // Options to pass into the View responsible for rendering the single item.
-                itemViewOptions: null,
+                itemViewOptions: {},
 
                 // A string, element, or function describing what should be displayed
                 // when the list is empty.
