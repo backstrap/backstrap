@@ -61,7 +61,7 @@
                 $$.CollectionView.prototype.render.call(this);
 
                 this.renderClassNames(this.collectionEl);
-                this.el.appendChild(this.collectionEl);
+                this.$el.append(this.collectionEl);
 
                 return this;
             },

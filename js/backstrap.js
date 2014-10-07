@@ -519,9 +519,9 @@
 
         backstrap.history = Backbone.history;
 
-        /************* Add some utility methods to Backbone.View **********/
+        /************* Add some utility methods to $$.View **********/
 
-        _(context.Backbone.View.prototype).extend({
+        _(backstrap.View.prototype).extend({
             // resolves the appropriate content from the given choices
             resolveContent : function (model, content, defaultOption) {
                 defaultOption = (defaultOption === null || _(defaultOption).isUndefined())

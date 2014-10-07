@@ -18,6 +18,29 @@ require(['jquery', 'backstrap'], function($, $$) {
 	// tag factories
 	
 	test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
+    
+    testObj(new $$.List({
+        model: new $$.Collection([
+            { value: 'Hello' },
+            { value: 'This is a value' },
+            { value: 'Hello' }
+        ]),
+        itemView: $$.ModelView.extend({
+            render: function () { this.$el.append($$.div(this.model.get('value'))); return this; }
+        })
+    }).render(), 'List');
+    
+    testObj(new $$.Table({
+        model: new $$.Collection([
+            { name: 'a', value: 'Hello' },
+            { name: 'b', value: 'This is a value' },
+            { name: 'c', value: 'Hello' }
+        ]),
+        columns: [
+                  { title: 'Name', content: 'name' },
+                  { title: 'Value String', content: 'value' }
+        ]
+    }), 'Table');
 	
 	test($$.container(
 		$$.jumbotron({bgcontext: 'primary'}, $$.p('Some important content in a jumbotron'))
@@ -210,8 +233,7 @@ require(['jquery', 'backstrap'], function($, $$) {
 			{ a: 'ab234', b: 'b3456', c: '34567' },
 			{ a: 'abcde', b: 'bcdef', c: 'cdefg' },
 			{ a: 'uerhiu', b: 'u78dh3', c: 'starwgd' }
-		]
-		)
+		])
 	}), 'Table');
 	
 	test($$.form(
@@ -273,23 +295,41 @@ require(['jquery', 'backstrap'], function($, $$) {
 		labelContent: 'descrip'
 	}), 'Label');
 
-	testObj(new $$.Menu({
-		model: new $$.Model({ value: 'e' }),
-		content: 'value',
-		alternatives: new $$.Collection(
-			[
-			 { name: 'Adam',    value: 'a' },
-			 { name: 'Bert',    value: 'b' },
-			 { name: 'Cathy',   value: 'c' },
-			 { name: 'Douglas', value: 'd' },
-			 { name: 'Ellen',   value: 'e' },
-			 { name: 'Fred',    value: 'f' },
-			 { name: 'Georgia', value: 'g' },
-			]
-		),
-		altLabelContent: 'name',
-		altValueContent: 'value'
-	}), 'Menu');
+    testObj(new $$.Menu({
+        model: new $$.Model({ value: 'e' }),
+        content: 'value',
+        alternatives: new $$.Collection(
+            [
+             { name: 'Adam',    value: 'a' },
+             { name: 'Bert',    value: 'b' },
+             { name: 'Cathy',   value: 'c' },
+             { name: 'Douglas', value: 'd' },
+             { name: 'Ellen',   value: 'e' },
+             { name: 'Fred',    value: 'f' },
+             { name: 'Georgia', value: 'g' },
+            ]
+        ),
+        altLabelContent: 'name',
+        altValueContent: 'value'
+    }), 'Menu');
+
+    testObj(new $$.Select({
+        model: new $$.Model({ value: 'e' }),
+        content: 'value',
+        alternatives: new $$.Collection(
+            [
+             { name: 'Adam',    value: 'a' },
+             { name: 'Bert',    value: 'b' },
+             { name: 'Cathy',   value: 'c' },
+             { name: 'Douglas', value: 'd' },
+             { name: 'Ellen',   value: 'e' },
+             { name: 'Fred',    value: 'f' },
+             { name: 'Georgia', value: 'g' },
+            ]
+        ),
+        altLabelContent: 'name',
+        altValueContent: 'value'
+    }), 'Select');
 	
 	testObj(new $$.RadioGroup({
 		model: new $$.Model({ value: 'c' }),

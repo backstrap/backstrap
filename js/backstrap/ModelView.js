@@ -29,7 +29,7 @@
                 if (this.model) {
                     var renderOnChange = this.options.renderOnChange;
                     if (renderOnChange) {
-                        if (is_array(renderOnChange)) {
+                        if (_(renderOnChange).isArray()) {
                             renderOnChange.forEach(function (property) {
                                 this.model.on('change:' + property, this.render, this);
                             }, this);

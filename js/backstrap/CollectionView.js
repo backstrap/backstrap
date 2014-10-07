@@ -19,8 +19,9 @@
                 if (_(this.options.itemView).isString()) {
                     content = this.resolveContent(model, this.options.itemView);
                 } else {
-                    var view = new this.options.itemView(_({ model: model }).extend(
-                        this.options.itemViewOptions));
+                    var view = new this.options.itemView(
+                        _({ model: model, parentView: this }).extend(
+                            this.options.itemViewOptions));
                     view.render();
                     this.itemViews[model.cid] = view;
                     content = view.el;
@@ -144,7 +145,7 @@
             },
 
             render: function () {
-                $(this.el).empty();
+                this.$el.empty();
                 this.itemViews = {};
 
                 if (this.options.emptyContent) {

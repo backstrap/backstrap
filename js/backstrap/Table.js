@@ -14,7 +14,7 @@
         var noop = function () {};
         
         return ($$[moduleName] = $$.CollectionView.extend({
-            options: _($$.CollectionView.prototype.options).extend({
+            options: _({}).extend($$.CollectionView.prototype.options, {
                 // Each column should contain a <code>title</code> property to
                 // describe the column's heading, a <code>content</code> property to
                 // declare which property the cell is bound to, an optional two-argument
@@ -35,10 +35,8 @@
                         
                         var row = this.el;
 
-                        // TODO Need parent "this" for options.
-
                         // for each model, we walk through each column and generate the content
-                        _(this.parentView.options.columns).each(function (column, index, list) {
+                        _(this.options.parentView.options.columns).each(function (column, index, list) {
                             var width = !!column.width ? parseInt(column.width, 10) + 5 : null;
                             var style = width ? 'width:' + width + 'px; max-width:' + width + 'px': null;
                             var content = this.resolveContent(this.model, column.content);
@@ -49,8 +47,8 @@
                         }, this);
         
                         // bind the item click callback if given
-                        if (this.parentView.options.onItemClick) {
-                            $(row).click(_(this.parentView.options.onItemClick).bind(this, this.model));
+                        if (this.options.parentView.options.onItemClick) {
+                            $(row).click(_(this.options.parentView.options.onItemClick).bind(this, this.model));
                         }
 
                         return this;
@@ -75,7 +73,6 @@
 
             initialize: function (options) {
                 $$.CollectionView.prototype.initialize.call(this, options);
-                this.options.itemViewOptions.columns = this.options.columns;
                 $(this.el).addClass('table_view');
                 this._sortState = {reverse: true};
             },
@@ -166,7 +163,7 @@
                 return this;
             },
 
-            placeItem: function (item) {
+            placeItem: function (item, model, index) {
                 $(this.collectionEl).append(item);
             },
 
