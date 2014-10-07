@@ -85,14 +85,17 @@
 	// The first parameter MUST be a string specifying the element's
 	// tag name.
 	// 
-	// An optional object of element attributs may follow directly
-	// after the tag name.
+	// The second parameter MUST be a string specifying the element's
+	// bootstrap class name.
+	// 
+	// An optional object of element attributes may follow directly
+	// after the tag and class names.
 	// 
 	// Additional arguments will be considered children of the new
 	// element and may consist of elements, strings, or numbers.
 	// 
 	// for example:
-	// backstrap('div', {'class' : 'foo'}, 'bar');
+	// backstrap('div', 'btn', {'class' : 'foo'}, 'bar');
 	var backstrap = function $$(tag, bootstrapClass) {
 
 		// handle Bootstrap special attributes
