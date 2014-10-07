@@ -356,6 +356,19 @@ if you want it pulled right instead of left.
 Its body will be further wrapped in a div with class "media-body".</p>
 
 <h4>
+<a name="navbar" class="anchor" href="#navbar"><span class="octicon octicon-link"></span></a>navbar</h4>
+
+<p>The <code>$$.navbar()</code> method creates a <code>nav</code> tag decorated with the Bootstrap "navbar" class
+and also the attribute 'role="navigation"' (can be overridden if necessary), to implement a Bootstrap navbar.
+It accepts several special attributes for configuration of the navbar:</p>
+<ul>
+<li>brand - Branding content for left end of navbar.
+<li>position - Allowed values 'fixed-top', 'fixed-bottom' or 'static-top'.
+<li>inverse - Set to true to invert color scheme
+<li>sr_toggle_text - For screen-readers, defaults to 'Toggle navigation', can be overridden e.g. for internationalization.
+</ul>
+
+<h4>
 <a name="pagination" class="anchor" href="#pagination"><span class="octicon octicon-link"></span></a>pagination</h4>
 
 <p>The <code>$$.pagination()</code> method creates a <code>ul</code> tag decorated with the Bootstrap "pagination" class.</p>
