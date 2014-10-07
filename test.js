@@ -19,16 +19,30 @@ require(['jquery', 'backstrap'], function($, $$) {
 	
 	test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
     
+	var kptest1;
+	
     testObj(new $$.List({
-        model: new $$.Collection([
-            { value: 'Hello' },
-            { value: 'This is a value' },
-            { value: 'Hello' }
-        ]),
+        model: (kptest1 = new $$.Collection([
+            { value: 'Hello, World', index: 1 },
+            { value: 'These values re-sort every 2 secs', index: 2 },
+            { value: 'Item Number Three', index: 3 }
+        ],{
+            comparator: 'index'
+        })),
         itemView: $$.ModelView.extend({
             render: function () { this.$el.append($$.div(this.model.get('value'))); return this; }
         })
     }).render(), 'List');
+    
+    setInterval(function () { kptest1.comparator = (kptest1.comparator === 'index') ? 'value' : 'index'; kptest1.sort(); }, 2000);
+    
+    test($$.navbar(
+        { brand: 'KP' },
+        $$.ul({ className: 'nav navbar-nav'},
+            $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#boo' }, 'Boo!')),
+            $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#logout' }, 'Logout'))
+        )
+    ), 'navbar');
     
     testObj(new $$.Table({
         model: new $$.Collection([

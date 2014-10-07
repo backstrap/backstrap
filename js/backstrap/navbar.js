@@ -53,9 +53,9 @@
                     attrs.role = 'navigation';
                 }
 
-                el = backstrap.apply(this, ['nav', 'navbar', attrs]);
+                el = $$.apply(this, ['nav', 'navbar', attrs]);
                 content = Array.prototype.slice.call(arguments, offset);
-                collapser = $$.div({className: 'collapse navbar-collapse'}, content);
+                collapser = $$.div({className: 'collapse navbar-collapse', id: _.uniqueId('$$')}, content);
 
                 $(el).addClass(className).append(
                     $$.div({className: 'container container-fluid'},
@@ -64,7 +64,7 @@
                                     type: 'button',
                                     className: 'navbar-toggle collapsed',
                                     'data-toggle': 'collapse',
-                                    'data-target': '#' + $(collapser).uniqueId().attr('id')
+                                    'data-target': '#' + $(collapser).attr('id')
                                 },
                                 $$.span({className: 'sr-only'}, sr_toggle_text),
                                 $$.span({className: 'icon-bar'}),
