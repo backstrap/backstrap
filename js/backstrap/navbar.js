@@ -3,6 +3,7 @@
  *
  * Options:
  *     brand: '' - Branding for left-hand icon.
+ *     brandUrl: '#' - URL for brand icon href.
  *     position: '' - Allowed: 'fixed-top', 'fixed-bottom' or 'static-top'.
  *     inverse: false - Invert color scheme
  *     sr_toggle_text: 'Toggle navigation' - For screen-readers
@@ -20,6 +21,7 @@
                 var el, content, collapser;
                 var offset = 0;
                 var brand = '';
+                var brandUrl = '#';
                 var className = 'navbar-default';
                 var sr_toggle_text = 'Toggle navigation';
 
@@ -30,6 +32,10 @@
                     if ('brand' in attrs) {
                         brand = attrs.brand;
                         delete(attrs.brand);
+                    }
+                    if ('brandUrl' in attrs) {
+                        brandUrl = attrs.brandUrl;
+                        delete(attrs.brandUrl);
                     }
                     if ('inverse' in attrs) {
                         className = attrs.inverse ? 'navbar-inverse' : 'navbar-default';
@@ -55,7 +61,7 @@
 
                 el = $$.apply(this, ['nav', 'navbar', attrs]);
                 content = Array.prototype.slice.call(arguments, offset);
-                collapser = $$.div({className: 'collapse navbar-collapse', id: _.uniqueId('$$')}, content);
+                collapser = $$.div({className: 'collapse navbar-collapse', id: _.uniqueId('_BS_')}, content);
 
                 $(el).addClass(className).append(
                     $$.div({className: 'container container-fluid'},
@@ -73,7 +79,7 @@
                             ),
                             $$.a({
                                     className: 'navbar-brand',
-                                    href: '#'
+                                    href: brandUrl
                                 }, brand
                             )
                         ),
