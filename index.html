@@ -371,6 +371,25 @@ It accepts several special attributes for configuration of the navbar:</p>
 </ul>
 
 <h4>
+<a name="navgroup" class="anchor" href="#navgroup"><span class="octicon octicon-link"></span></a>navgroup</h4>
+
+<p>The <code>$$.navgroup()</code> method creates a <code>ul</code> tag decorated with
+the Bootstrap "nav" and "navbar-nav" classes.
+This should be used as a container for groups of $$.li() tags inside a $$.navbar().
+Example:</p>
+
+<pre><code>$$.navbar({position: 'fixed-top'},
+    $$.navgroup(
+        $$.li($$.a({href: '#one'}, 'First item')),
+        $$.li($$.a({href: '#two'}, 'Second item')),
+        $$.li($$.a({href: '#three'}, 'Third item'))
+    ),
+    $$.navgroup({align: 'right'},
+        $$.li($$.a({href: '#four'}, 'Other'))
+    )
+);</code></pre>
+
+<h4>
 <a name="pagination" class="anchor" href="#pagination"><span class="octicon octicon-link"></span></a>pagination</h4>
 
 <p>The <code>$$.pagination()</code> method creates a <code>ul</code> tag decorated with the Bootstrap "pagination" class.</p>
