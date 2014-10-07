@@ -42,7 +42,6 @@
                 $(this.el).addClass('menu');
             },
 
-
             render : function() {
                 $(this.el).empty();
 

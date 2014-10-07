@@ -14,7 +14,7 @@
         var noop = function () {};
         
         return ($$[moduleName] = $$.CollectionView.extend({
-            options: {
+            options: _($$.CollectionView.prototype.options).extend({
                 // Each column should contain a <code>title</code> property to
                 // describe the column's heading, a <code>content</code> property to
                 // declare which property the cell is bound to, an optional two-argument
@@ -71,7 +71,7 @@
                 hover: false,
                 condensed: false,
                 responsive: false
-            },
+            }),
 
             initialize: function (options) {
                 $$.CollectionView.prototype.initialize.call(this, options);
@@ -167,11 +167,11 @@
             },
 
             placeItem: function (item) {
-                this.collectionEl.append(item);
+                $(this.collectionEl).append(item);
             },
 
             placeEmpty: function (content) {
-                this.collectionEl.append($$.tr($$.td(content)));
+                $(this.collectionEl).append($$.tr($$.td(content)));
             },
 
             _sort: function (column, silent) {

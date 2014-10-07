@@ -115,7 +115,7 @@
                         value : new Date(d)
                     });
 
-                    d.add('minutes', this.options.interval);
+                    d.add(this.options.interval, 'minutes');
                 }
 
                 return collection;
