@@ -3,9 +3,11 @@
  * Based on Backbone-UI's ListView,
  * with Bootstrap decoration.
  * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
-(function (context)
+(function (context, moduleName, requirements)
 {
     var fn = function ($$)
     {
@@ -42,7 +44,7 @@
                 }
             }
         };
-
+	
         var ensureProperPositions = function (collection) {
             collection.models.forEach(function (model, index) {
                 var itemEl = this.itemViews[model.cid].el.parentNode;
@@ -57,7 +59,7 @@
             updateClassNames.call(this);
         };
 
-        return ($$.List = $$.CollectionView.extend({
+        return ($$[moduleName] = $$.CollectionView.extend({
             options: {
                 // Set this to true to generate first, last, even, and odd classnames on rows.
                 generateRowClassNames: false
@@ -108,15 +110,27 @@
         }));
     };
 
-    if (typeof context.define === "function" && context.define.amd &&
-            typeof context._$$_backstrap_built_flag === 'undefined') {
-        define("backstrap/List", ["backstrap"], function ($$) {
-            return fn($$);
-        });
-    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-        module.exports = fn(require("backstrap"));
+    if (typeof context.define === 'function' && context.define.amd
+            && !context._$$_backstrap_built_flag) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+
+    if (typeof context.define === 'function' && context.define.amd
+            && !context._$$_backstrap_built_flag) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+            && typeof context.module.exports === 'object') {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
     } else {
-        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
         fn(context.$$);
     }
-}(this));
+}(this, 'List', [ 'backstrap', 'backstrap/CollectionView' ]));
+

@@ -3,191 +3,203 @@
  * Largely from Backbone-UI's Menu class,
  * with Bootstrap decoration.
  * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
-(function(context) {
-	var fn = function($$)
-	{
-		// TODO: Major overhaul - should not use <select>
-		var noop = function(){};
-		return ($$.Menu = $$.View.extend({
+(function(context, moduleName, requirements) {
+    var fn = function($$)
+    {
+        // TODO: Major overhaul - should not use <select>
+        var noop = function(){};
+        return ($$[moduleName] = $$.View.extend({
+            options : {
+                // an additional item to render at the top of the menu to 
+                // denote the lack of a selection
+                emptyItem : null,
 
-			options : {
+                // enables / disables the menu
+                disabled : false,
 
-				// an additional item to render at the top of the menu to 
-				// denote the lack of a selection
-				emptyItem : null,
+                // A callback to invoke with a particular item when that item is
+                // selected from the menu.
+                onChange : noop,
 
-				// enables / disables the menu
-				disabled : false,
+                // text to place in the pulldown button before a
+                // selection has been made
+                placeholder : 'Select...',
 
-				// A callback to invoke with a particular item when that item is
-				// selected from the menu.
-				onChange : noop,
+                // number of option items to display in the menu
+                size : 1
+            },
 
-				// text to place in the pulldown button before a
-				// selection has been made
-				placeholder : 'Select...',
-
-				// number of option items to display in the menu
-				size : 1
-			},
-
-			initialize : function(options) {
-				$$.View.prototype.initialize.call(this, options);
-				this.mixin([$$.HasModel, $$.HasAlternativeProperty, 
-					$$.HasFormLabel, $$.HasError]);
-				_(this).bindAll('render');
-				$(this.el).addClass('menu');
-			},
+            initialize : function(options) {
+                $$.View.prototype.initialize.call(this, options);
+                this.mixin([$$.HasModel, $$.HasAlternativeProperty, 
+                    $$.HasFormLabel, $$.HasError]);
+                _(this).bindAll('render');
+                $(this.el).addClass('menu');
+            },
 
 
-			render : function() {
-				$(this.el).empty();
+            render : function() {
+                $(this.el).empty();
 
-				this._observeModel(this.render);
-				this._observeCollection(this.render);
+                this._observeModel(this.render);
+                this._observeCollection(this.render);
 
-				this.selectedItem = this._determineSelectedItem();
-				// || this.selectedItem;
-				var selectedValue = this._valueForItem(this.selectedItem);
+                this.selectedItem = this._determineSelectedItem();
+                // || this.selectedItem;
+                var selectedValue = this._valueForItem(this.selectedItem);
 
-				this.select = $$.select({ 
-					size : this.options.size,
-					disabled : this.options.disabled
-				 });
+                this.select = $$.select({ 
+                    size : this.options.size,
+                    disabled : this.options.disabled
+                 });
 
-				// setup events for each input in collection
-				$(this.select).change(_(this._updateModel).bind(this));
+                // setup events for each input in collection
+                $(this.select).change(_(this._updateModel).bind(this));
 
-				var selectedOffset = 0;
+                var selectedOffset = 0;
 
-				// append placeholder option if no selectedItem
-				this._placeholder = null;
-				if(!this.options.emptyItem && (this.options.size === 1) && !selectedValue) {
-					this._placeholder = $$.option(this.options.placeholder);
-					$(this._placeholder).data('value', null);
-					$(this._placeholder).attr({ disabled : 'true' });
-					this.select.appendChild(this._placeholder);
-					// adjust for placeholder option
-					selectedOffset++;
-				}
+                // append placeholder option if no selectedItem
+                this._placeholder = null;
+                if(!this.options.emptyItem && (this.options.size === 1) && !selectedValue) {
+                    this._placeholder = $$.option(this.options.placeholder);
+                    $(this._placeholder).data('value', null);
+                    $(this._placeholder).attr({ disabled : 'true' });
+                    this.select.appendChild(this._placeholder);
+                    // adjust for placeholder option
+                    selectedOffset++;
+                }
 
-				if(this.options.emptyItem) {
+                if(this.options.emptyItem) {
 
-					this._emptyItem = $$.option(this._labelForItem(this.options.emptyItem));
-					$(this._emptyItem).data('value', null);
-					this.select.appendChild(this._emptyItem);
-					$(this._emptyItem).click(_(function() {
-						this.select.selectedIndex = 0;
-						this._updateModel();
-					}).bind(this));
-					// adjust for emptyItem option
-					selectedOffset++;
-				}
+                    this._emptyItem = $$.option(this._labelForItem(this.options.emptyItem));
+                    $(this._emptyItem).data('value', null);
+                    this.select.appendChild(this._emptyItem);
+                    $(this._emptyItem).click(_(function() {
+                        this.select.selectedIndex = 0;
+                        this._updateModel();
+                    }).bind(this));
+                    // adjust for emptyItem option
+                    selectedOffset++;
+                }
 
-				// default selectedIndex as placeholder if exists
-				this._selectedIndex = -1 + selectedOffset;
+                // default selectedIndex as placeholder if exists
+                this._selectedIndex = -1 + selectedOffset;
 
-				_(this._collectionArray()).each(function(item, idx) {
+                _(this._collectionArray()).each(function(item, idx) {
 
-					// adjust index for potential placeholder and emptyItem
-					idx = idx + selectedOffset;
+                    // adjust index for potential placeholder and emptyItem
+                    idx = idx + selectedOffset;
 
-					var val = this._valueForItem(item);
-					if(_(selectedValue).isEqual(val)) {
-						this._selectedIndex = idx;
-					}
+                    var val = this._valueForItem(item);
+                    if(_(selectedValue).isEqual(val)) {
+                        this._selectedIndex = idx;
+                    }
 
-					var option = $$.option(this._labelForItem(item));
-					$(option).data('value', val);
-					$(option).attr({
-						selected : this._selectedIndex === idx
-					});
+                    var option = $$.option(this._labelForItem(item));
+                    $(option).data('value', val);
+                    $(option).attr({
+                        selected : this._selectedIndex === idx
+                    });
 
-					$(option).click(_(function(selectedIdx) {
-						this.select.selectedIndex = selectedIdx;
-						this._updateModel();
-					}).bind(this, idx));
+                    $(option).click(_(function(selectedIdx) {
+                        this.select.selectedIndex = selectedIdx;
+                        this._updateModel();
+                    }).bind(this, idx));
 
-					this.select.appendChild(option);
+                    this.select.appendChild(option);
 
-				}, this);
+                }, this);
 
-				// set the selectedIndex on the select element
-				this.select.selectedIndex = this._selectedIndex;
+                // set the selectedIndex on the select element
+                this.select.selectedIndex = this._selectedIndex;
 
-				this.el.appendChild(this.wrapWithFormLabel(this.select));
+                this.el.appendChild(this.wrapWithFormLabel(this.select));
 
-				// scroll to selected Item
-				this.scrollToSelectedItem();
+                // scroll to selected Item
+                this.scrollToSelectedItem();
 
-				this.setEnabled(!this.options.disabled);
+                this.setEnabled(!this.options.disabled);
 
-				return this;
-			},
+                return this;
+            },
 
-		 // sets the enabled state
-			setEnabled : function(enabled) {
-				$(this.el).toggleClass('disabled', !enabled);
-				this.select.disabled = !enabled;
-			},
+         // sets the enabled state
+            setEnabled : function(enabled) {
+                $(this.el).toggleClass('disabled', !enabled);
+                this.select.disabled = !enabled;
+            },
 
-			_labelForItem : function(item) {
-				return !_(item).exists() ? this.options.placeholder : 
-					this.resolveContent(item, this.options.altLabelContent);
-			},
+            _labelForItem : function(item) {
+                return !_(item).exists() ? this.options.placeholder : 
+                    this.resolveContent(item, this.options.altLabelContent);
+            },
 
-			// sets the selected item
-			setSelectedItem : function(item) {
-				this._setSelectedItem(item);
-				$(this._placeholder).remove();
-			},
+            // sets the selected item
+            setSelectedItem : function(item) {
+                this._setSelectedItem(item);
+                $(this._placeholder).remove();
+            },
 
-			_updateModel : function() {
-				var item = this._itemForValue($(this.select.options[this.select.selectedIndex]).data('value'));
-				var changed = this.selectedItem !== item;
-				this._setSelectedItem(item);
-				// if onChange function exists call it
-				if(_(this.options.onChange).isFunction() && changed) {
-					this.options.onChange(item);
-				}	
-			},
+            _updateModel : function() {
+                var item = this._itemForValue($(this.select.options[this.select.selectedIndex]).data('value'));
+                var changed = this.selectedItem !== item;
+                this._setSelectedItem(item);
+                // if onChange function exists call it
+                if(_(this.options.onChange).isFunction() && changed) {
+                    this.options.onChange(item);
+                }    
+            },
 
-			_itemForValue : function(val) {
-				if(val === null) {
-					return val;
-				}
-				var item = _(this._collectionArray()).find(function(item) {
-					var isItem = val === item;
-					var itemHasValue = this.resolveContent(item, this.options.altValueContent) === val;
-					return isItem || itemHasValue;
-				}, this);
+            _itemForValue : function(val) {
+                if(val === null) {
+                    return val;
+                }
+                var item = _(this._collectionArray()).find(function(item) {
+                    var isItem = val === item;
+                    var itemHasValue = this.resolveContent(item, this.options.altValueContent) === val;
+                    return isItem || itemHasValue;
+                }, this);
 
-				return item;
-			},
+                return item;
+            },
 
-			scrollToSelectedItem : function() {
-				if(this.select.selectedIndex > 0) {
-					var optionIsMeasurable = $(this.select).find('option').eq(0).height();
-					var optionHeight = optionIsMeasurable > 0 ? optionIsMeasurable : 12;
-					$(this.select).scrollTop((this.select.selectedIndex * optionHeight));
-				}
-			}
+            scrollToSelectedItem : function() {
+                if(this.select.selectedIndex > 0) {
+                    var optionIsMeasurable = $(this.select).find('option').eq(0).height();
+                    var optionHeight = optionIsMeasurable > 0 ? optionIsMeasurable : 12;
+                    $(this.select).scrollTop((this.select.selectedIndex * optionHeight));
+                }
+            }
 
-		}));
-	};
+        }));
+    };
 
-	if (typeof context.define === "function" && context.define.amd &&
-			typeof context._$$_backstrap_built_flag === 'undefined') {
-		context.define("backstrap/Menu",
-				["backstrap", "backstrap/HasAlternativeProperty", "backstrap/HasError",
-				 "backstrap/HasFormLabel", "backstrap/HasModel"
-				], fn);
-	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-		context.module.exports = fn(require("backstrap"));
-	} else {
-		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-		fn(context.$$);
-	}
-}(this));
+    if (typeof context.define === 'function' && context.define.amd
+            && !context._$$_backstrap_built_flag) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+            && typeof context.module.exports === 'object') {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'Menu', [
+    'backstrap',
+    'backstrap/View',
+    'backstrap/HasAlternativeProperty',
+    'backstrap/HasError',
+    'backstrap/HasFormLabel',
+    'backstrap/HasModel'
+]));

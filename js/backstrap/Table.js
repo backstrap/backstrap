@@ -3,15 +3,17 @@
  * Largely from Backbone-UI's TableView class,
  * with Bootstrap decoration.
  * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
-(function (context)
+(function (context, moduleName, requirements)
 {
     var fn = function ($$)
     {
         var noop = function () {};
         
-        return ($$.Table = $$.CollectionView.extend({
+        return ($$[moduleName] = $$.CollectionView.extend({
             options: {
                 // Each column should contain a <code>title</code> property to
                 // describe the column's heading, a <code>content</code> property to
@@ -190,15 +192,22 @@
         }));
     };
 
-    if (typeof context.define === "function" && context.define.amd &&
-            typeof context._$$_backstrap_built_flag === 'undefined') {
-        define("backstrap/Table", ["backstrap", "backstrap/CollectionView"], function ($$) {
-            return fn($$);
-        });
-    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-        module.exports = fn(require("backstrap"));
+    if (typeof context.define === 'function' && context.define.amd
+            && !context._$$_backstrap_built_flag) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+            && typeof context.module.exports === 'object') {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
     } else {
-        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
         fn(context.$$);
     }
-}(this));
+}(this, 'Table', [ 'backstrap', 'backstrap/CollectionView' ]));
+

@@ -1,53 +1,62 @@
 /**
  * A generic Backbone Collection object, with extensions.
  * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
-(function(context){
-  var fn = function($$, dispatcher, Backbone) {
-
-    return ($$.Collection = Backbone.Collection.extend({
-        options: {
-          // Whether the Collection should automatically refresh at regular intervals.
-          autoRefresh: false
-        },
-
-        initialize: function(model, options) {
-            // NOOP Backbone.Collection.prototype.initialize.call(this, model, options);
-            this.options = this.options ? _({}).extend(this.options, options) : options;
-            if (this.options.autoRefresh) {
-              dispatcher.startRefresh(this);
-            }  
-        },
+(function(context, moduleName, requirements) {
+    var fn = function($$, Backbone)
+    {
+        return ($$[moduleName] = Backbone.Collection.extend({
+            options: {
+              // Whether the Collection should automatically refresh at regular intervals.
+              autoRefresh: false
+            },
     
-        pauseAutoRefresh: function () {
-              dispatcher.stopRefresh(this);
-        },
+            initialize: function(model, options) {
+                // NOOP Backbone.Collection.prototype.initialize.call(this, model, options);
+                this.options = this.options ? _({}).extend(this.options, options) : options;
+                if (this.options.autoRefresh) {
+                  $$.dispatcher.startRefresh(this);
+                }  
+            },
+        
+            pauseAutoRefresh: function () {
+                  $$.dispatcher.stopRefresh(this);
+            },
+    
+            resumeAutoRefresh: function () {
+                  $$.dispatcher.startRefresh(this);
+            },
+    
+            refresh: function () {
+                this.fetch();
+            }
+    
+        }));
+    };
 
-        resumeAutoRefresh: function () {
-              dispatcher.startRefresh(this);
-        },
-
-        refresh: function () {
-            this.fetch();
-        }
-
-    }));
-  };
-
-    if (typeof context.define === "function" && context.define.amd &&
-            typeof context._$$_backstrap_built_flag === 'undefined') {
-        define("backstrap/Collection", ["backstrap", "backstrap/dispatcher", "backbone"], function ($$) {
-            return fn($$);
-        });
-    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-        module.exports = fn(require("backstrap"), require('backstrap/dispatcher'), require('Backbone'));
+    if (typeof context.define === 'function' && context.define.amd
+            && !context._$$_backstrap_built_flag) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+            && typeof context.module.exports === 'object') {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
     } else {
-        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-        if (typeof context.$$.dispatcher !== 'object') throw new Error('Backstrap dispatcher not loaded');
-        if (typeof context.Backbone.View === 'undefined') throw new Error('Backbone environment not loaded');
-        fn(context.$$, context.$$.dispatcher, context.Backbone);
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        if (typeof context.Backbone !== 'function') {
+            throw new Error('Backbone not loaded');
+        }
+        fn(context.$$, context.Backbone);
     }
-}(this));
-
+}(this, 'Collection', [ 'backstrap', 'backbone', 'backstrap/dispatcher' ]
+));
 

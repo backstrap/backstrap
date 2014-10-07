@@ -1,53 +1,69 @@
 /**
  * A Backbone View that displays model-bound content with Bootstrap decoration.
  * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
-(function(context) {
-	var fn = function($$)
-	{
-		return ($$.Span = $$.View.extend({
-			options : {
-				size: 'default',
-				context: 'default'
-			},
+(function(context, moduleName, requirements) {
+    var fn = function($$)
+    {
+        return ($$[moduleName] = $$.View.extend({
+            options : {
+                size: 'default',
+                context: 'default'
+            },
 
-			tagName : 'span',
+            tagName : 'span',
 
-			initialize : function(options) {
-				$$.View.prototype.initialize.call(this, options);
-				this.mixin([$$.HasModel, $$.HasGlyph]);
-				_(this).bindAll('render');
-				this.$el.addClass('text-' + $$._mapSize(this.options.size));
-				if (this.options.size !== this.options.context) {
-					this.$el.addClass(' text-' + this.options.context);
-				}
-			},
+            initialize : function(options) {
+                $$.View.prototype.initialize.call(this, options);
+                this.mixin([$$.HasModel, $$.HasGlyph]);
+                _(this).bindAll('render');
+                this.$el.addClass('text-' + $$._mapSize(this.options.size));
+                if (this.options.size !== this.options.context) {
+                    this.$el.addClass(' text-' + this.options.context);
+                }
+            },
 
-			render : function() {
-				var content = this.resolveContent();
+            render : function() {
+                var content = this.resolveContent();
 
-				this._observeModel(this.render);
+                this._observeModel(this.render);
 
-				this.$el.empty();
+                this.$el.empty();
 
-				var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
-				var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
+                var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
+                var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
 
-				this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, content, this.el);
+                this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, content, this.el);
 
-				return this;
-			}
-		}));
-	};
+                return this;
+            }
+        }));
+    };
 
-	if (typeof context.define === "function" && context.define.amd &&
-			typeof context._$$_backstrap_built_flag === 'undefined') {
-		context.define("backstrap/Span", ["backstrap", "backstrap/HasModel", "backstrap/HasGlyph"], fn);
-	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-		context.module.exports = fn(require("backstrap"));
-	} else {
-		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-		fn(context.$$);
-	}
-}(this));
+    if (typeof context.define === 'function' && context.define.amd
+            && !context._$$_backstrap_built_flag) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+            && typeof context.module.exports === 'object') {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'Span', [
+    'backstrap',
+    'backstrap/View',
+    'backstrap/HasModel',
+    'backstrap/HasGlyph'
+]));
+
