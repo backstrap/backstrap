@@ -20,7 +20,7 @@
         return($$[moduleName] = function (attrs)
             {
                 var el, content, collapser, toggleContent = '';
-                var offset = 0;
+                var offset = 1;
                 var brandContent = '';
                 var brandUrl = '#';
                 var className = 'navbar-default';
@@ -29,8 +29,8 @@
 
                 if (typeof attrs !== 'object' || attrs.nodeType === 1) {
                     attrs = {};
+                    offset = 0;
                 } else {
-                    offset = 1;
                     if ('brandContent' in attrs) {
                         brandContent = attrs.brandContent;
                         delete(attrs.brandContent);
@@ -71,11 +71,12 @@
                     attrs.role = 'navigation';
                 }
 
-                el = $$.apply(this, ['nav', 'navbar', attrs]);
+                el = $$.nav(attrs);
                 content = Array.prototype.slice.call(arguments, offset);
-                collapser = $$.div({className: 'collapse navbar-collapse', id: collapserId}, content);
+                collapser = $$.div({className: 'collapse navbar-collapse', id: collapserId});
+                $(collapser).append.apply($(collapser), content);
 
-                $(el).addClass(className).append(
+                $(el).addClass('navbar ' + className).append(
                     $$.div({className: 'container container-fluid'},
                         $$.div({className: 'navbar-header'},
                             $$.button({

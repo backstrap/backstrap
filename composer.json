@@ -60,6 +60,7 @@
                 "js/backstrap/Menu.js",
                 "js/backstrap/ModelView.js",
                 "js/backstrap/navbar.js",
+                "js/backstrap/navgroup.js",
                 "js/backstrap/NavPills.js",
                 "js/backstrap/NavTabs.js",
                 "js/backstrap/Panel.js",

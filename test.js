@@ -38,10 +38,14 @@ require(['jquery', 'backstrap'], function($, $$) {
     
     test($$.navbar(
         { brandContent: 'KP' },
-        $$.ul({ className: 'nav navbar-nav'},
+        $$.navgroup(
             $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#boo' }, 'Boo!')),
             $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#logout' }, 'Logout'))
-        )
+        ),
+        $$.navgroup({align: 'right'},
+                $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#r1' }, 'R1')),
+                $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#r2' }, 'R2'))
+            )
     ), 'navbar');
     
     testObj(new $$.Table({
