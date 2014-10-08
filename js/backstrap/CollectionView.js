@@ -56,7 +56,7 @@
             }
         };
 
-        var onItemChanged = function (model) {
+        var onItemChanged = function (model, options) {
             var view = this.itemViews[model.cid];
             // Re-render the individual item view if it's a backbone view.
             if (view && view.el && view.el.parentNode) {
@@ -66,11 +66,11 @@
             }
 
             if (_.isFunction(this.onItemChanged)) {
-                this.onItemChanged(model, list, options);
+                this.onItemChanged(model, options);
             }
         };
 
-        var onItemRemoved = function (model) {
+        var onItemRemoved = function (model, list, options) {
             var view = this.itemViews[model.cid];
             var liOrTrElement = view.el.parentNode;
             if (view && liOrTrElement && liOrTrElement.parentNode) {
