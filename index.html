@@ -173,7 +173,7 @@ Overloaded names include: button, form, input, label, and table. For example:</p
 &lt;/div&gt;
 </code></pre>
 
-<p>There are also constructors for building various Bootstrap.View extensions,
+<p>There are also constructors for building various Backbone.View extensions,
 which allow you to make Backbone Model-bound components that are also
 Bootstrap-enabled. For instance <code>$$.BasicNavbar()</code> which creates a navbar
 whose contents are built from a description provided as a Backbone Collection.
@@ -360,7 +360,8 @@ Its body will be further wrapped in a div with class "media-body".</p>
 
 <p>The <code>$$.navbar()</code> method creates a <code>nav</code> tag decorated with the Bootstrap "navbar" class
 and also the attribute 'role="navigation"' (can be overridden if necessary), to implement a Bootstrap navbar.
-It accepts several special attributes for configuration of the navbar:</p>
+In addition to standard tag attributes,
+it accepts several special attributes for configuration of the navbar:</p>
 <ul>
 <li>brandContent - Branding visual for left end of navbar (a DOM object or string, default: '').</li>
 <li>brandUrl - URL for brand href (default: '#").</li>
@@ -371,23 +372,37 @@ It accepts several special attributes for configuration of the navbar:</p>
 </ul>
 
 <h4>
-<a name="navgroup" class="anchor" href="#navgroup"><span class="octicon octicon-link"></span></a>navgroup</h4>
+<a name="navbarGroup" class="anchor" href="#navbarGroup"><span class="octicon octicon-link"></span></a>navbarGroup</h4>
 
-<p>The <code>$$.navgroup()</code> method creates a <code>ul</code> tag decorated with
+<p>The <code>$$.navbarGroup()</code> method creates a <code>ul</code> tag decorated with
 the Bootstrap "nav" and "navbar-nav" classes.
 This should be used as a container for groups of $$.li() tags inside a $$.navbar().
+In addition to standard tag attributes, it accepts the attribute "align" with values
+"right" and "left", to do right- and left-alignment of the items (using Bootstrap's
+"navbar-right", "navbar-left").
 Example:</p>
 
 <pre><code>$$.navbar({position: 'fixed-top'},
-    $$.navgroup(
+    $$.navbarGroup(
         $$.li($$.a({href: '#one'}, 'First item')),
         $$.li($$.a({href: '#two'}, 'Second item')),
         $$.li($$.a({href: '#three'}, 'Third item'))
     ),
-    $$.navgroup({align: 'right'},
+    $$.navbarGroup({align: 'right'},
         $$.li($$.a({href: '#four'}, 'Other'))
     )
 );</code></pre>
+
+<h4>
+<a name="navbarForm" class="anchor" href="#navbarForm"><span class="octicon octicon-link"></span></a>navbarForm</h4>
+
+<p>The <code>$$.navbarForm()</code> method creates a <code>form</code> tag
+decorated with the Bootstrap "navbar-form" class.
+This should be used as a container for form-groups and form items.
+In addition to standard tag attributes, it accepts the attribute "align" with values
+"right" and "left", to do right- and left-alignment of the items (using Bootstrap's
+"navbar-right", "navbar-left").
+</p>
 
 <h4>
 <a name="pagination" class="anchor" href="#pagination"><span class="octicon octicon-link"></span></a>pagination</h4>
@@ -484,6 +499,10 @@ component classes that extend <code>Backbone.View</code>, to give you powerful
 (and good-looking!) data-driven, model-bound DOM components.</p>
 
 <p>The components are bound to either a Backbone Model or Collection.
+(Actually, you will probably want to use
+<a href="#Model">$$.Model</a>, which extends Backbone.Model,
+and <a href="#Collection">$$.Collection</a>, which extends Backbone.Collection,
+to build your data models.)
 The components then automatically re-render when the bound model
 data changes.</p>
 
@@ -500,7 +519,7 @@ Give it a Model object and the name of the property you want to use as the
 badge's content.
 For example:</p>
 
-<pre><code>var model = new Backbone.Model({item: 'tweets', count: 42});
+<pre><code>var model = new $$.Model({item: 'tweets', count: 42});
 var badge = new $$.Badge({model: model, content: 'count'}).render();
 </code></pre>
 
@@ -512,7 +531,7 @@ By default, it will create a simple button for each element of the
 provided Collection, using the model object's name, href, and label properties.
 For example:</p>
 
-<pre><code>var items = new Backbone.Collection([
+<pre><code>var items = new $$.Collection([
     {name: 'view', label: 'View', href: '#view'},
     {name: 'edit', label: 'Edit', href: '#edit'},
     {name: 'delete', label: 'Delete', href: '#delete'}
@@ -530,7 +549,7 @@ You can pass "context" and "size" attributes to define
 the corresponding Bootstrap "btn-*" classNames.
 For example:</p>
 
-<pre><code>var model = new Backbone.Model({name: 'Submit'});
+<pre><code>var model = new $$.Model({name: 'Submit'});
 var button = new $$.Button({model: model, content: 'name'}).render();
 ...
 // Alter the displayed label.
@@ -544,7 +563,7 @@ model.set('name', 'Save as Draft');
 Clicking on a date will set the Model's date to the chosen value.
 For example:</p>
 
-<pre><code>var model = new Backbone.Model({when: new Date()});
+<pre><code>var model = new $$.Model({when: new Date()});
 var cal = new $$.Calendar({model: model, content: 'when'}).render();
 </code></pre>
 
@@ -555,26 +574,37 @@ var cal = new $$.Calendar({model: model, content: 'when'}).render();
 Clicking on the checkbox will set or unset the Model's state
 For example:</p>
 
-<pre><code>var model = new Backbone.Model({state: true});
+<pre><code>var model = new $$.Model({state: true});
 var input = new $$.Checkbox({model: model, content: 'state'}).render();
 </code></pre>
 
 <h4>
 <a name="collectionView" class="anchor" href="#collectionView"><span class="octicon octicon-link"></span></a>CollectionView</h4>
 
-<p>A generic Collection-aware view. Listens to add, remove, and change events on the Collection, and provides a basic rendering framework.
+<p>A generic Collection-aware view. Listens to
+<code>add</code>, <code>remove</code>, and <code>change</code> events on the Collection,
+and provides a basic rendering framework.
+Extensions or instances of CollectionView may alter its behavior by overriding the methods
+<code>placeItem</code>,
+<code>placeEmpty</code>,
+<code>onItemAdded</code>,
+<code>onItemChanged</code>, and
+<code>onItemRemoved</code>.
+You may also provide the following attributes to the constructor:
+<code>model</code>,
+<code>itemView</code>,
+<code>itemViewOptions</code>,
+<code>emptyContent</code>,
+<code>onItemClick</code>,
+<code>maxHeight</code>,
+<code>renderOnChange</code>, and
+<code>generateRowClassNames</code>.
 Example:</p>
 
 <pre><code>new $$.CollectionView({
     model: someCollection,
-    itemView: $$.View.extend({ /* view for individual item */ }),
-    emptyContent: 'No items to show',
-    placeItem: function (itemview) {
-        // If you require special handling to place itemViews on the page.
-    },
-    placeEmpty: function (emptycontent) {
-        // If you require special handling to place emptyContent on the page.
-    }
+    itemView: $$.View.extend({ /* view for an individual item */ }),
+    emptyContent: 'Nothing to see here.',
 });
 </code></pre>
 
@@ -587,7 +617,7 @@ Example:</p>
 
 <p>A simple example - displays the text in a <code>span</code> with class "text-info":</p>
 
-<pre><code>var model = new Backbone.Model({context: 'info'});
+<pre><code>var model = new $$.Model({context: 'info'});
 var text = new $$.Context({
         model: model,
         content: 'context'
@@ -612,7 +642,7 @@ provided Collection, using the model object's label and href properties.
 Also supports header and divider elements.
 For example:</p>
 
-<pre><code>var items = new Backbone.Collection([
+<pre><code>var items = new $$.Collection([
     {header: true, label: 'Operations'},
     {label: 'View', href: '#view'},
     {label: 'Edit', href: '#edit'},
@@ -631,7 +661,7 @@ You can also use a "separator" property - "separator" is a synonym for "divider"
 <p>Creates a Bootstrap Glyphicon glyph (a <code>span</code> with class="glyphicon") whose icon is model-bound.
 For example:</p>
 
-<pre><code>var model = new Backbone.Model({glyph: 'star'});
+<pre><code>var model = new $$.Model({glyph: 'star'});
 var glyph = new $$.Glyph({
     model: model,
     content: 'glyph'
@@ -671,7 +701,7 @@ the corresponding Bootstrap "link-*" classNames.</p>
 For example:</p>
 
 <pre><code>var list = new $$.List({
-    model: new Backbone.Collection({
+    model: new $$.Collection({
         { id: 1, name: 'Alaska' },
         { id: 2, name: 'Maine' },
         { id: 3, name: 'Florida' },
@@ -689,9 +719,9 @@ and whose choices are taken from the bound Collection of alternatives.
 For example:</p>
 
 <pre><code>var menu = new $$.Menu({
-    model: new Backbone.Model({place: 'Alaska'}),
+    model: new $$.Model({place: 'Alaska'}),
     content: 'place',
-    alternatives: new Backbone.Collection({
+    alternatives: new $$.Collection({
         { id: 1, name: 'Alaska' },
         { id: 2, name: 'Maine' },
         { id: 3, name: 'Florida' },
@@ -718,7 +748,7 @@ By default, it will create a simple button for each element of the
 provided Collection, using the model object's name, href, and label properties.
 For example:</p>
 
-<pre><code>var items = new Backbone.Collection([
+<pre><code>var items = new $$.Collection([
     {name: 'view', label: 'View', href: '#view'},
     {name: 'edit', label: 'Edit', href: '#edit'},
     {name: 'delete', label: 'Delete', href: '#delete'}
@@ -736,7 +766,7 @@ By default, it will create a simple button for each element of the
 provided Collection, using the model object's name, href, and label properties.
 For example:</p>
 
-<pre><code>var items = new Backbone.Collection([
+<pre><code>var items = new $$.Collection([
     {name: 'view', label: 'View', href: '#view'},
     {name: 'edit', label: 'Edit', href: '#edit'},
     {name: 'delete', label: 'Delete', href: '#delete'}
@@ -764,9 +794,9 @@ and whose choices are taken from the bound Collection of alternatives.
 For example:</p>
 
 <pre><code>var menu = new $$.RadioGroup({
-    model: new Backbone.Model({place: 'Alaska'}),
+    model: new $$.Model({place: 'Alaska'}),
     content: 'place',
-    alternatives: new Backbone.Collection({
+    alternatives: new $$.Collection({
         { id: 1, name: 'Alaska' },
         { id: 2, name: 'Maine' },
         { id: 3, name: 'Florida' },
@@ -833,7 +863,7 @@ For example:</p>
     name: 'startTime',
     interval: 15,
     format: 'hh:mm a',
-    model: new Backbone.Model({ when: new Date() }),
+    model: new $$.Model({ when: new Date() }),
     content: 'when'
 }).render();
 </code></pre>
@@ -846,12 +876,12 @@ For example:</p>
 <h4>
 <a name="events" class="anchor" href="#events"><span class="octicon octicon-link"></span></a>Events</h4>
 
-<p>$$.Events is a simple extension of Backbone.Events.</p>
+<p><code>$$.Events</code> is a simple extension of <code>Backbone.Events</code>.</p>
 
 <h4>
 <a name="model" class="anchor" href="#model"><span class="octicon octicon-link"></span></a>Model</h4>
 
-<p>$$.Model extends Backbone.Model and adds an autoRefresh option.
+<p><code>$$.Model</code> extends <code>Backbone.Model</code> and adds an autoRefresh option.
 If autoRefresh is true, the Backstrap dispatcher will call model.fetch() on a regular basis
 to refresh the model data from the server.
 The interval is tunable (see <a href="#dispatcher">dispatcher</a>), and can be configured to slow down over time.</p>
@@ -859,7 +889,7 @@ The interval is tunable (see <a href="#dispatcher">dispatcher</a>), and can be c
 <h4>
 <a name="collection" class="anchor" href="#collection"><span class="octicon octicon-link"></span></a>Collection</h4>
 
-<p>$$.Collection extends Backbone.Collection and adds an autoRefresh option.
+<p><code>$$.Collection</code> extends <code>Backbone.Collection</code> and adds an autoRefresh option.
 If autoRefresh is true, the Backstrap dispatcher will call collection.fetch() on a regular basis
 to refresh the model data from the server.
 The interval is tunable (see <a href="#dispatcher">dispatcher</a>), and can be configured to slow down over time.</p>
@@ -867,22 +897,23 @@ The interval is tunable (see <a href="#dispatcher">dispatcher</a>), and can be c
 <h4>
 <a name="view" class="anchor" href="#view"><span class="octicon octicon-link"></span></a>View</h4>
 
-<p>$$.View is a simple extension of Backbone.View.</p>
+<p><code>$$.View</code> is a simple extension of <code>Backbone.View</code>.</p>
 
 <h4>
 <a name="router" class="anchor" href="#router"><span class="octicon octicon-link"></span></a>Router</h4>
 
-<p>$$.Router is a simple extension of Backbone.Router.</p>
+<p><code>$$.Router</code> is a simple extension of <code>Backbone.Router</code>.</p>
 
 <h4>
 <a name="history" class="anchor" href="#history"><span class="octicon octicon-link"></span></a>history</h4>
 
-<p>$$.history is an alias for Backbone.history.</p>
+<p><code>$$.history</code> is an alias for <code>Backbone.history</code>.</p>
 
 <h4>
 <a name="dispatcher" class="anchor" href="#dispatcher"><span class="octicon octicon-link"></span></a>dispatcher</h4>
 
-<p>$$.dispatcher is an Events object which provides the autoRefresh functionality for Models and Collections. Tunable parameters are:</p>
+<p><code>$$.dispatcher</code> is a <code>Backbone.Events</code> object which provides the autoRefresh functionality for Models and Collections.
+Tunable parameters are:</p>
 
 <ul>
 <li>minInterval The base interval between refreshes (in seconds)</li>
