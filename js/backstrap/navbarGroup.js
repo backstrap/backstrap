@@ -1,6 +1,6 @@
 /**
  * A 'tag' that defines a Bootstrap navbar content group.
- * The navgroup is a $$.ul(), so you should populate it with $$.li()'s.
+ * The navbarGroup is a $$.ul(), so you should populate it with $$.li()'s.
  *
  * @author Kevin Perry perry@princeton.edu
  * @copyright 2014 The Trustees of Princeton University.
@@ -51,4 +51,4 @@
         }
         fn(context.$$);
     }
-}(this, 'navgroup', [ 'backstrap' ]));
+}(this, 'navbarGroup', [ 'backstrap' ]));
