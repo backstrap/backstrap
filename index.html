@@ -602,7 +602,7 @@ You may also provide the following attributes to the constructor:
 Example:</p>
 
 <pre><code>new $$.CollectionView({
-    model: someCollection,
+    model: new $$.Collection([ /* model data items */ ]),
     itemView: $$.View.extend({ /* view for an individual item */ }),
     emptyContent: 'Nothing to see here.',
 });
