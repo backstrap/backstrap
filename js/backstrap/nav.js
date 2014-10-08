@@ -24,19 +24,19 @@
                             attrs.role = 'tablist';
                         }
                         if (attrs.type === 'tabs' || attrs.type === 'pills') {
-                            type = ' navbar-' + attrs.type;
+                            type = ' nav-' + attrs.type;
                         }
                         delete(attrs.type);
                     }
                     if ('justified' in attrs) {
                         if (attrs.justified) {
-                            type += ' navbar-justified';
+                            type += ' nav-justified';
                         }
                         delete(attrs.justified);
                     }
                     if ('stacked' in attrs) {
                         if (attrs.stacked) {
-                            type += ' navbar-stacked';
+                            type += ' nav-stacked';
                         }
                         delete(attrs.stacked);
                     }
@@ -44,6 +44,10 @@
 
                 el = $$.ul.apply($$, arguments);
                 $(el).addClass('nav' + type);
+                el.clearActive = function () {
+                    $('> *', this).removeClass('active');
+                    return this;
+                };
 
                 return el;
             }

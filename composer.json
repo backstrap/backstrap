@@ -59,6 +59,7 @@
                 "js/backstrap/List.js",
                 "js/backstrap/Menu.js",
                 "js/backstrap/ModelView.js",
+                "js/backstrap/nav.js",
                 "js/backstrap/navbar.js",
                 "js/backstrap/navbarForm.js",
                 "js/backstrap/navbarGroup.js",

@@ -38,16 +38,22 @@ require(['jquery', 'backstrap'], function($, $$) {
     
     test($$.navbar(
         { brandContent: 'KP' },
-        $$.navgroup(
+        $$.navbarGroup(
             $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#boo' }, 'Boo!')),
             $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#logout' }, 'Logout'))
         ),
-        $$.navgroup({align: 'right'},
+        $$.navbarGroup({align: 'right'},
                 $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#r1' }, 'R1')),
                 $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#r2' }, 'R2'))
             )
     ), 'navbar');
     
+    test($$.nav({type: 'tabs'},
+        $$.li({className: 'active'}, $$.a({href: '#a'}, 'Tab 1')),
+        $$.li($$.a({href: '#b'}, 'Tab 2')),
+        $$.li($$.a({href: '#c'}, 'Tab 3'))
+    ), 'nav (tabs)');
+
     testObj(new $$.Table({
         model: new $$.Collection([
             { name: 'a', value: 'Hello' },
