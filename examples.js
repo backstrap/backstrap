@@ -33,13 +33,13 @@ require(['jquery', 'backstrap'], function($, $$) {
         $$.panel(
             $("How it's done:"),
             $pre($code(
-                "$$.jumbotron({bgcontext: 'primary'},
-    'Some example text in a Jumbotron, including ',
-    $$.span({context: 'warning'}, 'some text in a warning context color,'),
-    'a ',
-    $$.button('Button'),  
-    ' that doesn\'t do anything, and a star glyph: ', 
-    $$.glyph('star')
+                "$$.jumbotron({bgcontext: 'primary'},\n" +
+    'Some example text in a Jumbotron, including ',\n" +
+    $$.span({context: 'warning'}, 'some text in a warning context color,'),\n" +
+    'a ',\n" +
+    $$.button('Button'),  \n" +
+    ' that doesn\'t do anything, and a star glyph: ', \n" +
+    $$.glyph('star')\n" +
 )"
             ))
         ),
