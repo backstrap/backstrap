@@ -15,6 +15,7 @@ require(['jquery', 'backstrap'], function($, $$) {
             $$.pageHeader($$.h1('Backstrap Examples')),
             grid = $$.grid({ layout: [
                 [ 12 ],
+                [ 8 ],
                 [ 4, 4, 4 ],
                 [ 12 ]
             ]})
@@ -25,7 +26,7 @@ require(['jquery', 'backstrap'], function($, $$) {
         $$.jumbotron({bgcontext: 'primary'},
             'Some example text in a Jumbotron, including ',
             $$.span({context: 'warning'}, 'some text in a warning context color,'),
-            'a ',
+            ' a ',
             $$.button('Button'),
             ' that doesn\'t do anything, and a star glyph: ',
             $$.glyph('star')
@@ -35,8 +36,8 @@ require(['jquery', 'backstrap'], function($, $$) {
             $$.pre($$.code(
                 "$$.jumbotron({bgcontext: 'primary'},\n" +
                 "    'Some example text in a Jumbotron, including ',\n" +
-                "    $$.span({context: 'warning'}, 'some text in a warning context color, '),\n" +
-                "    'a ',\n" +
+                "    $$.span({context: 'warning'}, 'some text in a warning context color,'),\n" +
+                "    ' a ',\n" +
                 "    $$.button('Button'),  \n" +
                 "    ' that doesn\'t do anything, and a star glyph: ', \n" +
                 "    $$.glyph('star')\n" +
@@ -58,27 +59,35 @@ require(['jquery', 'backstrap'], function($, $$) {
     ));
     
     grid.getCell(2, 1).append(
+        new $$.Table({
+                striped: true,
+                model: bicycles,
+                columns: [ { title: 'ID', content: 'id' }, { title: 'Bike type', content: 'type' }, { title: 'Color', content: 'color' }, { title: 'Purchase Date', content: 'purchased'} ]
+        }).render().el
+    );
+
+    grid.getCell(3, 1).append(
         $$.div({ context: 'primary' },
             $$.plain.label('Type: '),
             new $$.TextField({model: bicycles.at(0), content: 'type'}).render().el
         )
     );
     
-    grid.getCell(2, 2).append(
+    grid.getCell(3, 2).append(
         $$.div({ context: 'primary' },
             $$.plain.label('Purchased: '),
             new $$.DatePicker({model: bicycles.at(0), content: 'purchased'}).render().el
         )
     );
     
-    grid.getCell(2, 3).append(
+    grid.getCell(3, 3).append(
         $$.div({ context: 'primary' },
             $$.plain.label('Color: '),
-            new $$.Badge({model: bicycles.at(0), content: 'color'}).render().el
+            new $$.TextField({model: bicycles.at(0), content: 'color'}).render().el
         )
     );
     
-    grid.getCell(3,1).append(
+    grid.getCell(4,1).append(
         $$.div({},
             "My ",
             new $$.Button({model: bicycles.at(0), content: 'type'}).render().el,
