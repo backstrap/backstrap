@@ -360,6 +360,8 @@ Its body will be further wrapped in a div with class "media-body".</p>
 
 <p>The <code>$$.nav()</code> method creates a <code>ul</code> tag decorated with the Bootstrap "nav" class.
 Children of <code>$$.nav()</code> should be <code>$$.li()'s</code>.
+Remember to mark one of the children with "className: 'active'" to get the proper highlighting.
+The nav object has a helper method <code>clearActive()</code> for convenience.
 In addition to standard tag attributes,
 it accepts several special attributes for configuration of the nav:</p>
 
@@ -373,7 +375,7 @@ it accepts several special attributes for configuration of the nav:</p>
 <p>Example:</p>
 
 <pre><code>$$.nav({type: 'tabs'},
-    $$.li($$.a({href: '#pane1'}, 'Pane 1'))
+    $$.li({className: 'active'}, $$.a({href: '#pane1'}, 'Pane 1'))
     $$.li($$.a({href: '#pane2'}, 'Pane 2'))
 );</code></pre>
 
