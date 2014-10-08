@@ -31,8 +31,8 @@ require(['jquery', 'backstrap'], function($, $$) {
             $$.glyph('star')
         ),
         $$.panel(
-            $p("How it's done:"),
-            $pre($code(
+            $$.p("How it's done:"),
+            $$.pre($$.code(
                 "$$.jumbotron({bgcontext: 'primary'},\n" +
                 "    'Some example text in a Jumbotron, including ',\n" +
                 "    $$.span({context: 'warning'}, 'some text in a warning context color, '),\n" +
@@ -43,7 +43,6 @@ require(['jquery', 'backstrap'], function($, $$) {
                 ")"
             ))
         ),
-
         $$.p('For the rest of the page, we will bind this dataset to various components:'),
         $$.blockquote($$.code($$.pre(
             "var bicycles = new $$.Collection([\n",
