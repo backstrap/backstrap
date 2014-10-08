@@ -31,7 +31,7 @@ require(['jquery', 'backstrap'], function($, $$) {
             $$.glyph('star')
         ),
         $$.panel(
-            $("How it's done:"),
+            $p("How it's done:"),
             $pre($code(
                 "$$.jumbotron({bgcontext: 'primary'},\n" +
                 "    'Some example text in a Jumbotron, including ',\n" +
