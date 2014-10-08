@@ -1326,7 +1326,7 @@ if(window.jQuery) {
             }
         };
 
-        var onItemChanged = function (model) {
+        var onItemChanged = function (model, options) {
             var view = this.itemViews[model.cid];
             // Re-render the individual item view if it's a backbone view.
             if (view && view.el && view.el.parentNode) {
@@ -1336,11 +1336,11 @@ if(window.jQuery) {
             }
 
             if (_.isFunction(this.onItemChanged)) {
-                this.onItemChanged(model, list, options);
+                this.onItemChanged(model, options);
             }
         };
 
-        var onItemRemoved = function (model) {
+        var onItemRemoved = function (model, list, options) {
             var view = this.itemViews[model.cid];
             var liOrTrElement = view.el.parentNode;
             if (view && liOrTrElement && liOrTrElement.parentNode) {
@@ -4721,26 +4721,32 @@ if(window.jQuery) {
                     tagName: 'tr',
 
                     render: function () {
-                        
-                        var row = this.el;
-
-                        // for each model, we walk through each column and generate the content
+                        // walk through each column and generate the container
                         _(this.options.parentView.options.columns).each(function (column, index, list) {
                             var width = !!column.width ? parseInt(column.width, 10) + 5 : null;
                             var style = width ? 'width:' + width + 'px; max-width:' + width + 'px': null;
-                            var content = this.resolveContent(this.model, column.content);
-                            row.appendChild($$.td({
+                            this.$el.append($$.td({
                                 className: _(list).nameForIndex(index), 
                                 style: style
-                            }, $$.div({className: 'wrapper', style: style}, content)));
+                            }, $$.div({className: 'wrapper', style: style})));
                         }, this);
         
                         // bind the item click callback if given
                         if (this.options.parentView.options.onItemClick) {
-                            $(row).click(_(this.options.parentView.options.onItemClick).bind(this, this.model));
+                            this.$el.click(_(this.options.parentView.options.onItemClick).bind(this, this.model));
                         }
-
-                        return this;
+                        
+                        this.render = function () {
+                            // walk through each column and fill in the content
+                            _(this.options.parentView.options.columns).each(function (column, index, list) {
+                                var content = this.resolveContent(this.model, column.content);
+                                this.$('td.' + _(list).nameForIndex(index) + ' div.wrapper').empty().append(content);
+                            }, this);
+    
+                            return this;
+                        };
+                        
+                        return this.render();
                     }
                 }),
 

@@ -32,26 +32,32 @@
                     tagName: 'tr',
 
                     render: function () {
-                        
-                        var row = this.el;
-
-                        // for each model, we walk through each column and generate the content
+                        // walk through each column and generate the container
                         _(this.options.parentView.options.columns).each(function (column, index, list) {
                             var width = !!column.width ? parseInt(column.width, 10) + 5 : null;
                             var style = width ? 'width:' + width + 'px; max-width:' + width + 'px': null;
-                            var content = this.resolveContent(this.model, column.content);
-                            row.appendChild($$.td({
+                            this.$el.append($$.td({
                                 className: _(list).nameForIndex(index), 
                                 style: style
-                            }, $$.div({className: 'wrapper', style: style}, content)));
+                            }, $$.div({className: 'wrapper', style: style})));
                         }, this);
         
                         // bind the item click callback if given
                         if (this.options.parentView.options.onItemClick) {
-                            $(row).click(_(this.options.parentView.options.onItemClick).bind(this, this.model));
+                            this.$el.click(_(this.options.parentView.options.onItemClick).bind(this, this.model));
                         }
-
-                        return this;
+                        
+                        this.render = function () {
+                            // walk through each column and fill in the content
+                            _(this.options.parentView.options.columns).each(function (column, index, list) {
+                                var content = this.resolveContent(this.model, column.content);
+                                this.$('td.' + _(list).nameForIndex(index) + ' div.wrapper').empty().append(content);
+                            }, this);
+    
+                            return this;
+                        };
+                        
+                        return this.render();
                     }
                 }),
 
