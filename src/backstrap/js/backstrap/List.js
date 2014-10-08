@@ -3,28 +3,14 @@
  * Based on Backbone-UI's ListView,
  * with Bootstrap decoration.
  * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
-(function (context)
+(function (context, moduleName, requirements)
 {
     var fn = function ($$)
     {
-        var updateClassNames = function () {
-            if (this.options.generateRowClassNames) {
-                var children = this.collectionEl.childNodes;
-                if (children.length > 0) {
-                    _(children).each(
-                        function (child, index)
-                        {
-                            $(child).removeClass('first last')
-                                    .addClass(index % 2 === 0 ? 'even' : 'odd');
-                        });
-                    $(children[0]).addClass('first');
-                    $(children[children.length - 1]).addClass('last');
-                }
-            }
-        };
-
         var ensureProperPosition = function (model) {
             if (_(this.model.comparator).isFunction()) {
                 this.model.sort({silent: true});
@@ -42,7 +28,7 @@
                 }
             }
         };
-
+	
         var ensureProperPositions = function (collection) {
             collection.models.forEach(function (model, index) {
                 var itemEl = this.itemViews[model.cid].el.parentNode;
@@ -54,15 +40,10 @@
                     this.collectionEl.appendChild(itemEl);
                 }
             }, this);
-            updateClassNames.call(this);
+            this.renderClassNames(this.collectionEl);
         };
 
-        return ($$.List = $$.CollectionView.extend({
-            options: {
-                // Set this to true to generate first, last, even, and odd classnames on rows.
-                generateRowClassNames: false
-            },
-            
+        return ($$[moduleName] = $$.CollectionView.extend({
             initialize: function (options) {
                 $$.CollectionView.prototype.initialize.call(this, options);
 
@@ -79,8 +60,8 @@
 
                 $$.CollectionView.prototype.render.call(this);
 
-                updateClassNames.call(this);
-                this.el.appendChild(this.collectionEl);
+                this.renderClassNames(this.collectionEl);
+                this.$el.append(this.collectionEl);
 
                 return this;
             },
@@ -95,11 +76,11 @@
             },
 
             onItemAdded: function () {
-                updateClassNames.call(this);
+                this.renderClassNames(this.collectionEl);
             },
 
             onItemRemoved: function () {
-                updateClassNames.call(this);
+                this.renderClassNames(this.collectionEl);
             },
 
             onItemChanged: function () {
@@ -108,15 +89,24 @@
         }));
     };
 
-    if (typeof context.define === "function" && context.define.amd &&
-            typeof context._$$_backstrap_built_flag === 'undefined') {
-        define("backstrap/List", ["backstrap"], function ($$) {
-            return fn($$);
-        });
-    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-        module.exports = fn(require("backstrap"));
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
     } else {
-        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
         fn(context.$$);
     }
-}(this));
+}(this, 'List', [ 'backstrap', 'backstrap/CollectionView' ]));

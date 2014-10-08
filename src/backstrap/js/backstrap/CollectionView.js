@@ -6,7 +6,7 @@
  * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
-(function (context)
+(function (context, moduleName, requirements)
 {
     var fn = function ($$)
     {
@@ -19,8 +19,9 @@
                 if (_(this.options.itemView).isString()) {
                     content = this.resolveContent(model, this.options.itemView);
                 } else {
-                    var view = new this.options.itemView(_({ model: model }).extend(
-                        this.options.itemViewOptions));
+                    var view = new this.options.itemView(
+                        _({ model: model, parentView: this }).extend(
+                            this.options.itemViewOptions));
                     view.render();
                     this.itemViews[model.cid] = view;
                     content = view.el;
@@ -86,7 +87,7 @@
             }
         };
         
-        return ($$.CollectionView = $$.View.extend({
+        return ($$[moduleName] = $$.View.extend({
             options: {
                 // The Collection instance the view is bound to.
                 model: null,
@@ -97,7 +98,7 @@
                 itemView: null,
       
                 // Options to pass into the View responsible for rendering the single item.
-                itemViewOptions: null,
+                itemViewOptions: {},
 
                 // A string, element, or function describing what should be displayed
                 // when the list is empty.
@@ -112,7 +113,10 @@
                 maxHeight: null,
       
                 // Render the the collection view on change in model.
-                renderOnChange: true
+                renderOnChange: true,
+                
+                // Set this to true to generate first, last, even, and odd classnames on rows.
+                generateRowClassNames: false
             },
 
             itemViews: {},
@@ -125,7 +129,7 @@
                     this.model.on('add', onItemAdded, this);
                     if (this.options.renderOnChange){
                         var renderOnChange = this.options.renderOnChange;
-                        if (is_array(renderOnChange)) {
+                        if (_.isArray(renderOnChange)) {
                             renderOnChange.forEach(function (property) {
                                 this.model.on('change:' + property, onItemChanged, this);
                             }, this);
@@ -141,7 +145,7 @@
             },
 
             render: function () {
-                $(this.el).empty();
+                this.$el.empty();
                 this.itemViews = {};
 
                 if (this.options.emptyContent) {
@@ -156,6 +160,25 @@
                 }
                 
                 return this;
+            },
+            
+            /**
+             * Render first, last, even and odd classnames on row items.
+             */
+            renderClassNames: function (collectionEl) {
+                if (this.options.generateRowClassNames) {
+                    var children = (collectionEl ? collectionEl : this.el).childNodes;
+                    if (children.length > 0) {
+                        _(children).each(
+                            function (child, index)
+                            {
+                                $(child).removeClass('first last')
+                                        .addClass(index % 2 === 0 ? 'even' : 'odd');
+                            });
+                        $(children[0]).addClass('first');
+                        $(children[children.length - 1]).addClass('last');
+                    }
+                }
             },
 
             /**
@@ -182,15 +205,24 @@
         }));
     };
 
-    if (typeof context.define === "function" && context.define.amd &&
-            typeof context._$$_backstrap_built_flag === 'undefined') {
-        define("backstrap/CollectionView", ["backstrap"], function ($$) {
-            return fn($$);
-        });
-    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-        module.exports = fn(require("backstrap"));
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
     } else {
-        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
         fn(context.$$);
     }
-}(this));
+}(this, 'CollectionView', [ 'backstrap', 'backstrap/View' ]));

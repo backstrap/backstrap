@@ -1,4 +1,10 @@
-(function(context) {
+/**
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
+ */
+(function(context, moduleName, requirements)
+{
     var fn = function($$, $)
     {
         var timeout = null;
@@ -48,7 +54,7 @@
             dispatcher.trigger('refresh');
         };
 
-        dispatcher = $$.dispatcher = _.extend({
+        dispatcher = _.extend({
             minInterval: 10,
             maxInterval: 1000,
             decayFrequency: 6,
@@ -79,18 +85,31 @@
         $('html').on('click focus touchstart', function () {
             touch();
         });
-        
-        return dispatcher;
+
+        return ($$[moduleName] = dispatcher);
     };
 
-    if (typeof context.define === 'function' && context.define.amd &&
-            typeof context._$$_backstrap_built_flag === 'undefined') {
-        context.define('backstrap/dispatcher', ['backstrap', 'backbone', 'jquery'], fn);
-    } else if (typeof context.module === 'object' && typeof context.module.exports === 'object') {
-        context.module.exports = fn(require('backstrap'), require('backbone'), require('jquery'));
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
     } else {
-        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-        if (typeof context.$ !== 'function') throw new Error('jQuery environment not loaded');
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        if (typeof context.$ !== 'function') {
+            throw new Error('jQuery environment not loaded');
+        }
         fn(context.$$, context.$);
     }
-}(this));
+}(this, 'dispatcher', ['backstrap', 'jquery', 'backstrap/Events']));

@@ -8,35 +8,47 @@
  * @license MIT
  * 
  */
-(function(context) {
-	var fn = function($$)
-	{
-		return ($$.Badge = $$.View.extend({
-			tagName: 'span',
-	
-			initialize : function(options) {
-				$$.View.prototype.initialize.call(this, options);
-				this.mixin([$$.HasModel]);
-				_(this).bindAll('render');
-				this.$el.addClass('badge');
-			},
-	
-			render : function() {
-				var content = this.resolveContent();
-				this._observeModel(this.render);
-				this.$el.text(content);
-				return this;
-			}
-		}));
-	};
-	
-	if (typeof context.define === "function" && context.define.amd &&
-			typeof context._$$_backstrap_built_flag === 'undefined') {
-		context.define("backstrap/Badge", ["backstrap", "backstrap/HasModel"], fn);
-	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-		context.module.exports = fn(require("backstrap"));
-	} else {
-		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-		fn(context.$$);
-	}
-}(this));
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return ($$[moduleName] = $$.View.extend({
+            tagName: 'span',
+    
+            initialize : function(options) {
+                $$.View.prototype.initialize.call(this, options);
+                this.mixin([$$.HasModel]);
+                _(this).bindAll('render');
+                this.$el.addClass('badge');
+            },
+    
+            render : function() {
+                var content = this.resolveContent();
+                this._observeModel(this.render);
+                this.$el.text(content);
+                return this;
+            }
+        }));
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'Badge', [ 'backstrap', 'backstrap/View', 'backstrap/HasModel' ]));

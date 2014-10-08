@@ -1,89 +1,105 @@
- // A mixin for dealing with collection alternatives
-(function(context) {
-	var fn = function($$)
-	{
-		return ($$.HasAlternativeProperty = {
-			options : {
-				// The collection of items representing alternative choices
-				alternatives : null,
+/**
+ * A mixin for dealing with collection alternatives.
+ * Based on Backbone-UI.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
+ * @license MIT
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return($$[moduleName] = {
+            options : {
+                // The collection of items representing alternative choices
+                alternatives : null,
 
-				// The property of the individual choice represent the the label to be displayed
-				altLabelContent : null,
+                // The property of the individual choice represent the the label to be displayed
+                altLabelContent : null,
 
-				// The property of the individual choice that represents the value to be stored
-				// in the bound model's property.	Omit this option if you'd like the choice 
-				// object itself to represent the value.
-				altValueContent : null,
-				
-				// If provided this content will wrap the component with additional label.
-				formLabelContent : null,
-				
-				// The property of the individual choice representing CSS 
-				// background rule for the left glyph 
-				altGlyphLeftClassName : null,
+                // The property of the individual choice that represents the value to be stored
+                // in the bound model's property. Omit this option if you'd like the choice 
+                // object itself to represent the value.
+                altValueContent : null,
+                
+                // The property of the individual choice representing CSS 
+                // background rule for the left glyph 
+                altGlyphLeftClassName : null,
 
-				// The property of the individual choice representing CSS 
-				// background rule for the right glyph 
-				altGlyphRightClassName : null
-			},
+                // The property of the individual choice representing CSS 
+                // background rule for the right glyph 
+                altGlyphRightClassName : null
+            },
 
-			_determineSelectedItem : function() {
-				var item = null;
+            _determineSelectedItem : function() {
+                var item = null;
 
-				// if a bound property has been given, we attempt to resolve it
-				if(_(this.model).exists() && _(this.options.content).exists()) {
-					item = _(this.model).resolveProperty(this.options.content);
+                // if a bound property has been given, we attempt to resolve it
+                if(_(this.model).exists() && _(this.options.content).exists()) {
+                    item = _(this.model).resolveProperty(this.options.content);
 
-					// if a value property is given, we further resolve our selected item
-					if(_(this.options.altValueContent).exists()) {
-						var otherItem = _(this._collectionArray()).detect(function(collectionItem) {
-							return (collectionItem.attributes || collectionItem)[this.options.altValueContent] === item;
-						}, this);
-						if(!_(otherItem).isUndefined()) item = otherItem;
-					}
-				}
+                    // if a value property is given, we further resolve our selected item
+                    if(_(this.options.altValueContent).exists()) {
+                        var otherItem = _(this._collectionArray()).detect(function(collectionItem) {
+                            return (collectionItem.attributes || collectionItem)[this.options.altValueContent] === item;
+                        }, this);
+                        if(!_(otherItem).isUndefined()) item = otherItem;
+                    }
+                }
 
-				return item || this.options.selectedItem;
-			},
+                return item || this.options.selectedItem;
+            },
 
-			_setSelectedItem : function(item, silent) {
-				this.selectedValue = item;
-				this.selectedItem = item;
+            _setSelectedItem : function(item, silent) {
+                this.selectedValue = item;
+                this.selectedItem = item;
 
-				if(_(this.model).exists() && _(this.options.content).exists()) {
-					this.selectedValue = this._valueForItem(item);
-					_(this.model).setProperty(this.options.content, this.selectedValue, silent);
-				}
-			},
+                if(_(this.model).exists() && _(this.options.content).exists()) {
+                    this.selectedValue = this._valueForItem(item);
+                    _(this.model).setProperty(this.options.content, this.selectedValue, silent);
+                }
+            },
 
-			_valueForItem : function(item) {
-				return _(this.options.altValueContent).exists() ? 
-					_(item).resolveProperty(this.options.altValueContent) :
-					item;
-			},
+            _valueForItem : function(item) {
+                return _(this.options.altValueContent).exists() ? 
+                    _(item).resolveProperty(this.options.altValueContent) :
+                    item;
+            },
 
-			_collectionArray : function() {
-				return _(this.options.alternatives).exists() ?
-					this.options.alternatives.models || this.options.alternatives : [];
-			},
+            _collectionArray : function() {
+                return _(this.options.alternatives).exists() ?
+                    this.options.alternatives.models || this.options.alternatives : [];
+            },
 
-			_observeCollection : function(callback) {
-				if(_(this.options.alternatives).exists() && _(this.options.alternatives.bind).exists()) {
-					var key = 'change';
-					this.options.alternatives.unbind(key, callback);
-					this.options.alternatives.bind(key, callback);
-				}
-			}
-		});
-	};
+            _observeCollection : function(callback) {
+                if(_(this.options.alternatives).exists() && _(this.options.alternatives.bind).exists()) {
+                    var key = 'change';
+                    this.options.alternatives.unbind(key, callback);
+                    this.options.alternatives.bind(key, callback);
+                }
+            }
+        });
+    };
 
-	if (typeof context.define === "function" && context.define.amd &&
-			typeof context._$$_backstrap_built_flag === 'undefined') {
-		context.define("backstrap/HasAlternativeProperty", ["backstrap"], fn);
-	} else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-		context.module.exports = fn(require("backstrap"));
-	} else {
-		if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
-		fn(context.$$);
-	}
-}(this));
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'HasAlternativeProperty', [ 'backstrap' ]));

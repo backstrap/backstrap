@@ -3,16 +3,18 @@
  * Largely from Backbone-UI's TableView class,
  * with Bootstrap decoration.
  * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
-(function (context)
+(function (context, moduleName, requirements)
 {
     var fn = function ($$)
     {
         var noop = function () {};
         
-        return ($$.Table = $$.CollectionView.extend({
-            options: {
+        return ($$[moduleName] = $$.CollectionView.extend({
+            options: _({}).extend($$.CollectionView.prototype.options, {
                 // Each column should contain a <code>title</code> property to
                 // describe the column's heading, a <code>content</code> property to
                 // declare which property the cell is bound to, an optional two-argument
@@ -33,13 +35,11 @@
                         
                         var row = this.el;
 
-                        // TODO Need parent "this" for options and itemViews.
-
                         // for each model, we walk through each column and generate the content
-                        _(this.options.columns).each(function (column, index, list) {
+                        _(this.options.parentView.options.columns).each(function (column, index, list) {
                             var width = !!column.width ? parseInt(column.width, 10) + 5 : null;
                             var style = width ? 'width:' + width + 'px; max-width:' + width + 'px': null;
-                            var content = this.resolveContent(model, column.content);
+                            var content = this.resolveContent(this.model, column.content);
                             row.appendChild($$.td({
                                 className: _(list).nameForIndex(index), 
                                 style: style
@@ -47,11 +47,9 @@
                         }, this);
         
                         // bind the item click callback if given
-                        if (this.options.onItemClick) {
-                            $(row).click(_(this.options.onItemClick).bind(this, model));
+                        if (this.options.parentView.options.onItemClick) {
+                            $(row).click(_(this.options.parentView.options.onItemClick).bind(this, this.model));
                         }
-        
-                        this.itemViews[model.cid] = row;
 
                         return this;
                     }
@@ -71,7 +69,7 @@
                 hover: false,
                 condensed: false,
                 responsive: false
-            },
+            }),
 
             initialize: function (options) {
                 $$.CollectionView.prototype.initialize.call(this, options);
@@ -80,7 +78,6 @@
             },
 
             render: function () {
-
                 var table;
                 var container = $$.div({
                         className: 'content' + (this.options.responsive ? ' table-responsive' : '')
@@ -161,17 +158,17 @@
                     container
                 );
 
-                this._updateClassNames();
+                this.renderClassNames(this.collectionEl);
 
                 return this;
             },
 
-            placeItem: function (item) {
-                this.collectionEl.append(item);
+            placeItem: function (item, model, index) {
+                $(this.collectionEl).append(item);
             },
 
             placeEmpty: function (content) {
-                this.collectionEl.append($$.tr($$.td(content)));
+                $(this.collectionEl).append($$.tr($$.td(content)));
             },
 
             _sort: function (column, silent) {
@@ -190,15 +187,24 @@
         }));
     };
 
-    if (typeof context.define === "function" && context.define.amd &&
-            typeof context._$$_backstrap_built_flag === 'undefined') {
-        define("backstrap/Table", ["backstrap", "backstrap/CollectionView"], function ($$) {
-            return fn($$);
-        });
-    } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-        module.exports = fn(require("backstrap"));
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
     } else {
-        if (typeof context.$$ !== 'function') throw new Error('Backstrap environment not loaded');
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
         fn(context.$$);
     }
-}(this));
+}(this, 'Table', [ 'backstrap', 'backstrap/CollectionView' ]));
