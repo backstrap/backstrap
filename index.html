@@ -356,12 +356,36 @@ if you want it pulled right instead of left.
 Its body will be further wrapped in a div with class "media-body".</p>
 
 <h4>
+<a name="nav" class="anchor" href="#nav"><span class="octicon octicon-link"></span></a>nav</h4>
+
+<p>The <code>$$.nav()</code> method creates a <code>ul</code> tag decorated with the Bootstrap "nav" class.
+Children of <code>$$.nav()</code> should be <code>$$.li()'s</code>.
+In addition to standard tag attributes,
+it accepts several special attributes for configuration of the nav:</p>
+
+<ul>
+<li>type - Required.  The type of nav to create - either "tabs" or "pills".
+    With "type: 'tabs'", you also get "role: 'tablist'" by default.</li>
+<li>justified - Set to true to get justified tabs or pills.</li>
+<li>stacked - Set to true to get stacked pills.</li>
+</ul>
+
+<p>Example:</p>
+
+<pre><code>$$.nav({type: 'tabs'},
+    $$.li($$.a({href: '#pane1'}, 'Pane 1'))
+    $$.li($$.a({href: '#pane2'}, 'Pane 2'))
+);</code></pre>
+
+<h4>
 <a name="navbar" class="anchor" href="#navbar"><span class="octicon octicon-link"></span></a>navbar</h4>
 
 <p>The <code>$$.navbar()</code> method creates a <code>nav</code> tag decorated with the Bootstrap "navbar" class
 and also the attribute 'role="navigation"' (can be overridden if necessary), to implement a Bootstrap navbar.
+Children of <code>$$.navbar()</code> should be either <code>$$.navbarGroup()</code> or <code>$$.navbarForm()</code> objects.
 In addition to standard tag attributes,
 it accepts several special attributes for configuration of the navbar:</p>
+
 <ul>
 <li>brandContent - Branding visual for left end of navbar (a DOM object or string, default: '').</li>
 <li>brandUrl - URL for brand href (default: '#").</li>
