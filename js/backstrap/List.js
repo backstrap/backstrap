@@ -12,7 +12,7 @@
     var fn = function ($$)
     {
         var ensureProperPosition = function (model) {
-            if (_(this.model.comparator).isFunction()) {
+            if (this.model.comparator) {
                 this.model.sort({silent: true});
                 var itemEl = this.itemViews[model.cid].el.parentNode;
                 var currentIndex = _(this.collectionEl.childNodes).indexOf(itemEl, true);
@@ -83,8 +83,8 @@
                 this.renderClassNames(this.collectionEl);
             },
 
-            onItemChanged: function () {
-                ensureProperPosition.call(this);
+            onItemChanged: function (model) {
+                ensureProperPosition.call(this, model);
             }
         }));
     };
