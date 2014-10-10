@@ -62,7 +62,7 @@
                     }
                 }  
 
-                (onOff ? model.on : model.off)(actions, this);
+                (onOff ? model.on : model.off).call(model, actions, this);
             }
         };
 
@@ -158,8 +158,8 @@
 
             initialize: function (options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.on('attach', _(this.listenToModel).bind(this, this.model, true));
-                this.on('detach', _(this.listenToModel).bind(this, this.model, false));
+                this.on('attach', _(listenToModel).bind(this, this.model, true));
+                this.on('detach', _(listenToModel).bind(this, this.model, false));
                 if (this.options.attached) {
                     listenToModel.call(this, this.model, true);
                 }
