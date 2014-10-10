@@ -225,12 +225,16 @@ require(['jquery', 'backstrap'], function($, $$) {
 	obj.$el.append(new $$.Badge({content: '33'}).render().el);
 	testObj(obj, 'Context(bg) + Glyph + Badge');
 
-	testObj(new $$.Dropdown({buttonLabel: 'Things', buttonId: 'button1', align: 'left', model: new $$.Collection([
-		{ name: 'first', href: '#first', label: 'First' },
-		{ header: true, label: 'More things'},
-		{ name: 'second', href: '#second', label: 'Second' },
-		{ divider: true },
-		{ name: 'third', href: '#third', label: 'Third' }
+	testObj(new $$.Dropdown({align: 'left', context: 'primary',
+	    buttonLabel: 'Things',
+	    split: false,
+	    model: new $$.Collection([
+    		{ name: 'first', href: '#first', label: 'First' },
+            { element: 'divider' },
+    		{ element: 'header', label: 'More things'},
+    		{ name: 'second', href: '#second', label: 'Second' },
+            { name: 'third', href: '#third', label: 'Third' },
+            { name: 'fourth', href: '#fourth', label: $$.span($$.glyph('star'), ' Star!') },
 	])}), 'Dropdown');
 
 	testObj(new $$.NavPills({context: 'primary', model: new $$.Collection([

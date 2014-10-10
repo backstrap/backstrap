@@ -355,7 +355,7 @@
 
         // Bootstrap component pseudo-tags
         var bootstrapComponents = ['alert', 'badge', 'breadcrumb', 'button',
-                    'buttonGroup', 'buttonToolbar', 'container', 'form',
+                    'buttonGroup', 'buttonToolbar', 'caret', 'container', 'form',
                     'formGroup', 'input', 'inputGroup', 'inputGroupAddon',
                     'jumbotron', 'label', 'linkList', 'linkListItem', 'list',
                     'listItem', 'media', 'pageHeader', 'pagination', 'panel',
@@ -368,6 +368,7 @@
                 breadcrumb: 'ol',
                 buttonGroup: 'div',
                 buttonToolbar: 'div',
+                caret: 'span',
                 container: 'div',
                 formGroup: 'div',
                 inputGroup: 'div',
