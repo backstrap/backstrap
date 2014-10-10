@@ -1271,6 +1271,10 @@ if(window.jQuery) {
 /**
  * A generic Backbone View for displaying Collection data.
  * Based on Backbone-UI CollectionView.
+ *
+ * The view will start listening to add/remove/change events
+ * on the Collection when it receives an 'attach' event,
+ * and will suspend listening when it receives a 'detach' event.
  * 
  * @author Kevin Perry, perry@princeton.edu
  * @copyright 2014 The Trustees of Princeton University.
@@ -1306,8 +1310,34 @@ if(window.jQuery) {
             this.placeItem(content, model, index);
         };
 
+        /*
+         * Set up model change listeners.
+         */
+        var listenToModel = function (model, onOff) {
+            if (model) {
+                var actions = {
+                    add:    onItemAdded,
+                    remove: onItemRemoved,
+                    reset:  this.render
+                };
+
+                if (this.options.renderOnChange) {
+                    var props = this.options.renderOnChange;
+                    if (props === true) {
+                        actions.change = onItemChanged;
+                    } else {
+                        (_.isArray(props) ? props : [props]).forEach(function (prop) {
+                            this['change:' + prop] = onItemChanged;
+                        }, actions);
+                    }
+                }  
+
+                (onOff ? model.on : model.off).call(model, actions, this);
+            }
+        };
+
         var onItemAdded = function (model, list, options) {
-            // First ensure that we haven't already rendered an item for this model.
+            // First, ensure that we haven't already rendered an item for this model.
             if (this.itemViews[model.cid]) {
                 return;
             }
@@ -1385,6 +1415,9 @@ if(window.jQuery) {
                 // Render the the collection view on change in model.
                 renderOnChange: true,
                 
+                // Whether to start listening to model events immediately or wait for 'attach'.
+                attached: true,
+                
                 // Set this to true to generate first, last, even, and odd classnames on rows.
                 generateRowClassNames: false
             },
@@ -1395,22 +1428,10 @@ if(window.jQuery) {
 
             initialize: function (options) {
                 $$.View.prototype.initialize.call(this, options);
-                if (this.model) {
-                    this.model.on('add', onItemAdded, this);
-                    if (this.options.renderOnChange){
-                        var renderOnChange = this.options.renderOnChange;
-                        if (_.isArray(renderOnChange)) {
-                            renderOnChange.forEach(function (property) {
-                                this.model.on('change:' + property, onItemChanged, this);
-                            }, this);
-                        } else if (renderOnChange === true) {
-                            this.model.on('change', onItemChanged, this);
-                        } else { // Assume string
-                            this.model.on('change:' + renderOnChange, onItemChanged, this);
-                        }
-                    }  
-                    this.model.on('remove', onItemRemoved, this);
-                    this.model.on('reset', this.render, this);
+                this.on('attach', _(listenToModel).bind(this, this.model, true));
+                this.on('detach', _(listenToModel).bind(this, this.model, false));
+                if (this.options.attached) {
+                    listenToModel.call(this, this.model, true);
                 }
             },
 
@@ -1428,7 +1449,7 @@ if(window.jQuery) {
                 } else {
                     this.placeEmpty(this._emptyContent);
                 }
-                
+
                 return this;
             },
             
@@ -2005,7 +2026,7 @@ if(window.jQuery) {
     var fn = function ($$)
     {
         var ensureProperPosition = function (model) {
-            if (_(this.model.comparator).isFunction()) {
+            if (this.model.comparator) {
                 this.model.sort({silent: true});
                 var itemEl = this.itemViews[model.cid].el.parentNode;
                 var currentIndex = _(this.collectionEl.childNodes).indexOf(itemEl, true);
@@ -2076,8 +2097,8 @@ if(window.jQuery) {
                 this.renderClassNames(this.collectionEl);
             },
 
-            onItemChanged: function () {
-                ensureProperPosition.call(this);
+            onItemChanged: function (model) {
+                ensureProperPosition.call(this, model);
             }
         }));
     };
@@ -4325,6 +4346,99 @@ if(window.jQuery) {
 }(this, 'Panel', [ 'backstrap', 'backstrap/View' ]));
 
 /**
+ * A model-bound Bootstrap progress bar.
+ *
+ * Use model and content options to set the percent-complete of the progress bar.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
+ * @license MIT
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        var ItemView = $$.View.extend({
+            initialize: function () {
+                $$.View.prototype.initialize.call(this, options);
+                this.mixin([$$.HasModel]);
+                _(this).bindAll('render');
+                this.span = $$.span({className: this.model.labelled ? '' : 'sr-only'});
+                $(this.el).addClass('progress-bar').
+                    attr('role', 'progressbar').
+                    append(this.span);
+                if (this.model.context) {
+                    $(this.el).addClass(this.model.context);
+                }
+            },
+            
+            render: function () {
+                var value = this.resolveContent();
+                var min = this.resolveContent(this.model, 'min', 0);
+                var max = this.resolveContent(this.model, 'max', 100);
+                $(this.el).attr({
+                    role: 'progressbar',
+                    'aria-min': min,
+                    'aria-max': max,
+                    'aria-valuenow': value
+                }).style('width', (value - min)/(max - min) + '%');
+                // TODO Allow for "minutes left" style label (computed if flag set?)
+                this.span.text(value + this.model.labelSuffix);
+            }
+        });
+        
+        return ($$[moduleName] = $$.CollectionView.extend({
+            options : {
+                tagName : 'span',
+                itemView: ItemView
+            },
+    
+            initialize : function(options) {
+                $$.View.prototype.initialize.call(this, options);
+                this.mixin([$$.HasModel]);
+                _(this).bindAll('render');
+                $(this.el).addClass('progress');
+                if (typeof this.model !== 'Collection') {
+                    this.model = new $$.Collection(this.model);    
+                }
+            },
+    
+            render : function() {
+                var content = this.resolveContent();
+                this._observeModel(this.render);
+                $(this.el).text(content);
+                return this;
+            }
+        }));
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'ProgressBar', [
+    'backstrap',
+    'backstrap/CollectionView',
+    'backstrap/HasModel'
+]));
+
+/**
  * A Backbone View that displays a model-bound radio-button group.
  * Largely from Backbone-UI's RadioGroup class,
  * with Bootstrap decoration.
@@ -4685,6 +4799,79 @@ if(window.jQuery) {
     'backstrap/HasError',
     'backstrap/HasFormLabel',
     'backstrap/HasModel'
+]));
+
+/**
+ * A Backbone View that displays model-bound content with Bootstrap decoration.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @copyright 2014 The Trustees of Princeton University.
+ * @license MIT
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return ($$[moduleName] = $$.View.extend({
+            options : {
+                size: 'default',
+                context: 'default'
+            },
+
+            tagName : 'span',
+
+            initialize : function(options) {
+                $$.View.prototype.initialize.call(this, options);
+                this.mixin([$$.HasModel, $$.HasGlyph]);
+                _(this).bindAll('render');
+                this.$el.addClass('text-' + $$._mapSize(this.options.size));
+                if (this.options.size !== this.options.context) {
+                    this.$el.addClass(' text-' + this.options.context);
+                }
+            },
+
+            render : function() {
+                var content = this.resolveContent();
+
+                this._observeModel(this.render);
+
+                this.$el.empty();
+
+                var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
+                var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
+
+                this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, content, this.el);
+
+                return this;
+            }
+        }));
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'Span', [
+    'backstrap',
+    'backstrap/View',
+    'backstrap/HasModel',
+    'backstrap/HasGlyph'
 ]));
 
 /**

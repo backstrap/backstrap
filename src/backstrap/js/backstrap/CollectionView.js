@@ -1,6 +1,10 @@
 /**
  * A generic Backbone View for displaying Collection data.
  * Based on Backbone-UI CollectionView.
+ *
+ * The view will start listening to add/remove/change events
+ * on the Collection when it receives an 'attach' event,
+ * and will suspend listening when it receives a 'detach' event.
  * 
  * @author Kevin Perry, perry@princeton.edu
  * @copyright 2014 The Trustees of Princeton University.
@@ -36,8 +40,34 @@
             this.placeItem(content, model, index);
         };
 
+        /*
+         * Set up model change listeners.
+         */
+        var listenToModel = function (model, onOff) {
+            if (model) {
+                var actions = {
+                    add:    onItemAdded,
+                    remove: onItemRemoved,
+                    reset:  this.render
+                };
+
+                if (this.options.renderOnChange) {
+                    var props = this.options.renderOnChange;
+                    if (props === true) {
+                        actions.change = onItemChanged;
+                    } else {
+                        (_.isArray(props) ? props : [props]).forEach(function (prop) {
+                            this['change:' + prop] = onItemChanged;
+                        }, actions);
+                    }
+                }  
+
+                (onOff ? model.on : model.off).call(model, actions, this);
+            }
+        };
+
         var onItemAdded = function (model, list, options) {
-            // First ensure that we haven't already rendered an item for this model.
+            // First, ensure that we haven't already rendered an item for this model.
             if (this.itemViews[model.cid]) {
                 return;
             }
@@ -115,6 +145,9 @@
                 // Render the the collection view on change in model.
                 renderOnChange: true,
                 
+                // Whether to start listening to model events immediately or wait for 'attach'.
+                attached: true,
+                
                 // Set this to true to generate first, last, even, and odd classnames on rows.
                 generateRowClassNames: false
             },
@@ -125,22 +158,10 @@
 
             initialize: function (options) {
                 $$.View.prototype.initialize.call(this, options);
-                if (this.model) {
-                    this.model.on('add', onItemAdded, this);
-                    if (this.options.renderOnChange){
-                        var renderOnChange = this.options.renderOnChange;
-                        if (_.isArray(renderOnChange)) {
-                            renderOnChange.forEach(function (property) {
-                                this.model.on('change:' + property, onItemChanged, this);
-                            }, this);
-                        } else if (renderOnChange === true) {
-                            this.model.on('change', onItemChanged, this);
-                        } else { // Assume string
-                            this.model.on('change:' + renderOnChange, onItemChanged, this);
-                        }
-                    }  
-                    this.model.on('remove', onItemRemoved, this);
-                    this.model.on('reset', this.render, this);
+                this.on('attach', _(listenToModel).bind(this, this.model, true));
+                this.on('detach', _(listenToModel).bind(this, this.model, false));
+                if (this.options.attached) {
+                    listenToModel.call(this, this.model, true);
                 }
             },
 
@@ -158,7 +179,7 @@
                 } else {
                     this.placeEmpty(this._emptyContent);
                 }
-                
+
                 return this;
             },
             

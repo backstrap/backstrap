@@ -617,14 +617,17 @@ Extensions or instances of CollectionView may alter its behavior by overriding t
 <code>onItemChanged</code>, and
 <code>onItemRemoved</code>.
 You may also provide the following attributes to the constructor:
-<code>model</code>,
-<code>itemView</code>,
-<code>itemViewOptions</code>,
-<code>emptyContent</code>,
-<code>onItemClick</code>,
-<code>maxHeight</code>,
-<code>renderOnChange</code>, and
-<code>generateRowClassNames</code>.
+<ul>
+<li><code>model</code> - the Collection to display</li>
+<li><code>itemView</code> - a View prototype for display of one item</li>
+<li><code>itemViewOptions</code> - optoins to pass to the itemView initializer</li>
+<li><code>emptyContent</code> - content to display when collection is empty</li>
+<li><code>onItemClick</code> - a click callback to be assigned to each itemView instance</li>
+<li><code>maxHeight</code> - max height of the view (view will scroll)</li>
+<li><code>attached</code> - whether to start out listening to collection change events</li>
+<li><code>renderOnChange</code> - whether to re-render on itme "change" events</li>
+<li><code>generateRowClassNames</code> - whether to generate row classes "first", "last", "even", "odd"</li>
+</ul>
 Example:</p>
 
 <pre><code>new $$.CollectionView({
