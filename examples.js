@@ -105,8 +105,8 @@ require(['jquery', 'backstrap', 'moment'],
             "                       { color: 'chartreuse', name: 'Chartreuse' },\n" +
             "                       { color: 'celeste', name: 'Celeste' }\n" +
             "                   ],\n" +
-            "                   altValueContent: 'color'\n" +
-            "                   altLabelContent: 'name',\n" +
+            "                   altValueContent: 'color',\n" +
+            "                   altLabelContent: 'name'\n" +
             "               }).render().el)\n" +
             "        }\n" + 
             "    ]]\n" + 
