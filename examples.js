@@ -92,21 +92,21 @@ require(['jquery', 'backstrap', 'moment'],
             "        },\n" +
             "        { md: 4, content: $$.div({ context: 'primary' },\n" +
             "            $$.plain.label('Color: '),\n" +
-            "            new $$.TextField({model: bicycles.at(0), content: 'color'}).render().el)\n" +
-            "        }\n" + 
-            "    ],[\n" +
-            "        { md: 4, content: $$.div({ context: 'primary' },\n" +
-            "            $$.plain.label('Color: '),\n" +
             "            new $$.Select({model: bicycles.at(0), content: 'color',\n" +
-            "                   alternatives: new $$.Collection([\n" +
-            "                       { id: 'red', name: 'Red' },\n" +
-            "                       { id: 'blue', name: 'Blue' },\n" +
-            "                       { id: 'green', name: 'Green' },\n" +
-            "                       { id: 'black', name: 'Black' },\n" +
-            "                       { id: 'celeste', name: 'Celeste' }\n" +
-            "                   ]),\n" +
+            "                   alternatives: [\n" +
+            "                       { color: 'red', name: 'Red' },\n" +
+            "                       { color: 'blue', name: 'Blue' },\n" +
+            "                       { color: 'green', name: 'Green' },\n" +
+            "                       { color: 'white', name: 'White' },\n" +
+            "                       { color: 'silver', name: 'Silver' },\n" +
+            "                       { color: 'yellow', name: 'Yellow' },\n" +
+            "                       { color: 'titanium', name: 'Titanium' },\n" +
+            "                       { color: 'pink', name: 'Pink' },\n" +
+            "                       { color: 'chartreuse', name: 'Chartreuse' },\n" +
+            "                       { color: 'celeste', name: 'Celeste' }\n" +
+            "                   ],\n" +
+            "                   altValueContent: 'color'\n" +
             "                   altLabelContent: 'name',\n" +
-            "                   altValueContent: 'id'\n" +
             "               }).render().el)\n" +
             "        }\n" + 
             "    ]]\n" + 
