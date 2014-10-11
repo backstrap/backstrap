@@ -94,6 +94,21 @@ require(['jquery', 'backstrap', 'moment'],
             "            $$.plain.label('Color: '),\n" +
             "            new $$.TextField({model: bicycles.at(0), content: 'color'}).render().el)\n" +
             "        }\n" + 
+            "    ],[\n" +
+            "        { md: 4, content: $$.div({ context: 'primary' },\n" +
+            "            $$.plain.label('Color: '),\n" +
+            "            new $$.Select({model: bicycles.at(0), content: 'color',\n" +
+            "                   alternatives: new $$.Collection({\n" +
+            "                       { id: 'red', name: 'Red' },\n" +
+            "                       { id: 'blue', name: 'Blue' },\n" +
+            "                       { id: 'green', name: 'Green' },\n" +
+            "                       { id: 'black', name: 'Black' },\n" +
+            "                       { id: 'celeste', name: 'Celeste' }\n" +
+            "                   }),\n" +
+            "                   altLabelContent: 'name',\n" +
+            "                   altValueContent: 'id'\n" +
+            "               }).render().el)\n" +
+            "        }\n" + 
             "    ]]\n" + 
             "})");
     }

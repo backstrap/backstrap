@@ -851,6 +851,29 @@ For example:</p>
 <p>altValueContent defaults to altLabelContent.</p>
 
 <h4>
+<a name="select" class="anchor" href="#select"><span class="octicon octicon-link"></span></a>Select</h4>
+
+<p>Creates a select list whose value is taken from the bound Model
+and whose choices are taken from the bound Collection of alternatives.
+For example:</p>
+
+<pre><code>var select = new $$.Select({
+    model: new $$.Model({place: 'Alaska'}),
+    content: 'place',
+    alternatives: new $$.Collection({
+        { id: 1, name: 'Alaska' },
+        { id: 2, name: 'Maine' },
+        { id: 3, name: 'Florida' },
+        { id: 4, name: 'Nevada' }
+    }),
+    altLabelContent: 'name',
+    altValueContent: 'id'
+});
+</code></pre>
+
+<p>altValueContent defaults to altLabelContent.</p>
+
+<h4>
 <a name="table" class="anchor" href="#table"><span class="octicon octicon-link"></span></a>Table</h4>
 
 <p>The Backbone-UI TableView, decorated with Bootstrap classes.
