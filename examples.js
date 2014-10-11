@@ -98,13 +98,13 @@ require(['jquery', 'backstrap', 'moment'],
             "        { md: 4, content: $$.div({ context: 'primary' },\n" +
             "            $$.plain.label('Color: '),\n" +
             "            new $$.Select({model: bicycles.at(0), content: 'color',\n" +
-            "                   alternatives: new $$.Collection({\n" +
+            "                   alternatives: new $$.Collection([\n" +
             "                       { id: 'red', name: 'Red' },\n" +
             "                       { id: 'blue', name: 'Blue' },\n" +
             "                       { id: 'green', name: 'Green' },\n" +
             "                       { id: 'black', name: 'Black' },\n" +
             "                       { id: 'celeste', name: 'Celeste' }\n" +
-            "                   }),\n" +
+            "                   ]),\n" +
             "                   altLabelContent: 'name',\n" +
             "                   altValueContent: 'id'\n" +
             "               }).render().el)\n" +
