@@ -246,6 +246,8 @@ For example:</p>
 
 <p>The <code>$$.form()</code> method creates a <code>form</code> tag decorated with the attribute 'role="form"'.</p>
 
+<p><code>$$.plain.form()</code> gives you a bare <code>form</code> tag.</p>
+
 <h4>
 <a name="formgroup" class="anchor" href="#formgroup"><span class="octicon octicon-link"></span></a>formGroup</h4>
 
@@ -325,7 +327,7 @@ and optionally with "label-*" classes for sizing and context.</p>
 
 <p><code>$$.plain.label()</code> gives you a bare <code>label</code> tag.</p>
 
-<p>See also <a href="#spanlabel">spanlabel</a>.</p>
+<p>See also <a href="#spanLabel">spanLabel</a>.</p>
 
 <h4>
 <a name="linklist" class="anchor" href="#linklist"><span class="octicon octicon-link"></span></a>linkList</h4>
@@ -455,9 +457,25 @@ to embed them within a <code>div</code> with the Bootstrap "panel-heading" or "p
 <p>The <code>$$.pageHeader()</code> method creates a <code>div</code> tag decorated with the Bootstrap "page-header" class.</p>
 
 <h4>
-<a name="spanlabel" class="anchor" href="#spanlabel"><span class="octicon octicon-link"></span></a>spanlabel</h4>
+<a name="plain" class="anchor" href="#plain"><span class="octicon octicon-link"></span></a>plain</h4>
 
-<p>The <code>$$.spanlabel()</code> method creates a <code>span</code> tag decorated with the Bootstrap "label" class,
+<p>The <code>$$.plain</code> object provides an alternate means of access to the plain HTML tag generators. 
+For tag names that also have Bootstrap decoration classes of the same name,
+use $$.name() for the Bootstrap version, and $$.plain.name() for the plain HTML version.
+Use this to get plain versions of button, form, input, label, and table tags.
+</p>
+
+<pre><code>$$.plain.button();
+$$.plain.form();
+$$.plain.input();
+$$.plain.label();
+$$.plain.table();
+</code></pre>
+
+<h4>
+<a name="spanLabel" class="anchor" href="#spanLabel"><span class="octicon octicon-link"></span></a>spanLabel</h4>
+
+<p>The <code>$$.spanLabel()</code> method creates a <code>span</code> tag decorated with the Bootstrap "label" class,
 and optionally with "label-*" classes for sizing and context.</p>
 
 <h4>
