@@ -3285,11 +3285,13 @@ if(window.jQuery) {
         var parseCellSpec = function (spec) {
             var str = 'col';
             for (var prop in spec) {
-                if (prop in sizeMap) {
-                    str += ' col-' + sizeMap[prop] + '-' + spec[prop];
-                }
                 if (prop === 'className') {
                     str += ' ' + spec[prop];
+                } else {
+                    var sz = $$._mapSize(prop);
+                    if (sz) {
+                        str += ' col-' + sz + '-' + spec[prop];
+                    }
                 }
             }
             return str;
