@@ -53,6 +53,7 @@
                 "js/backstrap/DatePicker.js",
                 "js/backstrap/Dropdown.js",
                 "js/backstrap/Glyph.js",
+                "js/backstrap/grid.js",
                 "js/backstrap/Grid.js",
                 "js/backstrap/Label.js",
                 "js/backstrap/Link.js",
