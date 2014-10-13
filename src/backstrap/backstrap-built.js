@@ -1,4 +1,4 @@
-/*
+/**
  * This is a bit of a kluge.  We need to differentiate between
  * the case where we're loading from the Composer component-builder
  * components/backstrap/backstrap-built.js (which has an AMD define()
@@ -8,6 +8,8 @@
  * We test for its existence within the module scripts, and then at the end
  * (see _cleanup.js), we execute the _$$_backstrap_built_flag function
  * causing it to remove itself from our global context.
+ * 
+ * @author Kevin Perry perry@princeton.edu
  */
 (function (context)
 {
@@ -48,6 +50,7 @@
  *     );
  *   }
  *
+ * @author Kevin Perry perry@princeton.edu
  * @license MIT
  **/
 (function (context)
@@ -230,7 +233,7 @@
 
                 // if the argument is an array, we append each element
                 else if (Object.prototype.toString.call(arg) === '[object Array]') {
-                    for(var j=0; j<arg.length; j++) {
+                    for (var j=0; j<arg.length; j++) {
                         var child = arg[j];
                         if (child.nodeType === 1) {
                             el.appendChild(child);
@@ -318,66 +321,35 @@
             return el;
         };
 
-        // Grid helper functions.
-        var appendGridRows = function (layout) {
-            for (var r=0; r<layout.length; r++) {
-                this.appendRow(layout[r]);
-            }
-        };
-
-        var parseCellSpec = function (spec) {
-            var str = 'col';
-            for (var prop in spec) {
-                if (prop in sizeMap) {
-                    str += ' col-' + sizeMap[prop] + '-' + spec[prop];
-                }
-                if (prop === 'className') {
-                    str += ' ' + spec[prop];
-                }
-            }
-            return str;
-        };
-
-        var appendGridRow = function (layout) {
-            var rowdiv = backstrap.div({className: 'row'});
-            $(this).append(rowdiv);
-            for (var c=0; c<layout.length; c++) {
-                var cell = layout[c];
-                var cellClass;
-                var content = '';
-                if (cell !== null && typeof cell === 'object') {
-                    cellClass = parseCellSpec(cell);
-                    content = ('content' in cell) ? cell.content : '';
-                } else {
-                    cellClass = 'col col-md-' + cell;
-                }
-                $(rowdiv).append(backstrap.div({className: cellClass}, content));
-            }
-        };
-
         // html 4 tags
-        var deprecatedTags = ['acronym', 'applet', 'basefont', 'big', 'center', 'dir',
-                              'font', 'frame', 'frameset', 'noframes', 'strike', 'tt', 'u', 'xmp'];
+        var deprecatedTags = ['acronym', 'applet', 'basefont', 'big', 'center',
+                    'dir', 'font', 'frame', 'frameset', 'noframes',
+                    'strike', 'tt', 'xmp'];
 
         // html 5 tags
-        var tags = ['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b',
-                    'base', 'bdo', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption',
-                    'cite', 'code', 'col', 'colgroup', 'command', 'datalist', 'dd', 'del',
-                    'details', 'dfn', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset',
-                    'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5',
-                    'h6', 'head', 'header', 'hgroup', 'hr', 'html', 'i', 'iframe', 'img',
-                    'input', 'ins', 'keygen', 'kbd', 'label', 'legend', 'li', 'link', 'map',
-                    'mark', 'menu', 'meta', 'meter', 'nav', 'noscript', 'object', 'ol',
-                    'optgroup', 'option', 'output', 'p', 'param', 'pre', 'progress', 'q', 'rp',
-                    'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'small',
-                    'source', 'span', 'strong', 'style', 'sub', 'summary', 'sup', 'table',
-                    'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr',
-                    'ul', 'var', 'video', 'wbr'].concat(deprecatedTags);
+        var tags = ['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio',
+                    'b', 'base', 'bdi', 'bdo', 'blockquote', 'body', 'br', 'button',
+                    'canvas', 'caption', 'cite', 'code', 'col', 'colgroup',
+                    'datalist', 'dd', 'del', 'details',
+                    'dfn', 'dialog', 'div', 'dl', 'dt',
+                    'em', 'embed', 'fieldset', 'figcaption', 'figure', 'footer', 'form',
+                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                    'head', 'header', 'hgroup', 'hr', 'html',
+                    'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen',
+                    'label', 'legend', 'li', 'link',
+                    'main', 'map', 'mark', 'menu', 'menuItem', 'meta', 'meter',
+                    'nav', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output',
+                    'p', 'param', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby',
+                    's', 'samp', 'script', 'section', 'select', 'small', 'source',
+                    'span', 'strong', 'style', 'sub', 'summary', 'sup',
+                    'table', 'tbody', 'td', 'textarea', 'tfoot', 'th',
+                    'thead', 'time', 'title', 'tr', 'track',
+                    'u', 'ul', 'var', 'video', 'wbr'].concat(deprecatedTags);
 
         // Bootstrap component pseudo-tags
         var bootstrapComponents = ['alert', 'badge', 'breadcrumb', 'button',
-                    'buttonGroup', 'buttonToolbar', 'container', 'form',
-                    'formGroup', 'input', 'inputGroup', 'inputGroupAddon',
+                    'buttonGroup', 'buttonToolbar', 'caret', 'container',
+                    'form', 'formGroup', 'input', 'inputGroup', 'inputGroupAddon',
                     'jumbotron', 'label', 'linkList', 'linkListItem', 'list',
                     'listItem', 'media', 'pageHeader', 'pagination', 'panel',
                     'spanLabel', 'table', 'thumbnail', 'well'];
@@ -389,6 +361,7 @@
                 breadcrumb: 'ol',
                 buttonGroup: 'div',
                 buttonToolbar: 'div',
+                caret: 'span',
                 container: 'div',
                 formGroup: 'div',
                 inputGroup: 'div',
@@ -436,14 +409,14 @@
 
         // Save all tag methods as properties of $$.plain
         // so we can access them even if we overwrite some with Bootstrap functionality.
-        for(var i=0; i<tags.length; i++) {
+        for (var i=0; i<tags.length; i++) {
             backstrap.plain[tags[i]] = backstrap[tags[i]] = makeApply(tags[i], null);
         }
 
         // Special tags for Bootstrap support.
         // Note that some of these will overwrite regular HTML tags.
         // Use $$.plain.* for the vanilla HTML versions.
-        for(var i=0; i<bootstrapComponents.length; i++) {
+        for (var i=0; i<bootstrapComponents.length; i++) {
             var name = bootstrapComponents[i];
             backstrap[name] = makeApply(
                     (bootstrapTags[name] ? bootstrapTags[name] : name),
@@ -459,35 +432,6 @@
         // shortcut for creating glyphicons.
         backstrap.glyph = function (name) {
             return backstrap.plain.span({className: 'glyphicon glyphicon-' + name});
-        };
-
-        // shortcut for creating Bootstrap grids.
-        backstrap.grid = function () {
-            var cn = 'container';
-            var layout = [[ 12 ]];
-            if (typeof(arguments[0]) === 'object') {
-                if ('layout' in arguments[0]) {
-                    layout = arguments[0].layout;
-                    delete arguments[0].layout;
-                }
-                if ('fluid' in arguments[0]) {
-                    cn = arguments[0].fluid ? 'container-fluid' : cn;
-                    delete arguments[0].fluid;
-                }
-            }
-            var el = backstrap.apply(this,
-                ['div', null].concat(Array.prototype.slice.call(arguments)));
-            $(el).addClass(cn);
-            el.appendRows = appendGridRows;
-            el.appendRow = appendGridRow;
-            el.getRow = function () {
-                return $('> *:nth-child('+row+') ', el);
-            };
-            el.getCell = function (row, col) {
-                return $('> *:nth-child('+row+') > *:nth-child(' + col + ') ', el);
-            };
-            el.appendRows(layout);
-            return el;
         };
 
         // registers a new 'tag' that can be used to automate
@@ -1027,7 +971,6 @@ if(window.jQuery) {
 /**
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  */
 (function(context, moduleName, requirements)
 {
@@ -1144,7 +1087,6 @@ if(window.jQuery) {
  * A generic Backbone Model object, with extensions.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -1207,7 +1149,6 @@ if(window.jQuery) {
  * A generic Backbone Collection object, with extensions.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -1277,7 +1218,6 @@ if(window.jQuery) {
  * and will suspend listening when it receives a 'detach' event.
  * 
  * @author Kevin Perry, perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function (context, moduleName, requirements)
@@ -1372,11 +1312,13 @@ if(window.jQuery) {
 
         var onItemRemoved = function (model, list, options) {
             var view = this.itemViews[model.cid];
-            var liOrTrElement = view.el.parentNode;
-            if (view && liOrTrElement && liOrTrElement.parentNode) {
-                liOrTrElement.parentNode.removeChild(liOrTrElement);
+            if (view) {
+                var liOrTrElement = view.el.parentNode;
+                if (liOrTrElement && liOrTrElement.parentNode) {
+                    liOrTrElement.parentNode.removeChild(liOrTrElement);
+                }
+                delete(this.itemViews[model.cid]);
             }
-            delete(this.itemViews[model.cid]);
             if (this.itemViews.length === 0) {
                 // Need to render the empty content.
                 this.render();
@@ -1523,7 +1465,6 @@ if(window.jQuery) {
  * Based on Backbone-UI.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -1628,7 +1569,6 @@ if(window.jQuery) {
  * A mixin for dealing with errors in widgets 
  *
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -1754,7 +1694,6 @@ if(window.jQuery) {
  * A mixin for dealing with focus in / focus out
  *
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -1804,7 +1743,6 @@ if(window.jQuery) {
  * A mixin for dealing with glyphs in widgets.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  */
 (function(context, moduleName, requirements)
 {
@@ -1857,7 +1795,6 @@ if(window.jQuery) {
  * A mixin for dealing with glyphs in widgets 
  *
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -1929,7 +1866,6 @@ if(window.jQuery) {
  * A mixin for those views that are model bound.
  *
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  */
 (function(context, moduleName, requirements)
 {
@@ -2018,7 +1954,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function (context, moduleName, requirements)
@@ -2028,16 +1963,19 @@ if(window.jQuery) {
         var ensureProperPosition = function (model) {
             if (this.model.comparator) {
                 this.model.sort({silent: true});
-                var itemEl = this.itemViews[model.cid].el.parentNode;
-                var currentIndex = _(this.collectionEl.childNodes).indexOf(itemEl, true);
-                var properIndex = this.model.indexOf(model);
-                if (currentIndex !== properIndex) {
-                    itemEl.parentNode.removeChild(itemEl);
-                    var refNode = this.collectionEl.childNodes[properIndex];
-                    if (refNode) {
-                        this.collectionEl.insertBefore(itemEl, refNode);
-                    } else {
-                        this.collectionEl.appendChild(itemEl);
+                var view = this.itemViews[model.cid];
+                if (view) {
+                    var itemEl = this.itemViews[model.cid].el.parentNode;
+                    var currentIndex = _(this.collectionEl.childNodes).indexOf(itemEl, true);
+                    var properIndex = this.model.indexOf(model);
+                    if (currentIndex !== properIndex) {
+                        itemEl.parentNode.removeChild(itemEl);
+                        var refNode = this.collectionEl.childNodes[properIndex];
+                        if (refNode) {
+                            this.collectionEl.insertBefore(itemEl, refNode);
+                        } else {
+                            this.collectionEl.appendChild(itemEl);
+                        }
                     }
                 }
             }
@@ -2045,28 +1983,38 @@ if(window.jQuery) {
 	
         var ensureProperPositions = function (collection) {
             collection.models.forEach(function (model, index) {
-                var itemEl = this.itemViews[model.cid].el.parentNode;
-                itemEl.parentNode.removeChild(itemEl);
-                var refNode = this.collectionEl.childNodes[index];
-                if (refNode) {
-                    this.collectionEl.insertBefore(itemEl, refNode);
-                } else {
-                    this.collectionEl.appendChild(itemEl);
+                if (this.itemViews[model.cid]) {
+                    var itemEl = this.itemViews[model.cid].el.parentNode;
+                    itemEl.parentNode.removeChild(itemEl);
+                    var refNode = this.collectionEl.childNodes[index];
+                    if (refNode) {
+                        this.collectionEl.insertBefore(itemEl, refNode);
+                    } else {
+                        this.collectionEl.appendChild(itemEl);
+                    }
                 }
             }, this);
             this.renderClassNames(this.collectionEl);
+        };
+        
+        var listenToSort = function (model, onOff) {
+            if (model) {
+                (onOff ? model.on : model.off).call(model, 'sort', ensureProperPositions, this);
+            }
         };
 
         return ($$[moduleName] = $$.CollectionView.extend({
             initialize: function (options) {
                 $$.CollectionView.prototype.initialize.call(this, options);
 
-                if (this.model) {
-                    this.model.bind('sort', ensureProperPositions, this);
-                }
-
                 $(this.el).addClass('list');
                 this.collectionEl = $$.ul({className: 'list-group'});
+
+                this.on('attach', _(listenToSort).bind(this, this.model, true));
+                this.on('detach', _(listenTosort).bind(this, this.model, false));
+                if (this.options.attached) {
+                    listenToSort.call(this, this.model, true);
+                }
             },
 
             render: function () {
@@ -2131,7 +2079,6 @@ if(window.jQuery) {
  * Use model and content options to set the content of the badge.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  * 
  */
@@ -2184,7 +2131,6 @@ if(window.jQuery) {
  * A basic model-bound Bootstrap navbar object.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -2341,7 +2287,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -2461,7 +2406,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -2716,7 +2660,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -2848,7 +2791,6 @@ if(window.jQuery) {
  * context name bound to model data.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -2904,7 +2846,6 @@ if(window.jQuery) {
  * A Backbone View that displays a Bootstrap container div.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -2947,7 +2888,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -3142,7 +3082,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -3151,23 +3090,20 @@ if(window.jQuery) {
     {
         var ItemView = $$.View.extend({
             tagName: function () {
-                if (this.model.get('divider') || this.model.get('separator') || this.model.get('header')) {
-                    return 'span';
-                } else {
-                    return 'a';
-                }
+                var elem = this.model.get('element');
+                return (elem === 'divider' || elem === 'separator' || elem === 'header') ? 'span' : 'a';
             },
     
-            render: function render() {
-                if (this.model.get('divider') || this.model.get('separator')) {
-                } else if (this.model.get('header')) {
+            initialize: function render() {
+                var elem = this.model.get('element');
+                if (elem === 'header') {
                     this.$el.text(this.model.get('label'));
-                } else {
-                    this.$el.addClass('menuitem')
-                        .attr('role', 'menuitem')
-                        .attr('tabindex', -1)
-                        .attr('href', this.model.get('href'))
-                        .text(this.model.get('label'));
+                } else  if (elem !== 'divider' && elem !== 'separator') {
+                    this.$el.addClass('menuitem').attr({
+                        role: 'menuitem',
+                        tabindex: -1,
+                        href: this.model.get('href')
+                    }).append(this.model.get('label'));
                 }
                 return this;
             }
@@ -3176,48 +3112,64 @@ if(window.jQuery) {
     
         return ($$[moduleName] = $$.List.extend({
             className: 'dropdown',
-            align: '',
     
             initialize: function (options) {
                 this.options.itemView = ItemView;
                 $$.List.prototype.initialize.call(this, options);
-                this.button = new $$.Button({
-                    tagName: 'button',
-                    className: 'dropdown-toggle',
-                    id: this.options.buttonId,
-                    content: this.options.buttonLabel + ' ',
-                    onClick: function () { return true; } // allow bubble-up to Bootstrap's Dropdown event handler!
-                });
-                this.button.render();
-                this.button.$el.attr('type', 'button');
-                this.button.$el.attr('data-toggle', 'dropdown');
-                this.button.$el.append($$.span({className: 'caret'}));
-                if ('align' in this.options) {
-                    this.align = this.options.align==='right' ? ' dropdown-menu-right' : ' dropdown-menu-left';
+
+                this.button = $$.button({
+                        className: 'dropdown-toggle',
+                        context: this.options.context,
+                        id: _.uniqueId('Bkp'),
+                        type: 'button',
+                        'data-toggle': 'dropdown'
+                    },
+                    String.fromCharCode(160), // &nbsp; to get proper height.
+                    $$.caret()
+                );
+                // allow bubble-up to Bootstrap's Dropdown event handler
+                $(this.button).on('click', function () { return true; });
+                
+                if (this.options.split) {
+                    this.$el.addClass('btn-group');
+                    this.labelButton = $$.button({
+                            context: this.options.context,
+                            type: 'button'
+                        },
+                        this.options.buttonLabel
+                    );
+                    $(this.button).append($$.span({className: 'sr-only'}, 'Toggle Dropdown'));
+                } else {
+                    $(this.button).prepend(this.options.buttonLabel);
                 }
+                
+                if ('align' in this.options) {
+                    $(this.collectionEl).addClass(this.options.align === 'right' ?
+                        'dropdown-menu-right' :
+                        'dropdown-menu-left'
+                    );
+                }
+                
+                $(this.collectionEl).addClass('dropdown-menu').attr({
+                    role: 'menu',
+                    'aria-labelledby': this.button.id
+                });
             },
-    
+            
             render: function () {
                 $$.List.prototype.render.call(this);
-                this.$el.prepend(this.button.el);
-                this.$('> ul').addClass('dropdown-menu' + this.align).attr({
-                    role: 'menu',
-                    'aria-labelledby': this.options.buttonId
-                });
+                this.$el.prepend(this.button);
+                this.$el.prepend(this.labelButton);
                 return this;
             },
             
-            // renders an item for the given model, at the given index
-            _renderItem : function(model, index) {
-                var li = $$.List.prototype._renderItem.call(this, model, index);
-                var $li = $(li);
-                $li.attr('role', 'presentation');
-                if (model.get('divider') || model.get('separator')) {
-                    $li.addClass('divider');
-                } else if (model.get('header')) {
-                    $li.addClass('dropdown-header');
-                }
-                return li;
+            placeItem: function (content, model, index) {
+                var elem = model.get('element');
+                this.collectionEl.appendChild($$.li({
+                    role: 'presentation',
+                    className: (elem === 'divider' || elem === 'separator') ? 'divider' :
+                        (elem === 'header') ? 'dropdown-header' : ''
+                }, content));
             }
         }));
     };
@@ -3249,7 +3201,6 @@ if(window.jQuery) {
  * context name bound to model data.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -3317,10 +3268,107 @@ if(window.jQuery) {
 }(this, 'Glyph', [ 'backstrap', 'backstrap/View', 'backstrap/HasModel' ]));
 
 /**
+ * Creates a Bootstrap grid layout object.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        var appendGridRows = function (layout) {
+            for (var r=0; r<layout.length; r++) {
+                this.appendRow(layout[r]);
+            }
+        };
+
+        var parseCellSpec = function (spec) {
+            var str = 'col';
+            for (var prop in spec) {
+                if (prop in sizeMap) {
+                    str += ' col-' + sizeMap[prop] + '-' + spec[prop];
+                }
+                if (prop === 'className') {
+                    str += ' ' + spec[prop];
+                }
+            }
+            return str;
+        };
+
+        var appendGridRow = function (layout) {
+            var rowdiv = backstrap.div({className: 'row'});
+            $(this).append(rowdiv);
+            for (var c=0; c<layout.length; c++) {
+                var cell = layout[c];
+                var cellClass;
+                var content = '';
+                if (cell !== null && typeof cell === 'object') {
+                    cellClass = parseCellSpec(cell);
+                    content = ('content' in cell) ? cell.content : '';
+                } else {
+                    cellClass = 'col col-md-' + cell;
+                }
+                $(rowdiv).append(backstrap.div({className: cellClass}, content));
+            }
+        };
+        
+        return ($$[moduleName] = function () {
+            var layout;
+            var cn = 'container';
+            
+            layout = [[12]];
+            if (typeof(arguments[0]) === 'object') {
+                if ('layout' in arguments[0]) {
+                    layout = arguments[0].layout;
+                    delete arguments[0].layout;
+                }
+                if ('fluid' in arguments[0]) {
+                    cn = arguments[0].fluid ? 'container-fluid' : cn;
+                    delete arguments[0].fluid;
+                }
+            }
+            var el = backstrap.apply(this,
+                ['div', null].concat(Array.prototype.slice.call(arguments)));
+            $(el).addClass(cn);
+            el.appendRows = appendGridRows;
+            el.appendRow = appendGridRow;
+            el.getRow = function () {
+                return $('> *:nth-child('+row+') ', el);
+            };
+            el.getCell = function (row, col) {
+                return $('> *:nth-child('+row+') > *:nth-child(' + col + ') ', el);
+            };
+            el.appendRows(layout);
+            return el;
+        });
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'grid', [ 'backstrap' ]));
+
+/**
  * A Backbone View that displays a Bootstrap grid.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -3424,7 +3472,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -3501,7 +3548,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -3597,7 +3643,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -3810,7 +3855,6 @@ if(window.jQuery) {
  * named properties change; or false to do nothing.
  *
  * @author Kevin Perry, perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  */
 (function (context, moduleName, requirements)
 {
@@ -3877,7 +3921,6 @@ if(window.jQuery) {
  * and "stacked: true" for stacked pills.
  *
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  */
 (function(context, moduleName, requirements)
 {
@@ -3959,7 +4002,6 @@ if(window.jQuery) {
  *     role: 'navigation' - For accessibility
  *
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  */
 (function(context, moduleName, requirements)
 {
@@ -4079,7 +4121,6 @@ if(window.jQuery) {
  * with $$.formGroups()'s and form items.
  *
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  */
 (function(context, moduleName, requirements)
 {
@@ -4134,7 +4175,6 @@ if(window.jQuery) {
  * The navbarGroup is a $$.ul(), so you should populate it with $$.li()'s.
  *
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  */
 (function(context, moduleName, requirements)
 {
@@ -4188,7 +4228,6 @@ if(window.jQuery) {
  * A model-bound Bootstrap pills nav object.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -4248,7 +4287,6 @@ if(window.jQuery) {
  * A model-bound Bootstrap tabs nav object.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -4308,7 +4346,6 @@ if(window.jQuery) {
  * A Backbone View that displays a Bootstrap panel div.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -4351,7 +4388,6 @@ if(window.jQuery) {
  * Use model and content options to set the percent-complete of the progress bar.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -4444,7 +4480,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -4597,7 +4632,6 @@ if(window.jQuery) {
  * Re-named to Select so I can use Menu for a more elaborate component.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -4805,7 +4839,6 @@ if(window.jQuery) {
  * A Backbone View that displays model-bound content with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -4880,7 +4913,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function (context, moduleName, requirements)
@@ -5097,7 +5129,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -5240,7 +5271,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -5396,7 +5426,6 @@ if(window.jQuery) {
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
@@ -5603,8 +5632,10 @@ if(window.jQuery) {
     'backstrap/TextField'
 ]));
 
-/*
+/**
  * Cleanup our temporary global context defn's. See _setup.js for explanation.
+ * 
+ * @author Kevin Perry perry@princeton.edu
  */
 if (typeof this.define === "function" && this.define.amd) {
 	this._$$_backstrap_built_flag();

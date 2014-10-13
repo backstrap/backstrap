@@ -4,7 +4,6 @@
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function (context, moduleName, requirements)
@@ -14,16 +13,19 @@
         var ensureProperPosition = function (model) {
             if (this.model.comparator) {
                 this.model.sort({silent: true});
-                var itemEl = this.itemViews[model.cid].el.parentNode;
-                var currentIndex = _(this.collectionEl.childNodes).indexOf(itemEl, true);
-                var properIndex = this.model.indexOf(model);
-                if (currentIndex !== properIndex) {
-                    itemEl.parentNode.removeChild(itemEl);
-                    var refNode = this.collectionEl.childNodes[properIndex];
-                    if (refNode) {
-                        this.collectionEl.insertBefore(itemEl, refNode);
-                    } else {
-                        this.collectionEl.appendChild(itemEl);
+                var view = this.itemViews[model.cid];
+                if (view) {
+                    var itemEl = this.itemViews[model.cid].el.parentNode;
+                    var currentIndex = _(this.collectionEl.childNodes).indexOf(itemEl, true);
+                    var properIndex = this.model.indexOf(model);
+                    if (currentIndex !== properIndex) {
+                        itemEl.parentNode.removeChild(itemEl);
+                        var refNode = this.collectionEl.childNodes[properIndex];
+                        if (refNode) {
+                            this.collectionEl.insertBefore(itemEl, refNode);
+                        } else {
+                            this.collectionEl.appendChild(itemEl);
+                        }
                     }
                 }
             }
@@ -31,28 +33,38 @@
 	
         var ensureProperPositions = function (collection) {
             collection.models.forEach(function (model, index) {
-                var itemEl = this.itemViews[model.cid].el.parentNode;
-                itemEl.parentNode.removeChild(itemEl);
-                var refNode = this.collectionEl.childNodes[index];
-                if (refNode) {
-                    this.collectionEl.insertBefore(itemEl, refNode);
-                } else {
-                    this.collectionEl.appendChild(itemEl);
+                if (this.itemViews[model.cid]) {
+                    var itemEl = this.itemViews[model.cid].el.parentNode;
+                    itemEl.parentNode.removeChild(itemEl);
+                    var refNode = this.collectionEl.childNodes[index];
+                    if (refNode) {
+                        this.collectionEl.insertBefore(itemEl, refNode);
+                    } else {
+                        this.collectionEl.appendChild(itemEl);
+                    }
                 }
             }, this);
             this.renderClassNames(this.collectionEl);
+        };
+        
+        var listenToSort = function (model, onOff) {
+            if (model) {
+                (onOff ? model.on : model.off).call(model, 'sort', ensureProperPositions, this);
+            }
         };
 
         return ($$[moduleName] = $$.CollectionView.extend({
             initialize: function (options) {
                 $$.CollectionView.prototype.initialize.call(this, options);
 
-                if (this.model) {
-                    this.model.bind('sort', ensureProperPositions, this);
-                }
-
                 $(this.el).addClass('list');
                 this.collectionEl = $$.ul({className: 'list-group'});
+
+                this.on('attach', _(listenToSort).bind(this, this.model, true));
+                this.on('detach', _(listenTosort).bind(this, this.model, false));
+                if (this.options.attached) {
+                    listenToSort.call(this, this.model, true);
+                }
             },
 
             render: function () {

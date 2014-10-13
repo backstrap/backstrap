@@ -27,6 +27,7 @@
  *     );
  *   }
  *
+ * @author Kevin Perry perry@princeton.edu
  * @license MIT
  **/
 (function (context)
@@ -209,7 +210,7 @@
 
                 // if the argument is an array, we append each element
                 else if (Object.prototype.toString.call(arg) === '[object Array]') {
-                    for(var j=0; j<arg.length; j++) {
+                    for (var j=0; j<arg.length; j++) {
                         var child = arg[j];
                         if (child.nodeType === 1) {
                             el.appendChild(child);
@@ -297,66 +298,35 @@
             return el;
         };
 
-        // Grid helper functions.
-        var appendGridRows = function (layout) {
-            for (var r=0; r<layout.length; r++) {
-                this.appendRow(layout[r]);
-            }
-        };
-
-        var parseCellSpec = function (spec) {
-            var str = 'col';
-            for (var prop in spec) {
-                if (prop in sizeMap) {
-                    str += ' col-' + sizeMap[prop] + '-' + spec[prop];
-                }
-                if (prop === 'className') {
-                    str += ' ' + spec[prop];
-                }
-            }
-            return str;
-        };
-
-        var appendGridRow = function (layout) {
-            var rowdiv = backstrap.div({className: 'row'});
-            $(this).append(rowdiv);
-            for (var c=0; c<layout.length; c++) {
-                var cell = layout[c];
-                var cellClass;
-                var content = '';
-                if (cell !== null && typeof cell === 'object') {
-                    cellClass = parseCellSpec(cell);
-                    content = ('content' in cell) ? cell.content : '';
-                } else {
-                    cellClass = 'col col-md-' + cell;
-                }
-                $(rowdiv).append(backstrap.div({className: cellClass}, content));
-            }
-        };
-
         // html 4 tags
-        var deprecatedTags = ['acronym', 'applet', 'basefont', 'big', 'center', 'dir',
-                              'font', 'frame', 'frameset', 'noframes', 'strike', 'tt', 'u', 'xmp'];
+        var deprecatedTags = ['acronym', 'applet', 'basefont', 'big', 'center',
+                    'dir', 'font', 'frame', 'frameset', 'noframes',
+                    'strike', 'tt', 'xmp'];
 
         // html 5 tags
-        var tags = ['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b',
-                    'base', 'bdo', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption',
-                    'cite', 'code', 'col', 'colgroup', 'command', 'datalist', 'dd', 'del',
-                    'details', 'dfn', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset',
-                    'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5',
-                    'h6', 'head', 'header', 'hgroup', 'hr', 'html', 'i', 'iframe', 'img',
-                    'input', 'ins', 'keygen', 'kbd', 'label', 'legend', 'li', 'link', 'map',
-                    'mark', 'menu', 'meta', 'meter', 'nav', 'noscript', 'object', 'ol',
-                    'optgroup', 'option', 'output', 'p', 'param', 'pre', 'progress', 'q', 'rp',
-                    'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'small',
-                    'source', 'span', 'strong', 'style', 'sub', 'summary', 'sup', 'table',
-                    'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr',
-                    'ul', 'var', 'video', 'wbr'].concat(deprecatedTags);
+        var tags = ['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio',
+                    'b', 'base', 'bdi', 'bdo', 'blockquote', 'body', 'br', 'button',
+                    'canvas', 'caption', 'cite', 'code', 'col', 'colgroup',
+                    'datalist', 'dd', 'del', 'details',
+                    'dfn', 'dialog', 'div', 'dl', 'dt',
+                    'em', 'embed', 'fieldset', 'figcaption', 'figure', 'footer', 'form',
+                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                    'head', 'header', 'hgroup', 'hr', 'html',
+                    'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen',
+                    'label', 'legend', 'li', 'link',
+                    'main', 'map', 'mark', 'menu', 'menuItem', 'meta', 'meter',
+                    'nav', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output',
+                    'p', 'param', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby',
+                    's', 'samp', 'script', 'section', 'select', 'small', 'source',
+                    'span', 'strong', 'style', 'sub', 'summary', 'sup',
+                    'table', 'tbody', 'td', 'textarea', 'tfoot', 'th',
+                    'thead', 'time', 'title', 'tr', 'track',
+                    'u', 'ul', 'var', 'video', 'wbr'].concat(deprecatedTags);
 
         // Bootstrap component pseudo-tags
         var bootstrapComponents = ['alert', 'badge', 'breadcrumb', 'button',
-                    'buttonGroup', 'buttonToolbar', 'container', 'form',
-                    'formGroup', 'input', 'inputGroup', 'inputGroupAddon',
+                    'buttonGroup', 'buttonToolbar', 'caret', 'container',
+                    'form', 'formGroup', 'input', 'inputGroup', 'inputGroupAddon',
                     'jumbotron', 'label', 'linkList', 'linkListItem', 'list',
                     'listItem', 'media', 'pageHeader', 'pagination', 'panel',
                     'spanLabel', 'table', 'thumbnail', 'well'];
@@ -368,6 +338,7 @@
                 breadcrumb: 'ol',
                 buttonGroup: 'div',
                 buttonToolbar: 'div',
+                caret: 'span',
                 container: 'div',
                 formGroup: 'div',
                 inputGroup: 'div',
@@ -415,14 +386,14 @@
 
         // Save all tag methods as properties of $$.plain
         // so we can access them even if we overwrite some with Bootstrap functionality.
-        for(var i=0; i<tags.length; i++) {
+        for (var i=0; i<tags.length; i++) {
             backstrap.plain[tags[i]] = backstrap[tags[i]] = makeApply(tags[i], null);
         }
 
         // Special tags for Bootstrap support.
         // Note that some of these will overwrite regular HTML tags.
         // Use $$.plain.* for the vanilla HTML versions.
-        for(var i=0; i<bootstrapComponents.length; i++) {
+        for (var i=0; i<bootstrapComponents.length; i++) {
             var name = bootstrapComponents[i];
             backstrap[name] = makeApply(
                     (bootstrapTags[name] ? bootstrapTags[name] : name),
@@ -438,35 +409,6 @@
         // shortcut for creating glyphicons.
         backstrap.glyph = function (name) {
             return backstrap.plain.span({className: 'glyphicon glyphicon-' + name});
-        };
-
-        // shortcut for creating Bootstrap grids.
-        backstrap.grid = function () {
-            var cn = 'container';
-            var layout = [[ 12 ]];
-            if (typeof(arguments[0]) === 'object') {
-                if ('layout' in arguments[0]) {
-                    layout = arguments[0].layout;
-                    delete arguments[0].layout;
-                }
-                if ('fluid' in arguments[0]) {
-                    cn = arguments[0].fluid ? 'container-fluid' : cn;
-                    delete arguments[0].fluid;
-                }
-            }
-            var el = backstrap.apply(this,
-                ['div', null].concat(Array.prototype.slice.call(arguments)));
-            $(el).addClass(cn);
-            el.appendRows = appendGridRows;
-            el.appendRow = appendGridRow;
-            el.getRow = function () {
-                return $('> *:nth-child('+row+') ', el);
-            };
-            el.getCell = function (row, col) {
-                return $('> *:nth-child('+row+') > *:nth-child(' + col + ') ', el);
-            };
-            el.appendRows(layout);
-            return el;
         };
 
         // registers a new 'tag' that can be used to automate

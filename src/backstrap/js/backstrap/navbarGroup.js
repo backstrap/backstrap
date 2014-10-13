@@ -3,7 +3,6 @@
  * The navbarGroup is a $$.ul(), so you should populate it with $$.li()'s.
  *
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  */
 (function(context, moduleName, requirements)
 {

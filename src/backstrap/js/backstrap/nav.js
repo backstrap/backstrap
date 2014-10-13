@@ -7,7 +7,6 @@
  * and "stacked: true" for stacked pills.
  *
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  */
 (function(context, moduleName, requirements)
 {

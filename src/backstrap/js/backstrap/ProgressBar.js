@@ -4,7 +4,6 @@
  * Use model and content options to set the percent-complete of the progress bar.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
