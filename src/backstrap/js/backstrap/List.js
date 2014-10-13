@@ -61,7 +61,7 @@
                 this.collectionEl = $$.ul({className: 'list-group'});
 
                 this.on('attach', _(listenToSort).bind(this, this.model, true));
-                this.on('detach', _(listenTosort).bind(this, this.model, false));
+                this.on('detach', _(listenToSort).bind(this, this.model, false));
                 if (this.options.attached) {
                     listenToSort.call(this, this.model, true);
                 }
