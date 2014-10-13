@@ -27,7 +27,7 @@
         };
 
         var appendGridRow = function (layout) {
-            var rowdiv = backstrap.div({className: 'row'});
+            var rowdiv = $$.div({className: 'row'});
             $(this).append(rowdiv);
             for (var c=0; c<layout.length; c++) {
                 var cell = layout[c];
@@ -39,7 +39,7 @@
                 } else {
                     cellClass = 'col col-md-' + cell;
                 }
-                $(rowdiv).append(backstrap.div({className: cellClass}, content));
+                $(rowdiv).append($$.div({className: cellClass}, content));
             }
         };
         
@@ -58,7 +58,7 @@
                     delete arguments[0].fluid;
                 }
             }
-            var el = backstrap.apply(this,
+            var el = $$.apply(this,
                 ['div', null].concat(Array.prototype.slice.call(arguments)));
             $(el).addClass(cn);
             el.appendRows = appendGridRows;
