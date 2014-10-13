@@ -27,6 +27,7 @@
  *     );
  *   }
  *
+ * @author Kevin Perry perry@princeton.edu
  * @license MIT
  **/
 (function (context)

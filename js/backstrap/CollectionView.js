@@ -7,7 +7,6 @@
  * and will suspend listening when it receives a 'detach' event.
  * 
  * @author Kevin Perry, perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function (context, moduleName, requirements)
@@ -102,11 +101,13 @@
 
         var onItemRemoved = function (model, list, options) {
             var view = this.itemViews[model.cid];
-            var liOrTrElement = view.el.parentNode;
-            if (view && liOrTrElement && liOrTrElement.parentNode) {
-                liOrTrElement.parentNode.removeChild(liOrTrElement);
+            if (view) {
+                var liOrTrElement = view.el.parentNode;
+                if (liOrTrElement && liOrTrElement.parentNode) {
+                    liOrTrElement.parentNode.removeChild(liOrTrElement);
+                }
+                delete(this.itemViews[model.cid]);
             }
-            delete(this.itemViews[model.cid]);
             if (this.itemViews.length === 0) {
                 // Need to render the empty content.
                 this.render();

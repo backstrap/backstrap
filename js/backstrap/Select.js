@@ -5,7 +5,6 @@
  * Re-named to Select so I can use Menu for a more elaborate component.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)

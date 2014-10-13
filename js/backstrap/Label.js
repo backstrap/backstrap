@@ -3,7 +3,6 @@
  * with Bootstrap decoration.
  * 
  * @author Kevin Perry perry@princeton.edu
- * @copyright 2014 The Trustees of Princeton University.
  * @license MIT
  */
 (function(context, moduleName, requirements)
