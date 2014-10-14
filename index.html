@@ -695,9 +695,11 @@ provided Collection, using the model object's label and href properties.
 Also supports header and divider elements.
 The <code>Dropdown</code> is an extension of <code>$$.List</code>.
 It additionally supports a "context" property for context-coloring;
-a "buttonLabel" property (can be a string, or any DOM object) to display
-as the button label; an "align" property to set the text alignment to "roght" or "left",
-and a "split" property which, if true, makes it draw as a split dropdown button
+a "labelContent" property (can be a string, or any DOM object) to display
+as the button label; an "align" property to set the text alignment to "right" or "left",
+a "dropup" property which, if true, makes the menu appear above the button instead of below it,
+and a "type" property which can be set to "plain" (the default, good for use in navbars),
+"button", or "split-button".
 (see <a href="http://getbootstrap.com/components/#btn-dropdowns-split">the Bootstrap example</a>).
 Example:</p>
 
@@ -708,7 +710,7 @@ Example:</p>
     {element: 'divider'},
     {label: 'Delete', href: '#delete'}
 ]);
-var dropdown = new $$.Dropdown({buttonLabel: 'File', model: items}).render();
+var dropdown = new $$.Dropdown({labelContent: 'File', model: items}).render();
 </code></pre>
 
 <p>creates a dropdown with a header and three buttons; the last button is below a divider.

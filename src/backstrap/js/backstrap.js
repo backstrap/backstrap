@@ -427,71 +427,21 @@
             return sizeMap[value];
         };
 
-        /******** Backbone-UI stuff ****************/
-        
-        // Don't need this. Just hold them here as documentation.
-        /*
-        backstrap.KEYS = {
-            KEY_BACKSPACE: 8,
-            KEY_TAB:       9,
-            KEY_RETURN:   13,
-            KEY_ESC:      27,
-            KEY_LEFT:     37,
-            KEY_UP:       38,
-            KEY_RIGHT:    39,
-            KEY_DOWN:     40,
-            KEY_DELETE:   46,
-            KEY_HOME:     36,
-            KEY_END:      35,
-            KEY_PAGEUP:   33,
-            KEY_PAGEDOWN: 34,
-            KEY_INSERT:   45
-        };
-        */
+        /******** Containers for our various extension objects ****************/
 
-        backstrap.View = context.Backbone.View.extend({
-            initialize : function (options) {
-                this.options = this.options ? _({}).extend(this.options, options) : options;
-            }
-        });
+        backstrap.mixins = {};
+
+        backstrap.components = {};
+
+        backstrap.views = {};
+
+        /******** Simple Backbone aliases ****************/
 
         backstrap.Events = _.extend({}, Backbone.Events);
 
         backstrap.Router = Backbone.Router.extend({});
 
         backstrap.history = Backbone.history;
-
-        /************* Add some utility methods to $$.View **********/
-
-        _(backstrap.View.prototype).extend({
-            // resolves the appropriate content from the given choices
-            resolveContent : function (model, content, defaultOption) {
-                defaultOption = (defaultOption === null || _(defaultOption).isUndefined())
-                    ? this.options.content : defaultOption;
-                model = _(model).exists() ? model : this.model;
-                content = _(content).exists() ? content : defaultOption;
-                var hasModelProperty = _(model).exists() && _(content).exists();
-                return _(content).isFunction()
-                    ? content(model)
-                    : hasModelProperty && _(model[content]).isFunction()
-                        ? model[content]()
-                        : hasModelProperty && _(_(model).resolveProperty(content)).isFunction()
-                            ? _(model).resolveProperty(content)(model)
-                            : hasModelProperty
-                                ? _(model).resolveProperty(content)
-                                : content;
-            },
-
-            mixin : function (objects) {
-                var options = _(this.options).clone();
-
-                _(objects).each(function (object) {
-                    $.extend(true, this, object);
-                }, this);
-
-                $.extend(true, this.options, options);
-            }
-        });
 
         /************* Add some utility methods to underscore **********/
         

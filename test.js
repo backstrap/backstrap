@@ -178,7 +178,8 @@ require(['jquery', 'backbone', 'backstrap'], function($, Backbone, $$) {
 	obj.$el.append(new $$.Badge({content: '33'}).render().el);
 	testObj(obj, 'Context(bg) + Glyph + Badge');
 
-	testObj(new $$.Dropdown({buttonLabel: 'Things', buttonId: 'button1', align: 'left', model: new Backbone.Collection([
+	testObj(new $$.Dropdown({labelContent: 'Things',
+            type: 'button', align: 'left', model: new Backbone.Collection([
 		{ name: 'first', href: '#first', label: 'First' },
 		{ header: true, label: 'More things'},
 		{ name: 'second', href: '#second', label: 'Second' },

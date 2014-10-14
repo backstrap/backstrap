@@ -450,71 +450,21 @@
             return sizeMap[value];
         };
 
-        /******** Backbone-UI stuff ****************/
-        
-        // Don't need this. Just hold them here as documentation.
-        /*
-        backstrap.KEYS = {
-            KEY_BACKSPACE: 8,
-            KEY_TAB:       9,
-            KEY_RETURN:   13,
-            KEY_ESC:      27,
-            KEY_LEFT:     37,
-            KEY_UP:       38,
-            KEY_RIGHT:    39,
-            KEY_DOWN:     40,
-            KEY_DELETE:   46,
-            KEY_HOME:     36,
-            KEY_END:      35,
-            KEY_PAGEUP:   33,
-            KEY_PAGEDOWN: 34,
-            KEY_INSERT:   45
-        };
-        */
+        /******** Containers for our various extension objects ****************/
 
-        backstrap.View = context.Backbone.View.extend({
-            initialize : function (options) {
-                this.options = this.options ? _({}).extend(this.options, options) : options;
-            }
-        });
+        backstrap.mixins = {};
+
+        backstrap.components = {};
+
+        backstrap.views = {};
+
+        /******** Simple Backbone aliases ****************/
 
         backstrap.Events = _.extend({}, Backbone.Events);
 
         backstrap.Router = Backbone.Router.extend({});
 
         backstrap.history = Backbone.history;
-
-        /************* Add some utility methods to $$.View **********/
-
-        _(backstrap.View.prototype).extend({
-            // resolves the appropriate content from the given choices
-            resolveContent : function (model, content, defaultOption) {
-                defaultOption = (defaultOption === null || _(defaultOption).isUndefined())
-                    ? this.options.content : defaultOption;
-                model = _(model).exists() ? model : this.model;
-                content = _(content).exists() ? content : defaultOption;
-                var hasModelProperty = _(model).exists() && _(content).exists();
-                return _(content).isFunction()
-                    ? content(model)
-                    : hasModelProperty && _(model[content]).isFunction()
-                        ? model[content]()
-                        : hasModelProperty && _(_(model).resolveProperty(content)).isFunction()
-                            ? _(model).resolveProperty(content)(model)
-                            : hasModelProperty
-                                ? _(model).resolveProperty(content)
-                                : content;
-            },
-
-            mixin : function (objects) {
-                var options = _(this.options).clone();
-
-                _(objects).each(function (object) {
-                    $.extend(true, this, object);
-                }, this);
-
-                $.extend(true, this.options, options);
-            }
-        });
 
         /************* Add some utility methods to underscore **********/
         
@@ -1210,6 +1160,977 @@ if(window.jQuery) {
 }(this, 'Collection', [ 'backstrap', 'backbone', 'backstrap/dispatcher' ]));
 
 /**
+ * The generic model-bound Bootstrap view object
+ * from which all other views are extended.
+ *
+ * @author Kevin Perry perry@princeton.edu
+ * @license MIT
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$, Backbone)
+    {
+        return ($$[moduleName] = Backbone.View.extend({
+            initialize: function (options) {
+                this.options = this.options ? _({}).extend(this.options, options) : options;
+            },
+
+            // resolves the appropriate content from the given choices
+            resolveContent: function (model, content, defaultOption) {
+                defaultOption = (defaultOption === null || _(defaultOption).isUndefined())
+                    ? this.options.content : defaultOption;
+                model = _(model).exists() ? model : this.model;
+                content = _(content).exists() ? content : defaultOption;
+                var hasModelProperty = _(model).exists() && _(content).exists();
+                return _(content).isFunction()
+                    ? content(model)
+                    : hasModelProperty && _(model[content]).isFunction()
+                        ? model[content]()
+                        : hasModelProperty && _(_(model).resolveProperty(content)).isFunction()
+                            ? _(model).resolveProperty(content)(model)
+                            : hasModelProperty
+                                ? _(model).resolveProperty(content)
+                                : content;
+            },
+
+            mixin: function (objects) {
+                var options = _(this.options).clone();
+
+                _(objects).each(function (object) {
+                    $.extend(true, this, object);
+                }, this);
+
+                $.extend(true, this.options, options);
+            }
+        }));
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        if (typeof context.Backbone.View !== 'function') {
+            throw new Error('Backbone not loaded');
+        }
+        fn(context.$$, context.Backbone);
+    }
+}(this, 'View', [ 'backstrap', 'backbone' ]));
+
+/**
+ * Creates a Bootstrap grid layout object.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        var appendGridRows = function (layout) {
+            for (var r=0; r<layout.length; r++) {
+                this.appendRow(layout[r]);
+            }
+        };
+
+        var parseCellSpec = function (spec) {
+            var str = 'col';
+            for (var prop in spec) {
+                if (prop === 'className') {
+                    str += ' ' + spec[prop];
+                } else {
+                    var sz = $$._mapSize(prop);
+                    if (sz) {
+                        str += ' col-' + sz + '-' + spec[prop];
+                    }
+                }
+            }
+            return str;
+        };
+
+        var appendGridRow = function (layout) {
+            var rowdiv = $$.div({className: 'row'});
+            $(this).append(rowdiv);
+            for (var c=0; c<layout.length; c++) {
+                var cell = layout[c];
+                var cellClass;
+                var content = '';
+                if (cell !== null && typeof cell === 'object') {
+                    cellClass = parseCellSpec(cell);
+                    content = ('content' in cell) ? cell.content : '';
+                } else {
+                    cellClass = 'col col-md-' + cell;
+                }
+                $(rowdiv).append($$.div({className: cellClass}, content));
+            }
+        };
+        
+        return ($$[moduleName] = $$.components[moduleName] = function () {
+            var layout;
+            var cn = 'container';
+            
+            layout = [[12]];
+            if (typeof(arguments[0]) === 'object') {
+                if ('layout' in arguments[0]) {
+                    layout = arguments[0].layout;
+                    delete arguments[0].layout;
+                }
+                if ('fluid' in arguments[0]) {
+                    cn = arguments[0].fluid ? 'container-fluid' : cn;
+                    delete arguments[0].fluid;
+                }
+            }
+            var el = $$.apply(this,
+                ['div', null].concat(Array.prototype.slice.call(arguments)));
+            $(el).addClass(cn);
+            el.appendRows = appendGridRows;
+            el.appendRow = appendGridRow;
+            el.getRow = function () {
+                return $('> *:nth-child('+row+') ', el);
+            };
+            el.getCell = function (row, col) {
+                return $('> *:nth-child('+row+') > *:nth-child(' + col + ') ', el);
+            };
+            el.appendRows(layout);
+            return el;
+        });
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/components/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'grid', [ 'backstrap' ]));
+
+/**
+ * A 'tag' that defines a Bootstrap nav - a navigation group.
+ *
+ * The nav is a $$.ul(), so you should populate it with $$.li()'s.
+ * You should provide a type, either "type: 'tabs'" or "type: 'pills'".
+ * You can also specify attributes "justified: true" for justified tabs or pills,
+ * and "stacked: true" for stacked pills.
+ *
+ * @author Kevin Perry perry@princeton.edu
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return($$[moduleName] = $$.components[moduleName] = function (attrs)
+            {
+                var el;
+                var type = '';
+
+                if (typeof attrs === 'object' && attrs.nodeType !== 1) {
+                    if ('type' in attrs) {
+                        if (attrs.type === 'tabs' && !('role' in attrs)) {
+                            attrs.role = 'tablist';
+                        }
+                        if (attrs.type === 'tabs' || attrs.type === 'pills') {
+                            type = ' nav-' + attrs.type;
+                        }
+                        delete(attrs.type);
+                    }
+                    if ('justified' in attrs) {
+                        if (attrs.justified) {
+                            type += ' nav-justified';
+                        }
+                        delete(attrs.justified);
+                    }
+                    if ('stacked' in attrs) {
+                        if (attrs.stacked) {
+                            type += ' nav-stacked';
+                        }
+                        delete(attrs.stacked);
+                    }
+                }
+
+                el = $$.ul.apply($$, arguments);
+                $(el).addClass('nav' + type);
+                el.clearActive = function () {
+                    $('> *', this).removeClass('active');
+                    return this;
+                };
+
+                return el;
+            }
+        );
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/components/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'nav', [ 'backstrap' ]));
+
+/**
+ * A 'tag' that defines a Bootstrap navbar component.
+ *
+ * Options:
+ *     brandContent: '' - Branding visual (a DOM object).
+ *     brandUrl: '#' - URL for brand href.
+ *     position: '' - Allowed: 'fixed-top', 'fixed-bottom' or 'static-top'.
+ *     inverse: false - Invert color scheme
+ *     toggleContent: Alternate visual for navbar collapse toggle (a DOM object; defaults to a 3-bar hamburger).
+ *     sr_toggle_text: 'Toggle navigation' - For screen-readers
+ *     role: 'navigation' - For accessibility
+ *
+ * @author Kevin Perry perry@princeton.edu
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return($$[moduleName] = $$.components[moduleName] = function (attrs)
+            {
+                var el, content, collapser, toggleContent = '';
+                var offset = 1;
+                var brandContent = '';
+                var brandUrl = '#';
+                var className = 'navbar-default';
+                var sr_toggle_text = 'Toggle navigation';
+                var collapserId = _.uniqueId('Bkp');
+
+                if (typeof attrs !== 'object' || attrs.nodeType === 1) {
+                    attrs = {};
+                    offset = 0;
+                } else {
+                    if ('brandContent' in attrs) {
+                        brandContent = attrs.brandContent;
+                        delete(attrs.brandContent);
+                    }
+                    if ('brandUrl' in attrs) {
+                        brandUrl = attrs.brandUrl;
+                        delete(attrs.brandUrl);
+                    }
+                    if ('inverse' in attrs) {
+                        className = attrs.inverse ? 'navbar-inverse' : 'navbar-default';
+                        delete(attrs.inverse);
+                    }
+                    if ('position' in attrs) {
+                        if (attrs.position === 'fixed-bottom'
+                            || attrs.position === 'fixed-top'
+                            || attrs.position === 'static-top'
+                        ) {
+                            className += ' navbar-' + attrs.position;
+                        }
+                        delete(attrs.position);
+                    }
+                    if ('toggleContent' in attrs) {
+                        toggleContent = attrs.toggleContent;
+                        delete(attrs.toggleContent);
+                    } else {
+                        toggleContent = $$.span(
+                            $$.span({className: 'icon-bar'}),
+                            $$.span({className: 'icon-bar'}),
+                            $$.span({className: 'icon-bar'})
+                        );
+                    }
+                    if ('sr_toggle_text' in attrs) {
+                        sr_toggle_text = attrs.sr_toggle_text;
+                        delete(attrs.sr_toggle_text);
+                    }
+                }
+                if (!('role' in attrs)) {
+                    attrs.role = 'navigation';
+                }
+
+                el = $$.nav(attrs);
+                content = Array.prototype.slice.call(arguments, offset);
+                collapser = $$.div({className: 'collapse navbar-collapse', id: collapserId});
+                $(collapser).append.apply($(collapser), content);
+
+                $(el).addClass('navbar ' + className).append(
+                    $$.div({className: 'container container-fluid'},
+                        $$.div({className: 'navbar-header'},
+                            $$.button({
+                                    type: 'button',
+                                    className: 'navbar-toggle collapsed',
+                                    'data-toggle': 'collapse',
+                                    'data-target': '#' + collapserId
+                                },
+                                $$.span({className: 'sr-only'}, sr_toggle_text),
+                                toggleContent
+                            ),
+                            $$.a({
+                                    className: 'navbar-brand',
+                                    href: brandUrl
+                                }, brandContent
+                            )
+                        ),
+                        collapser
+                    )
+                );
+
+                return el;
+            }
+        );
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/components/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'navbar', [ 'backstrap' ]));
+
+/**
+ * A 'tag' that defines a Bootstrap navbar content group.
+ * The navbarForm is a $$.form(), so you should populate it
+ * with $$.formGroups()'s and form items.
+ *
+ * @author Kevin Perry perry@princeton.edu
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return($$[moduleName] = $$.components[moduleName] = function (attrs)
+            {
+                var el;
+                var align = 'left';
+
+                if (typeof attrs === 'object' && attrs.nodeType !== 1) {
+                    if ('align' in attrs) {
+                        if (attrs.align === 'right') {
+                            align = attrs.align;
+                        }
+                        delete(attrs.align);
+                    }
+                }
+
+                el = $$.ul.apply($$, arguments);
+                $(el).addClass('navbar-form navbar-' + align);
+
+                return el;
+            }
+        );
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/components/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'navbarForm', [ 'backstrap' ]));
+
+/**
+ * A 'tag' that defines a Bootstrap navbar content group.
+ * The navbarGroup is a $$.ul(), so you should populate it with $$.li()'s.
+ *
+ * @author Kevin Perry perry@princeton.edu
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return($$[moduleName] = $$.components[moduleName] = function (attrs)
+            {
+                var el;
+                var align = 'left';
+
+                if (typeof attrs === 'object' && attrs.nodeType !== 1) {
+                    if ('align' in attrs) {
+                        if (attrs.align === 'right') {
+                            align = attrs.align;
+                        }
+                        delete(attrs.align);
+                    }
+                }
+
+                el = $$.ul.apply($$, arguments);
+                $(el).addClass('nav navbar-nav navbar-' + align);
+
+                return el;
+            }
+        );
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/components/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'navbarGroup', [ 'backstrap' ]));
+
+/**
+ * A mixin for dealing with collection alternatives.
+ * Based on Backbone-UI.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @license MIT
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return($$.mixins[moduleName] = $$[moduleName] = {
+            options : {
+                // The collection of items representing alternative choices
+                alternatives : null,
+
+                // The property of the individual choice represent the the label to be displayed
+                altLabelContent : null,
+
+                // The property of the individual choice that represents the value to be stored
+                // in the bound model's property. Omit this option if you'd like the choice 
+                // object itself to represent the value.
+                altValueContent : null,
+                
+                // The property of the individual choice representing CSS 
+                // background rule for the left glyph 
+                altGlyphLeftClassName : null,
+
+                // The property of the individual choice representing CSS 
+                // background rule for the right glyph 
+                altGlyphRightClassName : null
+            },
+
+            _determineSelectedItem : function() {
+                var item = null;
+
+                // if a bound property has been given, we attempt to resolve it
+                if(_(this.model).exists() && _(this.options.content).exists()) {
+                    item = _(this.model).resolveProperty(this.options.content);
+
+                    // if a value property is given, we further resolve our selected item
+                    if(_(this.options.altValueContent).exists()) {
+                        var otherItem = _(this._collectionArray()).detect(function(collectionItem) {
+                            return (collectionItem.attributes || collectionItem)[this.options.altValueContent] === item;
+                        }, this);
+                        if(!_(otherItem).isUndefined()) item = otherItem;
+                    }
+                }
+
+                return item || this.options.selectedItem;
+            },
+
+            _setSelectedItem : function(item, silent) {
+                this.selectedValue = item;
+                this.selectedItem = item;
+
+                if(_(this.model).exists() && _(this.options.content).exists()) {
+                    this.selectedValue = this._valueForItem(item);
+                    _(this.model).setProperty(this.options.content, this.selectedValue, silent);
+                }
+            },
+
+            _valueForItem : function(item) {
+                return _(this.options.altValueContent).exists() ? 
+                    _(item).resolveProperty(this.options.altValueContent) :
+                    item;
+            },
+
+            _collectionArray : function() {
+                return _(this.options.alternatives).exists() ?
+                    this.options.alternatives.models || this.options.alternatives : [];
+            },
+
+            _observeCollection : function(callback) {
+                if(_(this.options.alternatives).exists() && _(this.options.alternatives.bind).exists()) {
+                    var key = 'change';
+                    this.options.alternatives.unbind(key, callback);
+                    this.options.alternatives.bind(key, callback);
+                }
+            }
+        });
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/mixins/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'HasAlternativeProperty', [ 'backstrap' ]));
+
+/**
+ * A mixin for dealing with errors in widgets 
+ *
+ * @author Kevin Perry perry@princeton.edu
+ * @license MIT
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return ($$.mixins[moduleName] = $$[moduleName] = {
+            options : {
+                // Can be inserted into the flow of the form as the type 'inform' or as
+                // a flyover disclosing the error message as the type 'disclosure'
+                errorType : 'inform',
+                // Where the error message will be displayed.
+                // Possible positions: 'right', 'below'
+                errorPosition : 'below'
+            },
+            
+            unsetError : function() {
+                // remove error class
+                $(this.el).removeClass('error');
+                // remove error message if it exists
+                $(this.errorMessage).remove();
+                // remove disclosure if it exists
+                $(this._disclosure).remove();     
+                // remove event attached to the model regarding errors     
+                if(_(this._unobserveModel).exists()) {
+                    this._unobserveModel(_(this.unsetError).bind(this));
+                }
+            },
+            
+            setError : function(message) {
+                
+                // add event to model to unset error when on change
+                if(_(this._observeModel).exists()) {
+                    this._observeModel(_(this.unsetError).bind(this));
+                }
+                 
+                // message will default to empty string
+                message = (message === null || _(message).isUndefined()) ? "" : message;
+                // clear existing error
+                this.unsetError();
+                // add error class
+                $(this.el).addClass('error');
+                
+                // add error message if provided
+                if(message.length > 0) {
+                    
+                    if(this.options.errorType !== "disclosure") {
+                        this.errorMessage = $$.span({className : 'error_message ' + 
+                            this.options.errorPosition}, message);
+                    }
+                    else {
+                        this.errorMessage = $$.span({className : 'error_message right with_disclosure'}, "!");
+                        
+                        this._disclosure = $$.div({className : 'disclosure'},
+                            this._disclosureOuter = $$.div({className: 'disclosure_outer'},
+                                this._disclosureInner = $$.div({className: 'disclosure_inner'}, message),
+                                    this._disclosureArrow = $$.div({className: 'disclosure_arrow'})));
+                        
+                        $(this.errorMessage).click(_(function(e) {
+                            e.preventDefault();
+                            this._showDisclosure();
+                            return false;
+                        }).bind(this));
+                        
+                        $(this.el).click(_(function() {
+                            $(this._disclosure).remove();
+                        }).bind(this));
+                        
+                    }
+                    
+                    this.el.childNodes[0].appendChild(this.errorMessage);
+                    
+                    if(this._disclosure) {
+                        this._showDisclosure();
+                    }
+                    
+                }
+                
+            },
+            
+            _showDisclosure : function(){
+                // add the disclosure
+                this.el.appendChild(this._disclosure);
+                // set the position
+                this.options.errorPosition === 'right' ? 
+                    $(this._disclosure).alignTo(this.errorMessage, 'right', 10, 0, this.el) : 
+                    $(this._disclosure).alignTo(this.errorMessage, 'center bottom', 0, 10, this.el);
+
+                // add the appropriate class to disclosure arrow for correct sprite and styles
+                $(this._disclosureOuter).addClass(this.options.errorPosition === 'right' ? 'arrow_left' : 'arrow_up');
+                // set the disclosure arrow position
+                var pos = this.options.errorPosition === 'right' ? (($(this._disclosure).height() / 2) - 10) : 
+                    (($(this._disclosure).width() / 2) - 10);
+                var cssTopOrLeft = this.options.errorPosition === 'right' ? 'top' : 'left';    
+                $(this._disclosureArrow).css(cssTopOrLeft, pos + 'px');
+            }
+        });
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/mixins' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'HasError', [ 'backstrap' ]));
+
+/**
+ * A mixin for dealing with focus in / focus out
+ *
+ * @author Kevin Perry perry@princeton.edu
+ * @license MIT
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return ($$.mixins[moduleName] = $$[moduleName] = {
+            setupFocus : function(el, parent) {
+            
+                // add focusin 
+                $(el).focusin(_(function(e) {
+                    $(parent).addClass('focused');
+                }).bind(this));
+
+                // add focusout
+                $(el).focusout(_(function(e) {
+                    $(parent).removeClass('focused');
+                }).bind(this));
+                
+            }
+        });
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/mixins' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'HasFocus', [ 'backstrap' ]));
+
+/**
+ * A mixin for dealing with glyphs in widgets.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return($$.mixins[moduleName] = $$[moduleName] = {
+            options: {
+                // If provided this content will wrap the component with additional label.
+                formLabelContent : null
+            },
+
+            wrapWithFormLabel : function(content) {
+                var wrapped = $$.plain.label({'for': this.options.name});
+                
+                var formLabelText = this.options.formLabelContent ? 
+                    this.resolveContent(this.model, this.options.formLabelContent, 
+                        this.options.formLabelContent) || this.options.formLabelContent : null;
+                if(formLabelText) {
+                    wrapped.appendChild($$.span({className : 'form_label'}, formLabelText));
+                }
+                wrapped.appendChild(content);
+                return wrapped;    
+            }    
+        });
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/mixins' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'HasFormLabel', [ 'backstrap' ]));
+
+/**
+ * A mixin for dealing with glyphs in widgets 
+ *
+ * @author Kevin Perry perry@princeton.edu
+ * @license MIT
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return ($$.mixins[moduleName] = $$[moduleName] = {
+            insertGlyphLayout : function(glyphLeftClassName, glyphRightClassName, content, parent) {
+
+                // append left glyph
+                if(glyphLeftClassName) {
+                    var glyphLeft = $$.span({
+                        className : 'glyph left ' + glyphLeftClassName
+                    });
+                    parent.appendChild(glyphLeft);
+                    $(parent).addClass('hasGlyphLeft');
+                }
+
+                // append content
+                if(content) {
+                    parent.appendChild(content);
+                }
+
+                // append right glyph
+                if(glyphRightClassName) {
+                    var glyphRight = $$.span({
+                        className : 'glyph right ' + glyphRightClassName
+                    });
+                    parent.appendChild(glyphRight);
+                    $(parent).addClass('hasGlyphRight');
+                }
+             
+            },
+
+            resolveGlyph : function(model, content) {
+                if(content === null) return null;
+                var glyph = null;
+                if(_(model).exists() && _((model.attributes || model)[content]).exists()) {
+                    glyph = this.resolveContent(model, content);
+                }
+                return _(glyph).exists() ? glyph : content;
+            }
+        });
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/mixins' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'HasGlyph', [ 'backstrap' ]));
+
+/**
+ * A mixin for those views that are model bound.
+ *
+ * @author Kevin Perry perry@princeton.edu
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return($$.mixins[moduleName] = $$[moduleName] = {
+            options : {
+                // The Model instance the view is bound to.
+                model : null,
+
+                // The property of the bound model this component should render / update.
+                // If a function is given, it will be invoked with the model and will 
+                // expect an element to be returned.    If no model is present, this 
+                // property may be a string or function describing the content to be rendered.
+                content : null,
+
+                // If provided this content will wrap the component with additional label.
+                // The text displayed by the label is determined the same way the content attribute.
+                // For Checkbox and Label.
+                labelContent : null,
+
+                // If present, a square glyph area will be added to the left side of this 
+                // component, and the given string will be used as the class name
+                // property of that glyph area. This option is a no-op when applied 
+                // to Calender and Menu components. 
+                glyphLeftClassName : null,
+
+                // Same as above, but on the right side.
+                glyphRightClassName : null
+
+            },
+
+            _observeModel : function(callback) {
+                if(_(this.model).exists() && _(this.model.off).isFunction()) {
+                    _(['content', 'labelContent']).each(function(prop) {
+                        var key = this.options[prop];
+                        if(_(key).exists()) {
+                            key = 'change:' + key;
+                            this.model.off(key, callback);
+                            this.model.on(key, callback);
+                        }
+                    }, this);
+                }
+            },
+
+            _unobserveModel : function(callback) {
+                if(_(this.model).exists() && _(this.model.off).isFunction()) {
+                    _(['content', 'labelContent']).each(function(prop) {
+                        var key = this.options[prop];
+                        if(_(key).exists()) {
+                            key = 'change:' + key;
+                            this.model.off(key, callback);
+                        }
+                    }, this);
+                }
+            }
+
+        });
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/mixins' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'HasModel', [ 'backstrap' ]));
+
+/**
  * A generic Backbone View for displaying Collection data.
  * Based on Backbone-UI CollectionView.
  *
@@ -1329,7 +2250,7 @@ if(window.jQuery) {
             }
         };
         
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options: {
                 // The Collection instance the view is bound to.
                 model: null,
@@ -1442,7 +2363,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -1459,494 +2380,6 @@ if(window.jQuery) {
         fn(context.$$);
     }
 }(this, 'CollectionView', [ 'backstrap', 'backstrap/View' ]));
-
-/**
- * A mixin for dealing with collection alternatives.
- * Based on Backbone-UI.
- * 
- * @author Kevin Perry perry@princeton.edu
- * @license MIT
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        return($$[moduleName] = {
-            options : {
-                // The collection of items representing alternative choices
-                alternatives : null,
-
-                // The property of the individual choice represent the the label to be displayed
-                altLabelContent : null,
-
-                // The property of the individual choice that represents the value to be stored
-                // in the bound model's property. Omit this option if you'd like the choice 
-                // object itself to represent the value.
-                altValueContent : null,
-                
-                // The property of the individual choice representing CSS 
-                // background rule for the left glyph 
-                altGlyphLeftClassName : null,
-
-                // The property of the individual choice representing CSS 
-                // background rule for the right glyph 
-                altGlyphRightClassName : null
-            },
-
-            _determineSelectedItem : function() {
-                var item = null;
-
-                // if a bound property has been given, we attempt to resolve it
-                if(_(this.model).exists() && _(this.options.content).exists()) {
-                    item = _(this.model).resolveProperty(this.options.content);
-
-                    // if a value property is given, we further resolve our selected item
-                    if(_(this.options.altValueContent).exists()) {
-                        var otherItem = _(this._collectionArray()).detect(function(collectionItem) {
-                            return (collectionItem.attributes || collectionItem)[this.options.altValueContent] === item;
-                        }, this);
-                        if(!_(otherItem).isUndefined()) item = otherItem;
-                    }
-                }
-
-                return item || this.options.selectedItem;
-            },
-
-            _setSelectedItem : function(item, silent) {
-                this.selectedValue = item;
-                this.selectedItem = item;
-
-                if(_(this.model).exists() && _(this.options.content).exists()) {
-                    this.selectedValue = this._valueForItem(item);
-                    _(this.model).setProperty(this.options.content, this.selectedValue, silent);
-                }
-            },
-
-            _valueForItem : function(item) {
-                return _(this.options.altValueContent).exists() ? 
-                    _(item).resolveProperty(this.options.altValueContent) :
-                    item;
-            },
-
-            _collectionArray : function() {
-                return _(this.options.alternatives).exists() ?
-                    this.options.alternatives.models || this.options.alternatives : [];
-            },
-
-            _observeCollection : function(callback) {
-                if(_(this.options.alternatives).exists() && _(this.options.alternatives.bind).exists()) {
-                    var key = 'change';
-                    this.options.alternatives.unbind(key, callback);
-                    this.options.alternatives.bind(key, callback);
-                }
-            }
-        });
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'HasAlternativeProperty', [ 'backstrap' ]));
-
-/**
- * A mixin for dealing with errors in widgets 
- *
- * @author Kevin Perry perry@princeton.edu
- * @license MIT
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        return ($$[moduleName] = {
-            options : {
-                // Can be inserted into the flow of the form as the type 'inform' or as
-                // a flyover disclosing the error message as the type 'disclosure'
-                errorType : 'inform',
-                // Where the error message will be displayed.
-                // Possible positions: 'right', 'below'
-                errorPosition : 'below'
-            },
-            
-            unsetError : function() {
-                // remove error class
-                $(this.el).removeClass('error');
-                // remove error message if it exists
-                $(this.errorMessage).remove();
-                // remove disclosure if it exists
-                $(this._disclosure).remove();     
-                // remove event attached to the model regarding errors     
-                if(_(this._unobserveModel).exists()) {
-                    this._unobserveModel(_(this.unsetError).bind(this));
-                }
-            },
-            
-            setError : function(message) {
-                
-                // add event to model to unset error when on change
-                if(_(this._observeModel).exists()) {
-                    this._observeModel(_(this.unsetError).bind(this));
-                }
-                 
-                // message will default to empty string
-                message = (message === null || _(message).isUndefined()) ? "" : message;
-                // clear existing error
-                this.unsetError();
-                // add error class
-                $(this.el).addClass('error');
-                
-                // add error message if provided
-                if(message.length > 0) {
-                    
-                    if(this.options.errorType !== "disclosure") {
-                        this.errorMessage = $$.span({className : 'error_message ' + 
-                            this.options.errorPosition}, message);
-                    }
-                    else {
-                        this.errorMessage = $$.span({className : 'error_message right with_disclosure'}, "!");
-                        
-                        this._disclosure = $$.div({className : 'disclosure'},
-                            this._disclosureOuter = $$.div({className: 'disclosure_outer'},
-                                this._disclosureInner = $$.div({className: 'disclosure_inner'}, message),
-                                    this._disclosureArrow = $$.div({className: 'disclosure_arrow'})));
-                        
-                        $(this.errorMessage).click(_(function(e) {
-                            e.preventDefault();
-                            this._showDisclosure();
-                            return false;
-                        }).bind(this));
-                        
-                        $(this.el).click(_(function() {
-                            $(this._disclosure).remove();
-                        }).bind(this));
-                        
-                    }
-                    
-                    this.el.childNodes[0].appendChild(this.errorMessage);
-                    
-                    if(this._disclosure) {
-                        this._showDisclosure();
-                    }
-                    
-                }
-                
-            },
-            
-            _showDisclosure : function(){
-                // add the disclosure
-                this.el.appendChild(this._disclosure);
-                // set the position
-                this.options.errorPosition === 'right' ? 
-                    $(this._disclosure).alignTo(this.errorMessage, 'right', 10, 0, this.el) : 
-                    $(this._disclosure).alignTo(this.errorMessage, 'center bottom', 0, 10, this.el);
-
-                // add the appropriate class to disclosure arrow for correct sprite and styles
-                $(this._disclosureOuter).addClass(this.options.errorPosition === 'right' ? 'arrow_left' : 'arrow_up');
-                // set the disclosure arrow position
-                var pos = this.options.errorPosition === 'right' ? (($(this._disclosure).height() / 2) - 10) : 
-                    (($(this._disclosure).width() / 2) - 10);
-                var cssTopOrLeft = this.options.errorPosition === 'right' ? 'top' : 'left';    
-                $(this._disclosureArrow).css(cssTopOrLeft, pos + 'px');
-            }
-        });
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'HasError', [ 'backstrap' ]));
-
-/**
- * A mixin for dealing with focus in / focus out
- *
- * @author Kevin Perry perry@princeton.edu
- * @license MIT
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        return ($$[moduleName] = {
-            setupFocus : function(el, parent) {
-            
-                // add focusin 
-                $(el).focusin(_(function(e) {
-                    $(parent).addClass('focused');
-                }).bind(this));
-
-                // add focusout
-                $(el).focusout(_(function(e) {
-                    $(parent).removeClass('focused');
-                }).bind(this));
-                
-            }
-        });
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'HasFocus', [ 'backstrap' ]));
-
-/**
- * A mixin for dealing with glyphs in widgets.
- * 
- * @author Kevin Perry perry@princeton.edu
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        return($$[moduleName] = {
-            options: {
-                // If provided this content will wrap the component with additional label.
-                formLabelContent : null
-            },
-
-            wrapWithFormLabel : function(content) {
-                var wrapped = $$.plain.label({'for': this.options.name});
-                
-                var formLabelText = this.options.formLabelContent ? 
-                    this.resolveContent(this.model, this.options.formLabelContent, 
-                        this.options.formLabelContent) || this.options.formLabelContent : null;
-                if(formLabelText) {
-                    wrapped.appendChild($$.span({className : 'form_label'}, formLabelText));
-                }
-                wrapped.appendChild(content);
-                return wrapped;    
-            }    
-        });
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'HasFormLabel', [ 'backstrap' ]));
-
-/**
- * A mixin for dealing with glyphs in widgets 
- *
- * @author Kevin Perry perry@princeton.edu
- * @license MIT
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        return ($$[moduleName] = {
-            insertGlyphLayout : function(glyphLeftClassName, glyphRightClassName, content, parent) {
-
-                // append left glyph
-                if(glyphLeftClassName) {
-                    var glyphLeft = $$.span({
-                        className : 'glyph left ' + glyphLeftClassName
-                    });
-                    parent.appendChild(glyphLeft);
-                    $(parent).addClass('hasGlyphLeft');
-                }
-
-                // append content
-                if(content) {
-                    parent.appendChild(content);
-                }
-
-                // append right glyph
-                if(glyphRightClassName) {
-                    var glyphRight = $$.span({
-                        className : 'glyph right ' + glyphRightClassName
-                    });
-                    parent.appendChild(glyphRight);
-                    $(parent).addClass('hasGlyphRight');
-                }
-             
-            },
-
-            resolveGlyph : function(model, content) {
-                if(content === null) return null;
-                var glyph = null;
-                if(_(model).exists() && _((model.attributes || model)[content]).exists()) {
-                    glyph = this.resolveContent(model, content);
-                }
-                return _(glyph).exists() ? glyph : content;
-            }
-        });
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'HasGlyph', [ 'backstrap' ]));
-
-/**
- * A mixin for those views that are model bound.
- *
- * @author Kevin Perry perry@princeton.edu
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        return($$[moduleName] = {
-            options : {
-                // The Model instance the view is bound to.
-                model : null,
-
-                // The property of the bound model this component should render / update.
-                // If a function is given, it will be invoked with the model and will 
-                // expect an element to be returned.    If no model is present, this 
-                // property may be a string or function describing the content to be rendered.
-                content : null,
-
-                // If provided this content will wrap the component with additional label.
-                // The text displayed by the label is determined the same way the content attribute.
-                // For Checkbox and Label.
-                labelContent : null,
-
-                // If present, a square glyph area will be added to the left side of this 
-                // component, and the given string will be used as the class name
-                // property of that glyph area. This option is a no-op when applied 
-                // to Calender and Menu components. 
-                glyphLeftClassName : null,
-
-                // Same as above, but on the right side.
-                glyphRightClassName : null
-
-            },
-
-            _observeModel : function(callback) {
-                if(_(this.model).exists() && _(this.model.off).isFunction()) {
-                    _(['content', 'labelContent']).each(function(prop) {
-                        var key = this.options[prop];
-                        if(_(key).exists()) {
-                            key = 'change:' + key;
-                            this.model.off(key, callback);
-                            this.model.on(key, callback);
-                        }
-                    }, this);
-                }
-            },
-
-            _unobserveModel : function(callback) {
-                if(_(this.model).exists() && _(this.model.off).isFunction()) {
-                    _(['content', 'labelContent']).each(function(prop) {
-                        var key = this.options[prop];
-                        if(_(key).exists()) {
-                            key = 'change:' + key;
-                            this.model.off(key, callback);
-                        }
-                    }, this);
-                }
-            }
-
-        });
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'HasModel', [ 'backstrap' ]));
 
 /**
  * A Backbone View that displays a model-bound list.
@@ -2003,7 +2436,7 @@ if(window.jQuery) {
             }
         };
 
-        return ($$[moduleName] = $$.CollectionView.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.CollectionView.extend({
             initialize: function (options) {
                 $$.CollectionView.prototype.initialize.call(this, options);
 
@@ -2055,7 +2488,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -2071,215 +2504,7 @@ if(window.jQuery) {
         }
         fn(context.$$);
     }
-}(this, 'List', [ 'backstrap', 'backstrap/CollectionView' ]));
-
-/**
- * A model-bound Bootstrap badge object.
- *
- * Use model and content options to set the content of the badge.
- * 
- * @author Kevin Perry perry@princeton.edu
- * @license MIT
- * 
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        return ($$[moduleName] = $$.View.extend({
-            tagName: 'span',
-    
-            initialize : function(options) {
-                $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel]);
-                _(this).bindAll('render');
-                this.$el.addClass('badge');
-            },
-    
-            render : function() {
-                var content = this.resolveContent();
-                this._observeModel(this.render);
-                this.$el.text(content);
-                return this;
-            }
-        }));
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'Badge', [ 'backstrap', 'backstrap/View', 'backstrap/HasModel' ]));
-
-/**
- * A basic model-bound Bootstrap navbar object.
- * 
- * @author Kevin Perry perry@princeton.edu
- * @license MIT
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        var ItemView = $$.View.extend({
-            tagName: 'a',
-            className: 'nav-item',
-            
-            render: function render() {
-                this.$el.addClass('nav-item-' + this.model.get('name'))
-                    .attr('href', this.model.get('href'))
-                    .text(this.model.get('label'));
-                return this;
-            }
-        });
-
-        var NavList = $$.CollectionView.extend({
-            className: 'navbar-collapse collapse',
-            
-            initialize : function(options) {
-                $$.CollectionView.prototype.initialize.call(this, options);
-                $(this.el).addClass('list');
-                _(this).bindAll('render');
-            },
-            
-            render : function() {
-                $(this.el).empty();
-                this.itemViews = {};
-
-                this.collectionEl = $$.ul({className: 'nav navbar-nav'});
-
-                // if the collection is empty, we render the empty content
-              if((!_(this.model).exists()  || this.model.length === 0) && this.options.emptyContent) {
-                this._emptyContent = _(this.options.emptyContent).isFunction() ? 
-                  this.options.emptyContent() : this.options.emptyContent;
-                this._emptyContent = $$.li(this._emptyContent);
-
-                if(!!this._emptyContent) {
-                  this.collectionEl.appendChild(this._emptyContent);
-                }
-              }
-
-              // otherwise, we render each row
-              else {
-                _(this.model.models).each(function(model, index) {
-                  var item = this._renderItem(model, index);
-                  this.collectionEl.appendChild(item);
-                }, this);
-              }
-
-              this.el.appendChild(this.collectionEl);
-              this.renderClassNames(this.collectionEl);
-
-              return this;
-            },
-
-            // renders an item for the given model, at the given index
-            _renderItem : function(model, index) {
-              var content = null;
-              if(_(this.options.itemView).exists()) {
-
-                if(_(this.options.itemView).isString()) {
-                  content = this.resolveContent(model, this.options.itemView);
-                }
-
-                else {
-                  var view = new this.options.itemView(_({ model : model }).extend(
-                    this.options.itemViewOptions));
-                  view.render();
-                  this.itemViews[model.cid] = view;
-                  content = view.el;
-                }
-              }
-
-              var item = $$.li(content);
-
-              // bind the item click callback if given
-              if(this.options.onItemClick) {
-                $(item).click(_(this.options.onItemClick).bind(this, model));
-              }
-
-              return item;
-            }
-        });
-    
-        return ($$[moduleName] = $$.View.extend({
-            className: 'navbar navbar-default',
-            brand: '',
-    
-            initialize: function (options) {
-                $$.View.prototype.initialize.apply(this, arguments);
-                if ('navbarType' in options) {
-                    this.$el.addClass('navbar-'+options.navbarType);
-                }
-                if ('brand' in options) {
-                    this.brand = options.brand;
-                }
-                this.navList = new NavList({ model: options.model, itemView: ItemView });
-            },
-    
-            render: function () {
-                this.$el.empty();
-                this.$el.append(
-                    $$.div({ className: 'container' },
-                        $$.div({ className: 'navbar-header' },
-                            $$.button({
-                                    type: 'button',
-                                    className: 'navbar-toggle',
-                                    'data-toggle': 'collapse',
-                                    'data-target': '.navbar-collapse'
-                                },
-                                $$.span({ className: 'sr-only' }, 'Toggle navigation'),
-                                $$.span({ className: 'icon-bar' }),
-                                $$.span({ className: 'icon-bar' }),
-                                $$.span({ className: 'icon-bar' })
-                            ),
-                            $$.a({ className: 'navbar-brand', href: '#' }, this.brand)
-                        ),
-                        this.navList.render().el
-                    )
-                ).attr('role', 'navigation');
-                return this;
-            }
-        }));
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'BasicNavbar', [ 'backstrap', 'backstrap/CollectionView' ]));
+}(this, 'List', [ 'backstrap', 'backstrap/views/CollectionView' ]));
 
 /**
  * A Backbone View that displays a model-bound button.
@@ -2293,7 +2518,7 @@ if(window.jQuery) {
 {
     var fn = function($$)
     {
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
                 tagName : 'button',
                 size    : 'default', // added.
@@ -2315,7 +2540,7 @@ if(window.jQuery) {
 
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel, $$.HasGlyph]);
+                this.mixin([$$.mixins.HasModel, $$.mixins.HasGlyph]);
                 _(this).bindAll('render');
 
                 this.$el.addClass('button btn btn-' + $$._mapSize(this.options.size));
@@ -2377,7 +2602,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -2396,8 +2621,8 @@ if(window.jQuery) {
 }(this, 'Button', [
     'backstrap',
     'backstrap/View',
-    'backstrap/HasModel',
-    'backstrap/HasGlyph'
+    'backstrap/mixins/HasModel',
+    'backstrap/mixins/HasGlyph'
 ]));
 
 /**
@@ -2448,7 +2673,7 @@ if(window.jQuery) {
             return compareDate.getTime() > maxDate.getTime();
         };
 
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
                 // the selected calendar date
                 date : null, 
@@ -2633,7 +2858,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -2655,6 +2880,579 @@ if(window.jQuery) {
 }(this, 'Calendar', [ 'backstrap', 'moment', 'backstrap/View' ]));
 
 /**
+ * A Backbone View that displays a model-bound menu.
+ * Largely from Backbone-UI's Menu class,
+ * with Bootstrap decoration.
+ * Re-named to Select so I can use Menu for a more elaborate component.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @license MIT
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        var noop = function(){};
+
+        return($$[moduleName] = $$.views[moduleName] = $$.View.extend({
+            options : {
+
+                // an additional item to render at the top of the menu to 
+                // denote the lack of a selection
+                emptyItem : null,
+
+                // enables / disables the menu
+                disabled : false,
+
+                // A callback to invoke with a particular item when that item is
+                // selected from the menu.
+                onChange : noop,
+
+                // text to place in the pulldown button before a
+                // selection has been made
+                placeholder : 'Select...',
+
+                // number of option items to display in the menu
+                size : 1
+            },
+
+            initialize : function(options) {
+                $$.View.prototype.initialize.call(this, options);
+                this.mixin([$$.mixins.HasModel, $$.mixins.HasAlternativeProperty, 
+                    $$.mixins.HasFormLabel, $$.mixins.HasError]);
+                _(this).bindAll('render');
+                $(this.el).addClass('menu');
+            },
+
+
+            render : function() {
+                $(this.el).empty();
+
+                this._observeModel(this.render);
+                this._observeCollection(this.render);
+
+                this.selectedItem = this._determineSelectedItem();
+                // || this.selectedItem;
+                var selectedValue = this._valueForItem(this.selectedItem);
+
+                this.select = $$.select({ 
+                    size : this.options.size,
+                    disabled : this.options.disabled
+                 });
+
+                // setup events for each input in collection
+                $(this.select).change(_(this._updateModel).bind(this));
+
+                var selectedOffset = 0;
+
+                // append placeholder option if no selectedItem
+                this._placeholder = null;
+                if(!this.options.emptyItem && (this.options.size === 1) && !selectedValue) {
+                    this._placeholder = $$.option(this.options.placeholder);
+                    $(this._placeholder).data('value', null);
+                    $(this._placeholder).attr({ disabled : 'true' });
+                    this.select.appendChild(this._placeholder);
+                    // adjust for placeholder option
+                    selectedOffset++;
+                }
+
+                if(this.options.emptyItem) {
+
+                    this._emptyItem = $$.option(this._labelForItem(this.options.emptyItem));
+                    $(this._emptyItem).data('value', null);
+                    this.select.appendChild(this._emptyItem);
+                    $(this._emptyItem).click(_(function() {
+                        this.select.selectedIndex = 0;
+                        this._updateModel();
+                    }).bind(this));
+                    // adjust for emptyItem option
+                    selectedOffset++;
+                }
+
+                // default selectedIndex as placeholder if exists
+                this._selectedIndex = -1 + selectedOffset;
+
+                _(this._collectionArray()).each(function(item, idx) {
+
+                    // adjust index for potential placeholder and emptyItem
+                    idx = idx + selectedOffset;
+
+                    var val = this._valueForItem(item);
+                    if(_(selectedValue).isEqual(val)) {
+                        this._selectedIndex = idx;
+                    }
+
+                    var option = $$.option(this._labelForItem(item));
+                    $(option).data('value', val);
+                    $(option).attr({
+                        selected : this._selectedIndex === idx
+                    });
+
+                    $(option).click(_(function(selectedIdx) {
+                        this.select.selectedIndex = selectedIdx;
+                        this._updateModel();
+                    }).bind(this, idx));
+
+                    this.select.appendChild(option);
+
+                }, this);
+
+                // set the selectedIndex on the select element
+                this.select.selectedIndex = this._selectedIndex;
+
+                this.el.appendChild(this.wrapWithFormLabel(this.select));
+
+                // scroll to selected Item
+                this.scrollToSelectedItem();
+
+                this.setEnabled(!this.options.disabled);
+
+                return this;
+            },
+
+         // sets the enabled state
+            setEnabled : function(enabled) {
+                $(this.el).toggleClass('disabled', !enabled);
+                this.select.disabled = !enabled;
+            },
+
+            _labelForItem : function(item) {
+                return !_(item).exists() ? this.options.placeholder : 
+                    this.resolveContent(item, this.options.altLabelContent);
+            },
+
+            // sets the selected item
+            setSelectedItem : function(item) {
+                this._setSelectedItem(item);
+                $(this._placeholder).remove();
+            },
+
+            _updateModel : function() {
+                var item = this._itemForValue($(this.select.options[this.select.selectedIndex]).data('value'));
+                var changed = this.selectedItem !== item;
+                this._setSelectedItem(item);
+                // if onChange function exists call it
+                if(_(this.options.onChange).isFunction() && changed) {
+                    this.options.onChange(item);
+                }    
+            },
+
+            _itemForValue : function(val) {
+                if(val === null) {
+                    return val;
+                }
+                var item = _(this._collectionArray()).find(function(item) {
+                    var isItem = val === item;
+                    var itemHasValue = this.resolveContent(item, this.options.altValueContent) === val;
+                    return isItem || itemHasValue;
+                }, this);
+
+                return item;
+            },
+
+            scrollToSelectedItem : function() {
+                if(this.select.selectedIndex > 0) {
+                    var optionIsMeasurable = $(this.select).find('option').eq(0).height();
+                    var optionHeight = optionIsMeasurable > 0 ? optionIsMeasurable : 12;
+                    $(this.select).scrollTop((this.select.selectedIndex * optionHeight));
+                }
+            }
+        }));
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/views/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'Select', [
+    'backstrap',
+    'backstrap/View',
+    'backstrap/mixins/HasAlternativeProperty',
+    'backstrap/mixins/HasError',
+    'backstrap/mixins/HasFormLabel',
+    'backstrap/mixins/HasModel'
+]));
+
+/**
+ * A Backbone View that displays a model-bound text field.
+ * Largely from Backbone-UI's TextField class,
+ * with Bootstrap decoration.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @license MIT
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        var noop = function(){};
+
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
+            options : {
+                // disables the input text
+                disabled : false,
+                
+                // The type of input (text, password, number, email, etc.)
+                type : 'text',
+
+                // the value to use for both the name and id attribute 
+                // of the underlying input element
+                name : null,
+
+                // the tab index to set on the underlying input field
+                tabIndex : null,
+
+                // a callback to invoke when a key is pressed within the text field
+                onKeyPress : noop,
+
+                // if given, the text field will limit it's character count
+                maxLength : null
+            },
+
+            // public accessors
+            input : null,
+
+            initialize : function(options) {
+                $$.View.prototype.initialize.call(this, options);
+                this.mixin([$$.mixins.HasModel, $$.mixins.HasGlyph, 
+                    $$.mixins.HasFormLabel, $$.mixins.HasError, $$.mixins.HasFocus]);
+                _(this).bindAll('_refreshValue');
+            
+                $(this.el).addClass('text_field form-group');
+                if(this.options.name){
+                    $(this.el).addClass(this.options.name);
+                }
+
+                this.input = $$.input({maxLength : this.options.maxLength});
+
+                $(this.input).keyup(_(function(e) {
+                    if(_(this.options.onKeyPress).exists() && _(this.options.onKeyPress).isFunction()) {
+                        this.options.onKeyPress(e, this);
+                    }
+                }).bind(this)).input(_(this._updateModel).bind(this));
+
+                this._observeModel(this._refreshValue);
+            },
+
+            render : function() {
+                var value = (this.input && this.input.value.length) > 0 ? 
+                    this.input.value : this.resolveContent();
+
+                this.$el.empty();
+
+                $(this.input).attr({
+                    type : this.options.type ? this.options.type : 'text',
+                    name : this.options.name,
+                    id : this.options.name,
+                    tabIndex : this.options.tabIndex,
+                    placeholder : this.options.placeholder,
+                    pattern : this.options.pattern,
+                    value : value});
+
+                // insert glyph if exist
+                this._parent = $$.div({className : 'text_wrapper'});
+                var content = this.input;
+                var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
+                var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
+                this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, content, this._parent);
+                
+                // add focusin / focusout
+                this.setupFocus(this.input, this._parent);
+                            
+                this.$el.append(this.wrapWithFormLabel($$.span()), this._parent);
+                
+                this.setEnabled(!this.options.disabled);
+
+                return this;
+            },
+
+            getValue : function() {
+                return this.input.value;
+            },
+
+            setValue : function(value) {
+                this.input.value = value;
+                this._updateModel();
+            },
+
+            // sets the enabled state
+            setEnabled : function(enabled) {
+                if(enabled) { 
+                    $(this.el).removeClass('disabled');
+                } else {
+                    $(this.el).addClass('disabled');
+                }
+                this.input.disabled = !enabled;
+            },
+
+            _updateModel : function() {
+                _(this.model).setProperty(this.options.content, this.input.value);
+            },
+
+            _refreshValue : function() {
+                var newValue = this.resolveContent();
+                if(this.input && this.input.value !== newValue) {
+                    this.input.value = _(newValue).exists() ? newValue : "";
+                }
+            }
+        }));
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/views/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'TextField', [
+    'backstrap',
+    'backstrap/View',
+    'backstrap/mixins/HasModel',
+    'backstrap/mixins/HasGlyph',
+    'backstrap/mixins/HasFormLabel',
+    'backstrap/mixins/HasError',
+    'backstrap/mixins/HasFocus'
+]));
+
+/**
+ * A model-bound Bootstrap badge object.
+ *
+ * Use model and content options to set the content of the badge.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @license MIT
+ * 
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
+            tagName: 'span',
+    
+            initialize : function(options) {
+                $$.View.prototype.initialize.call(this, options);
+                this.mixin([$$.mixins.HasModel]);
+                _(this).bindAll('render');
+                this.$el.addClass('badge');
+            },
+    
+            render : function() {
+                var content = this.resolveContent();
+                this._observeModel(this.render);
+                this.$el.text(content);
+                return this;
+            }
+        }));
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/views/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'Badge', [ 'backstrap', 'backstrap/View', 'backstrap/mixins/HasModel' ]));
+
+/**
+ * A basic model-bound Bootstrap navbar object.
+ * 
+ * @author Kevin Perry perry@princeton.edu
+ * @license MIT
+ */
+(function(context, moduleName, requirements)
+{
+    var fn = function($$)
+    {
+        var ItemView = $$.View.extend({
+            tagName: 'a',
+            className: 'nav-item',
+            
+            render: function render() {
+                this.$el.addClass('nav-item-' + this.model.get('name'))
+                    .attr('href', this.model.get('href'))
+                    .text(this.model.get('label'));
+                return this;
+            }
+        });
+
+        var NavList = $$.CollectionView.extend({
+            className: 'navbar-collapse collapse',
+            
+            initialize : function(options) {
+                $$.CollectionView.prototype.initialize.call(this, options);
+                $(this.el).addClass('list');
+                _(this).bindAll('render');
+            },
+            
+            render : function() {
+                $(this.el).empty();
+                this.itemViews = {};
+
+                this.collectionEl = $$.ul({className: 'nav navbar-nav'});
+
+                // if the collection is empty, we render the empty content
+              if((!_(this.model).exists()  || this.model.length === 0) && this.options.emptyContent) {
+                this._emptyContent = _(this.options.emptyContent).isFunction() ? 
+                  this.options.emptyContent() : this.options.emptyContent;
+                this._emptyContent = $$.li(this._emptyContent);
+
+                if(!!this._emptyContent) {
+                  this.collectionEl.appendChild(this._emptyContent);
+                }
+              }
+
+              // otherwise, we render each row
+              else {
+                _(this.model.models).each(function(model, index) {
+                  var item = this._renderItem(model, index);
+                  this.collectionEl.appendChild(item);
+                }, this);
+              }
+
+              this.el.appendChild(this.collectionEl);
+              this.renderClassNames(this.collectionEl);
+
+              return this;
+            },
+
+            // renders an item for the given model, at the given index
+            _renderItem : function(model, index) {
+              var content = null;
+              if(_(this.options.itemView).exists()) {
+
+                if(_(this.options.itemView).isString()) {
+                  content = this.resolveContent(model, this.options.itemView);
+                }
+
+                else {
+                  var view = new this.options.itemView(_({ model : model }).extend(
+                    this.options.itemViewOptions));
+                  view.render();
+                  this.itemViews[model.cid] = view;
+                  content = view.el;
+                }
+              }
+
+              var item = $$.li(content);
+
+              // bind the item click callback if given
+              if(this.options.onItemClick) {
+                $(item).click(_(this.options.onItemClick).bind(this, model));
+              }
+
+              return item;
+            }
+        });
+    
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
+            className: 'navbar navbar-default',
+            brand: '',
+    
+            initialize: function (options) {
+                $$.View.prototype.initialize.apply(this, arguments);
+                if ('navbarType' in options) {
+                    this.$el.addClass('navbar-'+options.navbarType);
+                }
+                if ('brand' in options) {
+                    this.brand = options.brand;
+                }
+                this.navList = new NavList({ model: options.model, itemView: ItemView });
+            },
+    
+            render: function () {
+                this.$el.empty();
+                this.$el.append(
+                    $$.div({ className: 'container' },
+                        $$.div({ className: 'navbar-header' },
+                            $$.button({
+                                    type: 'button',
+                                    className: 'navbar-toggle',
+                                    'data-toggle': 'collapse',
+                                    'data-target': '.navbar-collapse'
+                                },
+                                $$.span({ className: 'sr-only' }, 'Toggle navigation'),
+                                $$.span({ className: 'icon-bar' }),
+                                $$.span({ className: 'icon-bar' }),
+                                $$.span({ className: 'icon-bar' })
+                            ),
+                            $$.a({ className: 'navbar-brand', href: '#' }, this.brand)
+                        ),
+                        this.navList.render().el
+                    )
+                ).attr('role', 'navigation');
+                return this;
+            }
+        }));
+    };
+
+    if (typeof context.define === 'function'
+        && context.define.amd
+        && !context._$$_backstrap_built_flag
+    ) {
+        context.define('backstrap/views/' + moduleName, requirements, fn);
+    } else if (typeof context.module === 'object'
+        && typeof context.module.exports === 'object'
+    ) {
+        context.module.exports = fn.call(requirements.map(
+            function (reqName)
+            {
+                return require(reqName);
+            }
+        ));
+    } else {
+        if (typeof context.$$ !== 'function') {
+            throw new Error('Backstrap not loaded');
+        }
+        fn(context.$$);
+    }
+}(this, 'BasicNavbar', [ 'backstrap', 'backstrap/views/CollectionView' ]));
+
+/**
  * A Backbone View that displays a model-bound checkbox.
  * Largely from Backbone-UI's Checkbox class,
  * with Bootstrap decoration.
@@ -2666,7 +3464,7 @@ if(window.jQuery) {
 {
     var fn = function($$)
     {
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
                 // The property of the model describing the label that 
                 // should be placed next to the checkbox
@@ -2677,7 +3475,7 @@ if(window.jQuery) {
 
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel, $$.HasGlyph, $$.HasError]);
+                this.mixin([$$.mixins.HasModel, $$.mixins.HasGlyph, $$.mixins.HasError]);
                 _(this).bindAll('_refreshCheck');
                 this.$el.addClass('checkbox');
                 if(this.options.name){
@@ -2762,7 +3560,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -2780,9 +3578,9 @@ if(window.jQuery) {
     }
 }(this, 'Checkbox', [
     'backstrap',
-    'backstrap/HasError',
-    'backstrap/HasGlyph',
-    'backstrap/HasModel',
+    'backstrap/mixins/HasError',
+    'backstrap/mixins/HasGlyph',
+    'backstrap/mixins/HasModel',
     'backstrap/View'
 ]));
 
@@ -2797,7 +3595,7 @@ if(window.jQuery) {
 {
     var fn = function($$)
     {
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
                 tagName: 'span',
                 content: 'context',
@@ -2806,7 +3604,7 @@ if(window.jQuery) {
     
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel]);
+                this.mixin([$$.mixins.HasModel]);
                 _(this).bindAll('render');
                 this.prefix = this.options.background ? 'bg-' : 'text-';
             },
@@ -2824,7 +3622,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -2840,7 +3638,7 @@ if(window.jQuery) {
         }
         fn(context.$$);
     }
-}(this, 'Context', [ 'backstrap', 'backstrap/View', 'backstrap/HasModel' ]));
+}(this, 'Context', [ 'backstrap', 'backstrap/View', 'backstrap/mixins/HasModel' ]));
 
 /**
  * A Backbone View that displays a Bootstrap container div.
@@ -2852,7 +3650,7 @@ if(window.jQuery) {
 {
     var fn = function($$)
     {
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
                 this.$el.addClass('container');
@@ -2864,7 +3662,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -2896,7 +3694,7 @@ if(window.jQuery) {
     {
         var KEY_RETURN = 13;
 
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
 
             options : {
                 // a moment.js format : http://momentjs.com/docs/#/display/format
@@ -2910,7 +3708,7 @@ if(window.jQuery) {
 
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel, $$.HasFormLabel, $$.HasError]);
+                this.mixin([$$.mixins.HasModel, $$.mixins.HasFormLabel, $$.mixins.HasError]);
                 this.$el.addClass('date_picker');
 
                 this._calendar = new $$.Calendar({
@@ -3046,7 +3844,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -3068,11 +3866,11 @@ if(window.jQuery) {
 }(this, 'DatePicker', [
     'backstrap',
     'moment',
-    'backstrap/Calendar',
-    'backstrap/HasError',
-    'backstrap/HasFormLabel',
-    'backstrap/HasModel',
-    'backstrap/TextField',
+    'backstrap/views/Calendar',
+    'backstrap/mixins/HasError',
+    'backstrap/mixins/HasFormLabel',
+    'backstrap/mixins/HasModel',
+    'backstrap/views/TextField',
     'backstrap/View'
 ]));
 
@@ -3110,37 +3908,49 @@ if(window.jQuery) {
         });
         
     
-        return ($$[moduleName] = $$.List.extend({
-            className: 'dropdown',
-    
+        return ($$[moduleName] = $$.views[moduleName] = $$.List.extend({
+            options: {
+                type: 'plain' // also allowed: 'button' or 'split-button'.
+            },
+
             initialize: function (options) {
                 this.options.itemView = ItemView;
                 $$.List.prototype.initialize.call(this, options);
 
-                this.button = $$.button({
-                        className: 'dropdown-toggle',
-                        context: this.options.context,
-                        id: _.uniqueId('Bkp'),
-                        type: 'button',
-                        'data-toggle': 'dropdown'
-                    },
-                    String.fromCharCode(160), // &nbsp; to get proper height.
+                var topTag = $$.a;
+                var topAttrs = {
+                    className: 'dropdown-toggle',
+                    context: this.options.context,
+                    id: _.uniqueId('Bkp'),
+                    'data-toggle': 'dropdown'
+                };
+
+                if (this.options.type !== 'plain') {
+                    topAttrs['type'] = 'button';
+                    topTag = $$.button;
+                }
+
+                this.button = topTag.call($$,
+                    topAttrs,
+                    String.fromCharCode(160), // &nbsp; to get proper height and spacing.
                     $$.caret()
                 );
+
                 // allow bubble-up to Bootstrap's Dropdown event handler
                 $(this.button).on('click', function () { return true; });
-                
-                if (this.options.split) {
+                this.$el.addClass(this.options.dropup ? 'dropup' : 'dropdown');
+
+                if (this.options.type === 'split-button') {
                     this.$el.addClass('btn-group');
                     this.labelButton = $$.button({
                             context: this.options.context,
                             type: 'button'
                         },
-                        this.options.buttonLabel
+                        this.options.labelContent
                     );
                     $(this.button).append($$.span({className: 'sr-only'}, 'Toggle Dropdown'));
                 } else {
-                    $(this.button).prepend(this.options.buttonLabel);
+                    $(this.button).prepend(this.options.labelContent);
                 }
                 
                 if ('align' in this.options) {
@@ -3159,7 +3969,9 @@ if(window.jQuery) {
             render: function () {
                 $$.List.prototype.render.call(this);
                 this.$el.prepend(this.button);
-                this.$el.prepend(this.labelButton);
+                if (this.labelButton) {
+                    this.$el.prepend(this.labelButton);
+                }
                 return this;
             },
             
@@ -3178,7 +3990,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -3194,7 +4006,7 @@ if(window.jQuery) {
         }
         fn(context.$$);
     }
-}(this, 'Dropdown', [ 'backstrap', 'backstrap/List', 'backstrap/Button' ]));
+}(this, 'Dropdown', [ 'backstrap', 'backstrap/views/List', 'backstrap/views/Button' ]));
 
 /**
  * A Backbone View that displays a Bootstrap contextually-colored glyphicon glyph.
@@ -3207,7 +4019,7 @@ if(window.jQuery) {
 {
     var fn = function($$)
     {
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
                 context: 'default',
                 contextMap: null,
@@ -3221,7 +4033,7 @@ if(window.jQuery) {
             initialize : function(options) {
                 options.tagName = 'span';
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel]);
+                this.mixin([$$.mixins.HasModel]);
                 _(this).bindAll('render');
                 this.prefix = this.options.background ? 'bg-' : 'text-';
                 this.glyph = $$.glyph(this.content);
@@ -3249,7 +4061,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -3265,107 +4077,7 @@ if(window.jQuery) {
         }
         fn(context.$$);
     }
-}(this, 'Glyph', [ 'backstrap', 'backstrap/View', 'backstrap/HasModel' ]));
-
-/**
- * Creates a Bootstrap grid layout object.
- * 
- * @author Kevin Perry perry@princeton.edu
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        var appendGridRows = function (layout) {
-            for (var r=0; r<layout.length; r++) {
-                this.appendRow(layout[r]);
-            }
-        };
-
-        var parseCellSpec = function (spec) {
-            var str = 'col';
-            for (var prop in spec) {
-                if (prop === 'className') {
-                    str += ' ' + spec[prop];
-                } else {
-                    var sz = $$._mapSize(prop);
-                    if (sz) {
-                        str += ' col-' + sz + '-' + spec[prop];
-                    }
-                }
-            }
-            return str;
-        };
-
-        var appendGridRow = function (layout) {
-            var rowdiv = $$.div({className: 'row'});
-            $(this).append(rowdiv);
-            for (var c=0; c<layout.length; c++) {
-                var cell = layout[c];
-                var cellClass;
-                var content = '';
-                if (cell !== null && typeof cell === 'object') {
-                    cellClass = parseCellSpec(cell);
-                    content = ('content' in cell) ? cell.content : '';
-                } else {
-                    cellClass = 'col col-md-' + cell;
-                }
-                $(rowdiv).append($$.div({className: cellClass}, content));
-            }
-        };
-        
-        return ($$[moduleName] = function () {
-            var layout;
-            var cn = 'container';
-            
-            layout = [[12]];
-            if (typeof(arguments[0]) === 'object') {
-                if ('layout' in arguments[0]) {
-                    layout = arguments[0].layout;
-                    delete arguments[0].layout;
-                }
-                if ('fluid' in arguments[0]) {
-                    cn = arguments[0].fluid ? 'container-fluid' : cn;
-                    delete arguments[0].fluid;
-                }
-            }
-            var el = $$.apply(this,
-                ['div', null].concat(Array.prototype.slice.call(arguments)));
-            $(el).addClass(cn);
-            el.appendRows = appendGridRows;
-            el.appendRow = appendGridRow;
-            el.getRow = function () {
-                return $('> *:nth-child('+row+') ', el);
-            };
-            el.getCell = function (row, col) {
-                return $('> *:nth-child('+row+') > *:nth-child(' + col + ') ', el);
-            };
-            el.appendRows(layout);
-            return el;
-        });
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'grid', [ 'backstrap' ]));
+}(this, 'Glyph', [ 'backstrap', 'backstrap/View', 'backstrap/mixins/HasModel' ]));
 
 /**
  * A Backbone View that displays a Bootstrap grid.
@@ -3402,7 +4114,7 @@ if(window.jQuery) {
         };
         
         // Defaults to 1x1 non-fluid layout.
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             fluid: false,
             layout: [[ 12 ]],
 
@@ -3451,7 +4163,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -3480,7 +4192,7 @@ if(window.jQuery) {
 {
     var fn = function($$)
     {
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
     
             options : {
                 emptyContent : '',
@@ -3492,7 +4204,7 @@ if(window.jQuery) {
 
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel]);
+                this.mixin([$$.mixins.HasModel]);
                 _(this).bindAll('render');
                 this.$el.addClass('label label-' + $$._mapSize(this.options.size));
                 if (this.options.size !== this.options.context) {
@@ -3526,7 +4238,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -3542,7 +4254,7 @@ if(window.jQuery) {
         }
         fn(context.$$);
     }
-}(this, 'Label', [ 'backstrap', 'backstrap/View', 'backstrap/HasModel' ]));
+}(this, 'Label', [ 'backstrap', 'backstrap/View', 'backstrap/mixins/HasModel' ]));
 
 /**
  * A Backbone View that displays a model-bound URL link.
@@ -3556,7 +4268,7 @@ if(window.jQuery) {
 {
     var fn = function($$)
     {
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
                 // disables the link (non-clickable) 
                 disabled : false,
@@ -3572,7 +4284,7 @@ if(window.jQuery) {
 
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel, $$.HasGlyph]);
+                this.mixin([$$.mixins.HasModel, $$.mixins.HasGlyph]);
                 _(this).bindAll('render');
                 this.$el.addClass('link text-' + $$._mapSize(this.options.size));
                 if (this.options.size !== this.options.context) {
@@ -3621,7 +4333,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -3637,7 +4349,7 @@ if(window.jQuery) {
         }
         fn(context.$$);
     }
-}(this, 'Link', [ 'backstrap', 'backstrap/View', 'backstrap/HasModel', 'backstrap/HasGlyph' ]));
+}(this, 'Link', [ 'backstrap', 'backstrap/View', 'backstrap/mixins/HasModel', 'backstrap/mixins/HasGlyph' ]));
 
 /**
  * A Backbone View that displays a model-bound menu.
@@ -3653,7 +4365,7 @@ if(window.jQuery) {
     {
         // TODO: Major overhaul - should not use <select>
         var noop = function(){};
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
                 // an additional item to render at the top of the menu to 
                 // denote the lack of a selection
@@ -3676,8 +4388,8 @@ if(window.jQuery) {
 
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel, $$.HasAlternativeProperty, 
-                    $$.HasFormLabel, $$.HasError]);
+                this.mixin([$$.mixins.HasModel, $$.mixins.HasAlternativeProperty, 
+                    $$.mixins.HasFormLabel, $$.mixins.HasError]);
                 _(this).bindAll('render');
                 $(this.el).addClass('menu');
             },
@@ -3822,7 +4534,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -3841,10 +4553,10 @@ if(window.jQuery) {
 }(this, 'Menu', [
     'backstrap',
     'backstrap/View',
-    'backstrap/HasAlternativeProperty',
-    'backstrap/HasError',
-    'backstrap/HasFormLabel',
-    'backstrap/HasModel'
+    'backstrap/mixins/HasAlternativeProperty',
+    'backstrap/mixins/HasError',
+    'backstrap/mixins/HasFormLabel',
+    'backstrap/mixins/HasModel'
 ]));
 
 /**
@@ -3862,7 +4574,7 @@ if(window.jQuery) {
 {
     var fn = function ($$)
     {
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options: {
                 // The Model instance the view is bound to.
                 model: null,
@@ -3896,7 +4608,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -3913,318 +4625,6 @@ if(window.jQuery) {
         fn(context.$$);
     }
 }(this, 'ModelView', [ 'backstrap', 'backstrap/View' ]));
-
-/**
- * A 'tag' that defines a Bootstrap nav - a navigation group.
- *
- * The nav is a $$.ul(), so you should populate it with $$.li()'s.
- * You should provide a type, either "type: 'tabs'" or "type: 'pills'".
- * You can also specify attributes "justified: true" for justified tabs or pills,
- * and "stacked: true" for stacked pills.
- *
- * @author Kevin Perry perry@princeton.edu
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        return($$[moduleName] = function (attrs)
-            {
-                var el;
-                var type = '';
-
-                if (typeof attrs === 'object' && attrs.nodeType !== 1) {
-                    if ('type' in attrs) {
-                        if (attrs.type === 'tabs' && !('role' in attrs)) {
-                            attrs.role = 'tablist';
-                        }
-                        if (attrs.type === 'tabs' || attrs.type === 'pills') {
-                            type = ' nav-' + attrs.type;
-                        }
-                        delete(attrs.type);
-                    }
-                    if ('justified' in attrs) {
-                        if (attrs.justified) {
-                            type += ' nav-justified';
-                        }
-                        delete(attrs.justified);
-                    }
-                    if ('stacked' in attrs) {
-                        if (attrs.stacked) {
-                            type += ' nav-stacked';
-                        }
-                        delete(attrs.stacked);
-                    }
-                }
-
-                el = $$.ul.apply($$, arguments);
-                $(el).addClass('nav' + type);
-                el.clearActive = function () {
-                    $('> *', this).removeClass('active');
-                    return this;
-                };
-
-                return el;
-            }
-        );
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'nav', [ 'backstrap' ]));
-
-/**
- * A 'tag' that defines a Bootstrap navbar component.
- *
- * Options:
- *     brandContent: '' - Branding visual (a DOM object).
- *     brandUrl: '#' - URL for brand href.
- *     position: '' - Allowed: 'fixed-top', 'fixed-bottom' or 'static-top'.
- *     inverse: false - Invert color scheme
- *     toggleContent: Alternate visual for navbar collapse toggle (a DOM object; defaults to a 3-bar hamburger).
- *     sr_toggle_text: 'Toggle navigation' - For screen-readers
- *     role: 'navigation' - For accessibility
- *
- * @author Kevin Perry perry@princeton.edu
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        return($$[moduleName] = function (attrs)
-            {
-                var el, content, collapser, toggleContent = '';
-                var offset = 1;
-                var brandContent = '';
-                var brandUrl = '#';
-                var className = 'navbar-default';
-                var sr_toggle_text = 'Toggle navigation';
-                var collapserId = _.uniqueId('Bkp');
-
-                if (typeof attrs !== 'object' || attrs.nodeType === 1) {
-                    attrs = {};
-                    offset = 0;
-                } else {
-                    if ('brandContent' in attrs) {
-                        brandContent = attrs.brandContent;
-                        delete(attrs.brandContent);
-                    }
-                    if ('brandUrl' in attrs) {
-                        brandUrl = attrs.brandUrl;
-                        delete(attrs.brandUrl);
-                    }
-                    if ('inverse' in attrs) {
-                        className = attrs.inverse ? 'navbar-inverse' : 'navbar-default';
-                        delete(attrs.inverse);
-                    }
-                    if ('position' in attrs) {
-                        if (attrs.position === 'fixed-bottom'
-                            || attrs.position === 'fixed-top'
-                            || attrs.position === 'static-top'
-                        ) {
-                            className += ' navbar-' + attrs.position;
-                        }
-                        delete(attrs.position);
-                    }
-                    if ('toggleContent' in attrs) {
-                        toggleContent = attrs.toggleContent;
-                        delete(attrs.toggleContent);
-                    } else {
-                        toggleContent = $$.span(
-                            $$.span({className: 'icon-bar'}),
-                            $$.span({className: 'icon-bar'}),
-                            $$.span({className: 'icon-bar'})
-                        );
-                    }
-                    if ('sr_toggle_text' in attrs) {
-                        sr_toggle_text = attrs.sr_toggle_text;
-                        delete(attrs.sr_toggle_text);
-                    }
-                }
-                if (!('role' in attrs)) {
-                    attrs.role = 'navigation';
-                }
-
-                el = $$.nav(attrs);
-                content = Array.prototype.slice.call(arguments, offset);
-                collapser = $$.div({className: 'collapse navbar-collapse', id: collapserId});
-                $(collapser).append.apply($(collapser), content);
-
-                $(el).addClass('navbar ' + className).append(
-                    $$.div({className: 'container container-fluid'},
-                        $$.div({className: 'navbar-header'},
-                            $$.button({
-                                    type: 'button',
-                                    className: 'navbar-toggle collapsed',
-                                    'data-toggle': 'collapse',
-                                    'data-target': '#' + collapserId
-                                },
-                                $$.span({className: 'sr-only'}, sr_toggle_text),
-                                toggleContent
-                            ),
-                            $$.a({
-                                    className: 'navbar-brand',
-                                    href: brandUrl
-                                }, brandContent
-                            )
-                        ),
-                        collapser
-                    )
-                );
-
-                return el;
-            }
-        );
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'navbar', [ 'backstrap' ]));
-
-/**
- * A 'tag' that defines a Bootstrap navbar content group.
- * The navbarForm is a $$.form(), so you should populate it
- * with $$.formGroups()'s and form items.
- *
- * @author Kevin Perry perry@princeton.edu
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        return($$[moduleName] = function (attrs)
-            {
-                var el;
-                var align = 'left';
-
-                if (typeof attrs === 'object' && attrs.nodeType !== 1) {
-                    if ('align' in attrs) {
-                        if (attrs.align === 'right') {
-                            align = attrs.align;
-                        }
-                        delete(attrs.align);
-                    }
-                }
-
-                el = $$.ul.apply($$, arguments);
-                $(el).addClass('navbar-form navbar-' + align);
-
-                return el;
-            }
-        );
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'navbarForm', [ 'backstrap' ]));
-
-/**
- * A 'tag' that defines a Bootstrap navbar content group.
- * The navbarGroup is a $$.ul(), so you should populate it with $$.li()'s.
- *
- * @author Kevin Perry perry@princeton.edu
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        return($$[moduleName] = function (attrs)
-            {
-                var el;
-                var align = 'left';
-
-                if (typeof attrs === 'object' && attrs.nodeType !== 1) {
-                    if ('align' in attrs) {
-                        if (attrs.align === 'right') {
-                            align = attrs.align;
-                        }
-                        delete(attrs.align);
-                    }
-                }
-
-                el = $$.ul.apply($$, arguments);
-                $(el).addClass('nav navbar-nav navbar-' + align);
-
-                return el;
-            }
-        );
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'navbarGroup', [ 'backstrap' ]));
 
 /**
  * A model-bound Bootstrap pills nav object.
@@ -4248,7 +4648,7 @@ if(window.jQuery) {
             }
         });
         
-        return ($$[moduleName] = $$.List.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.List.extend({
     
             initialize: function (options) {
                 this.options.itemView = ItemView;
@@ -4267,7 +4667,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -4283,8 +4683,9 @@ if(window.jQuery) {
         }
         fn(context.$$);
     }
-}(this, 'NavPills', [ 'backstrap', 'backstrap/List' ]));
+}(this, 'NavPills', [ 'backstrap', 'backstrap/views/List' ]));
  
+
 /**
  * A model-bound Bootstrap tabs nav object.
  * 
@@ -4307,7 +4708,7 @@ if(window.jQuery) {
             }
         });
         
-        return ($$[moduleName] = $$.List.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.List.extend({
     
             initialize: function (options) {
                 this.options.itemView = ItemView;
@@ -4326,7 +4727,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -4342,7 +4743,7 @@ if(window.jQuery) {
         }
         fn(context.$$);
     }
-}(this, 'NavTabs', [ 'backstrap', 'backstrap/List' ]));
+}(this, 'NavTabs', [ 'backstrap', 'backstrap/views/List' ]));
 
 /**
  * A Backbone View that displays a Bootstrap panel div.
@@ -4354,7 +4755,7 @@ if(window.jQuery) {
 {
     var fn = function($$)
     {
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
                 this.$el.addClass('panel');
@@ -4366,7 +4767,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -4399,7 +4800,7 @@ if(window.jQuery) {
         var ItemView = $$.View.extend({
             initialize: function () {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel]);
+                this.mixin([$$.mixins.HasModel]);
                 _(this).bindAll('render');
                 this.span = $$.span({className: this.model.labelled ? '' : 'sr-only'});
                 $(this.el).addClass('progress-bar').
@@ -4425,7 +4826,7 @@ if(window.jQuery) {
             }
         });
         
-        return ($$[moduleName] = $$.CollectionView.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.CollectionView.extend({
             options : {
                 tagName : 'span',
                 itemView: ItemView
@@ -4433,7 +4834,7 @@ if(window.jQuery) {
     
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel]);
+                this.mixin([$$.mixins.HasModel]);
                 _(this).bindAll('render');
                 $(this.el).addClass('progress');
                 if (typeof this.model !== 'Collection') {
@@ -4454,7 +4855,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -4472,8 +4873,8 @@ if(window.jQuery) {
     }
 }(this, 'ProgressBar', [
     'backstrap',
-    'backstrap/CollectionView',
-    'backstrap/HasModel'
+    'backstrap/views/CollectionView',
+    'backstrap/mixins/HasModel'
 ]));
 
 /**
@@ -4490,7 +4891,7 @@ if(window.jQuery) {
     {
         var noop = function(){};
 
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
 
             options : {
                 // used to group the radio inputs
@@ -4505,9 +4906,9 @@ if(window.jQuery) {
 
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel, 
-                    $$.HasAlternativeProperty, $$.HasGlyph, 
-                    $$.HasFormLabel, $$.HasError]);
+                this.mixin([$$.mixins.HasModel, 
+                    $$.mixins.HasAlternativeProperty, $$.mixins.HasGlyph, 
+                    $$.mixins.HasFormLabel, $$.mixins.HasError]);
                 _(this).bindAll('render');
 
                 $(this.el).addClass('radio_group');
@@ -4601,7 +5002,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -4620,221 +5021,11 @@ if(window.jQuery) {
 }(this, 'RadioGroup', [
     'backstrap',
     'backstrap/View',
-    'backstrap/HasAlternativeProperty',
-    'backstrap/HasError',
-    'backstrap/HasFormLabel',
-    'backstrap/HasGlyph',
-    'backstrap/HasModel'
-]));
-
-/**
- * A Backbone View that displays a model-bound menu.
- * Largely from Backbone-UI's Menu class,
- * with Bootstrap decoration.
- * Re-named to Select so I can use Menu for a more elaborate component.
- * 
- * @author Kevin Perry perry@princeton.edu
- * @license MIT
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        var noop = function(){};
-
-        return($$[moduleName] = $$.View.extend({
-            options : {
-
-                // an additional item to render at the top of the menu to 
-                // denote the lack of a selection
-                emptyItem : null,
-
-                // enables / disables the menu
-                disabled : false,
-
-                // A callback to invoke with a particular item when that item is
-                // selected from the menu.
-                onChange : noop,
-
-                // text to place in the pulldown button before a
-                // selection has been made
-                placeholder : 'Select...',
-
-                // number of option items to display in the menu
-                size : 1
-            },
-
-            initialize : function(options) {
-                $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel, $$.HasAlternativeProperty, 
-                    $$.HasFormLabel, $$.HasError]);
-                _(this).bindAll('render');
-                $(this.el).addClass('menu');
-            },
-
-
-            render : function() {
-                $(this.el).empty();
-
-                this._observeModel(this.render);
-                this._observeCollection(this.render);
-
-                this.selectedItem = this._determineSelectedItem();
-                // || this.selectedItem;
-                var selectedValue = this._valueForItem(this.selectedItem);
-
-                this.select = $$.select({ 
-                    size : this.options.size,
-                    disabled : this.options.disabled
-                 });
-
-                // setup events for each input in collection
-                $(this.select).change(_(this._updateModel).bind(this));
-
-                var selectedOffset = 0;
-
-                // append placeholder option if no selectedItem
-                this._placeholder = null;
-                if(!this.options.emptyItem && (this.options.size === 1) && !selectedValue) {
-                    this._placeholder = $$.option(this.options.placeholder);
-                    $(this._placeholder).data('value', null);
-                    $(this._placeholder).attr({ disabled : 'true' });
-                    this.select.appendChild(this._placeholder);
-                    // adjust for placeholder option
-                    selectedOffset++;
-                }
-
-                if(this.options.emptyItem) {
-
-                    this._emptyItem = $$.option(this._labelForItem(this.options.emptyItem));
-                    $(this._emptyItem).data('value', null);
-                    this.select.appendChild(this._emptyItem);
-                    $(this._emptyItem).click(_(function() {
-                        this.select.selectedIndex = 0;
-                        this._updateModel();
-                    }).bind(this));
-                    // adjust for emptyItem option
-                    selectedOffset++;
-                }
-
-                // default selectedIndex as placeholder if exists
-                this._selectedIndex = -1 + selectedOffset;
-
-                _(this._collectionArray()).each(function(item, idx) {
-
-                    // adjust index for potential placeholder and emptyItem
-                    idx = idx + selectedOffset;
-
-                    var val = this._valueForItem(item);
-                    if(_(selectedValue).isEqual(val)) {
-                        this._selectedIndex = idx;
-                    }
-
-                    var option = $$.option(this._labelForItem(item));
-                    $(option).data('value', val);
-                    $(option).attr({
-                        selected : this._selectedIndex === idx
-                    });
-
-                    $(option).click(_(function(selectedIdx) {
-                        this.select.selectedIndex = selectedIdx;
-                        this._updateModel();
-                    }).bind(this, idx));
-
-                    this.select.appendChild(option);
-
-                }, this);
-
-                // set the selectedIndex on the select element
-                this.select.selectedIndex = this._selectedIndex;
-
-                this.el.appendChild(this.wrapWithFormLabel(this.select));
-
-                // scroll to selected Item
-                this.scrollToSelectedItem();
-
-                this.setEnabled(!this.options.disabled);
-
-                return this;
-            },
-
-         // sets the enabled state
-            setEnabled : function(enabled) {
-                $(this.el).toggleClass('disabled', !enabled);
-                this.select.disabled = !enabled;
-            },
-
-            _labelForItem : function(item) {
-                return !_(item).exists() ? this.options.placeholder : 
-                    this.resolveContent(item, this.options.altLabelContent);
-            },
-
-            // sets the selected item
-            setSelectedItem : function(item) {
-                this._setSelectedItem(item);
-                $(this._placeholder).remove();
-            },
-
-            _updateModel : function() {
-                var item = this._itemForValue($(this.select.options[this.select.selectedIndex]).data('value'));
-                var changed = this.selectedItem !== item;
-                this._setSelectedItem(item);
-                // if onChange function exists call it
-                if(_(this.options.onChange).isFunction() && changed) {
-                    this.options.onChange(item);
-                }    
-            },
-
-            _itemForValue : function(val) {
-                if(val === null) {
-                    return val;
-                }
-                var item = _(this._collectionArray()).find(function(item) {
-                    var isItem = val === item;
-                    var itemHasValue = this.resolveContent(item, this.options.altValueContent) === val;
-                    return isItem || itemHasValue;
-                }, this);
-
-                return item;
-            },
-
-            scrollToSelectedItem : function() {
-                if(this.select.selectedIndex > 0) {
-                    var optionIsMeasurable = $(this.select).find('option').eq(0).height();
-                    var optionHeight = optionIsMeasurable > 0 ? optionIsMeasurable : 12;
-                    $(this.select).scrollTop((this.select.selectedIndex * optionHeight));
-                }
-            }
-        }));
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'Select', [
-    'backstrap',
-    'backstrap/View',
-    'backstrap/HasAlternativeProperty',
-    'backstrap/HasError',
-    'backstrap/HasFormLabel',
-    'backstrap/HasModel'
+    'backstrap/mixins/HasAlternativeProperty',
+    'backstrap/mixins/HasError',
+    'backstrap/mixins/HasFormLabel',
+    'backstrap/mixins/HasGlyph',
+    'backstrap/mixins/HasModel'
 ]));
 
 /**
@@ -4847,7 +5038,7 @@ if(window.jQuery) {
 {
     var fn = function($$)
     {
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
                 size: 'default',
                 context: 'default'
@@ -4857,7 +5048,7 @@ if(window.jQuery) {
 
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel, $$.HasGlyph]);
+                this.mixin([$$.mixins.HasModel, $$.mixins.HasGlyph]);
                 _(this).bindAll('render');
                 this.$el.addClass('text-' + $$._mapSize(this.options.size));
                 if (this.options.size !== this.options.context) {
@@ -4886,7 +5077,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -4905,8 +5096,8 @@ if(window.jQuery) {
 }(this, 'Span', [
     'backstrap',
     'backstrap/View',
-    'backstrap/HasModel',
-    'backstrap/HasGlyph'
+    'backstrap/mixins/HasModel',
+    'backstrap/mixins/HasGlyph'
 ]));
 
 /**
@@ -4923,7 +5114,7 @@ if(window.jQuery) {
     {
         var noop = function () {};
         
-        return ($$[moduleName] = $$.CollectionView.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.CollectionView.extend({
             options: _({}).extend($$.CollectionView.prototype.options, {
                 // Each column should contain a <code>title</code> property to
                 // describe the column's heading, a <code>content</code> property to
@@ -5107,7 +5298,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -5123,7 +5314,7 @@ if(window.jQuery) {
         }
         fn(context.$$);
     }
-}(this, 'Table', [ 'backstrap', 'backstrap/CollectionView' ]));
+}(this, 'Table', [ 'backstrap', 'backstrap/views/CollectionView' ]));
 
 /**
  * A Backbone View that displays a model-bound text area.
@@ -5139,7 +5330,7 @@ if(window.jQuery) {
     {
         var noop = function(){};
 
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
                 className : 'text_area',
 
@@ -5163,8 +5354,8 @@ if(window.jQuery) {
 
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel, $$.HasFormLabel,
-                    $$.HasError, $$.HasFocus]);
+                this.mixin([$$.mixins.HasModel, $$.mixins.HasFormLabel,
+                    $$.mixins.HasError, $$.mixins.HasFocus]);
 
                 $(this.el).addClass('text_area');
                 if(this.options.name){
@@ -5242,7 +5433,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -5261,165 +5452,10 @@ if(window.jQuery) {
 }(this, 'TextArea', [
     'backstrap',
     'backstrap/View',
-    'backstrap/HasError',
-    'backstrap/HasFocus',
-    'backstrap/HasFormLabel',
-    'backstrap/HasModel'
-]));
-
-/**
- * A Backbone View that displays a model-bound text field.
- * Largely from Backbone-UI's TextField class,
- * with Bootstrap decoration.
- * 
- * @author Kevin Perry perry@princeton.edu
- * @license MIT
- */
-(function(context, moduleName, requirements)
-{
-    var fn = function($$)
-    {
-        var noop = function(){};
-
-        return ($$[moduleName] = $$.View.extend({
-            options : {
-                // disables the input text
-                disabled : false,
-                
-                // The type of input (text, password, number, email, etc.)
-                type : 'text',
-
-                // the value to use for both the name and id attribute 
-                // of the underlying input element
-                name : null,
-
-                // the tab index to set on the underlying input field
-                tabIndex : null,
-
-                // a callback to invoke when a key is pressed within the text field
-                onKeyPress : noop,
-
-                // if given, the text field will limit it's character count
-                maxLength : null
-            },
-
-            // public accessors
-            input : null,
-
-            initialize : function(options) {
-                $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel, $$.HasGlyph, 
-                    $$.HasFormLabel, $$.HasError, $$.HasFocus]);
-                _(this).bindAll('_refreshValue');
-            
-                $(this.el).addClass('text_field form-group');
-                if(this.options.name){
-                    $(this.el).addClass(this.options.name);
-                }
-
-                this.input = $$.input({maxLength : this.options.maxLength});
-
-                $(this.input).keyup(_(function(e) {
-                    if(_(this.options.onKeyPress).exists() && _(this.options.onKeyPress).isFunction()) {
-                        this.options.onKeyPress(e, this);
-                    }
-                }).bind(this)).input(_(this._updateModel).bind(this));
-
-                this._observeModel(this._refreshValue);
-            },
-
-            render : function() {
-                var value = (this.input && this.input.value.length) > 0 ? 
-                    this.input.value : this.resolveContent();
-
-                this.$el.empty();
-
-                $(this.input).attr({
-                    type : this.options.type ? this.options.type : 'text',
-                    name : this.options.name,
-                    id : this.options.name,
-                    tabIndex : this.options.tabIndex,
-                    placeholder : this.options.placeholder,
-                    pattern : this.options.pattern,
-                    value : value});
-
-                // insert glyph if exist
-                this._parent = $$.div({className : 'text_wrapper'});
-                var content = this.input;
-                var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
-                var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
-                this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, content, this._parent);
-                
-                // add focusin / focusout
-                this.setupFocus(this.input, this._parent);
-                            
-                this.$el.append(this.wrapWithFormLabel($$.span()), this._parent);
-                
-                this.setEnabled(!this.options.disabled);
-
-                return this;
-            },
-
-            getValue : function() {
-                return this.input.value;
-            },
-
-            setValue : function(value) {
-                this.input.value = value;
-                this._updateModel();
-            },
-
-            // sets the enabled state
-            setEnabled : function(enabled) {
-                if(enabled) { 
-                    $(this.el).removeClass('disabled');
-                } else {
-                    $(this.el).addClass('disabled');
-                }
-                this.input.disabled = !enabled;
-            },
-
-            _updateModel : function() {
-                _(this.model).setProperty(this.options.content, this.input.value);
-            },
-
-            _refreshValue : function() {
-                var newValue = this.resolveContent();
-                if(this.input && this.input.value !== newValue) {
-                    this.input.value = _(newValue).exists() ? newValue : "";
-                }
-            }
-        }));
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$$);
-    }
-}(this, 'TextField', [
-    'backstrap',
-    'backstrap/View',
-    'backstrap/HasModel',
-    'backstrap/HasGlyph',
-    'backstrap/HasFormLabel',
-    'backstrap/HasError',
-    'backstrap/HasFocus'
+    'backstrap/mixins/HasError',
+    'backstrap/mixins/HasFocus',
+    'backstrap/mixins/HasFormLabel',
+    'backstrap/mixins/HasModel'
 ]));
 
 /**
@@ -5436,7 +5472,7 @@ if(window.jQuery) {
     {
         var KEY_RETURN = 13;
 
-        return ($$[moduleName] = $$.View.extend({
+        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
                 // a moment.js format : http://momentjs.com/docs/#/display/format
                 format : 'hh:mm a',
@@ -5453,11 +5489,11 @@ if(window.jQuery) {
 
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.HasModel, $$.HasFormLabel, $$.HasError]);
+                this.mixin([$$.mixins.HasModel, $$.mixins.HasFormLabel, $$.mixins.HasError]);
                 $(this.el).addClass('time_picker');
 
                 this._timeModel = {};
-                this._menu = new $$.Menu({
+                this._menu = new $$.Select({
                     className : 'time_picker_menu',
                     model : this._timeModel,
                     altLabelContent : 'label',
@@ -5604,7 +5640,7 @@ if(window.jQuery) {
         && context.define.amd
         && !context._$$_backstrap_built_flag
     ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
+        context.define('backstrap/views/' + moduleName, requirements, fn);
     } else if (typeof context.module === 'object'
         && typeof context.module.exports === 'object'
     ) {
@@ -5627,11 +5663,11 @@ if(window.jQuery) {
     'backstrap',
     'moment',
     'backstrap/View',
-    'backstrap/HasError',
-    'backstrap/HasFormLabel',
-    'backstrap/HasModel',
-    'backstrap/Menu',
-    'backstrap/TextField'
+    'backstrap/mixins/HasError',
+    'backstrap/mixins/HasFormLabel',
+    'backstrap/mixins/HasModel',
+    'backstrap/views/Select',
+    'backstrap/views/TextField'
 ]));
 
 /**
