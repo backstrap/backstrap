@@ -10,23 +10,23 @@
     {
         return ($$[moduleName] = $$.components[moduleName] = function (attrs)
             {
-                var offset = 1;
-                var options = attrs;
-                if (typeof attrs !== 'object' || attrs.nodeType === 1) {
-                    options = {};
-                    offset = 0;
+                var offset = 0;
+                var argsHead = new Array();
+                if (typeof attrs === 'object' && attrs.nodeType !== 1) {
+                    argsHead.push(attrs);
+                    offset = 1;
+                    if (attrs.labelContent) {
+                        argsHead.push($$.li({className: 'header'}, attrs.labelContent));
+                        delete(attrs.labelContent);
+                    }
                 }
                 
-                var obj = $$.ul.apply($$,
-                    [
-                        options,
-                        $$.li({className: 'header'}, options.label)
-                    ].concat(
-                        Array.prototype.slice.call(arguments, offset)
-                    ));
-                $(obj).addClass('dropdown-menu dropdown-menu-group');
+                var list = $$.ul.apply($$, argsHead.concat(
+                    Array.prototype.slice.call(arguments, offset)
+                ));
+                $(list).addClass('dropdown-menu dropdown-menu-group');
                 
-                return $$.li(obj);
+                return $$.li(list);
             });
     };
 

@@ -406,7 +406,7 @@ require(['jquery', 'backstrap'], function($, $$) {
                 $$.li({className: 'header'}, 'Things!'),
                 $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Some thing')),
                 $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Thing two')),
-                $$.dropdownGroup({label: 'Special Things!'},
+                $$.dropdownGroup({labelContent: 'Special Things!'},
                     $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Thing 3')),
                     $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Thing 4'))
                 ),
