@@ -226,8 +226,8 @@ require(['jquery', 'backstrap'], function($, $$) {
 	testObj(obj, 'Context(bg) + Glyph + Badge');
 
 	testObj(new $$.Dropdown({align: 'left', context: 'primary',
-	    buttonLabel: 'Things',
-	    split: false,
+	    type: 'button',
+	    labelContent: 'Things',
 	    model: new $$.Collection([
     		{ name: 'first', href: '#first', label: 'First' },
             { element: 'divider' },
@@ -358,24 +358,49 @@ require(['jquery', 'backstrap'], function($, $$) {
         altLabelContent: 'name',
         altValueContent: 'value'
     }), 'Select');
-	
-	testObj(new $$.RadioGroup({
-		model: new $$.Model({ value: 'c' }),
-		content: 'value',
-		alternatives: new $$.Collection(
-			[
-			 { name: 'Adam',    value: 'a' },
-			 { name: 'Bert',    value: 'b' },
-			 { name: 'Cathy',   value: 'c' },
-			 { name: 'Douglas', value: 'd' },
-			 { name: 'Ellen',   value: 'e' },
-			 { name: 'Fred',    value: 'f' },
-			 { name: 'Georgia', value: 'g' },
-			]
-		),
-		altLabelContent: 'name',
-		altValueContent: 'value'
-	}), 'RadioGroup');
-	
-	test($$.div, ' === END === ');
+    
+    testObj(new $$.RadioGroup({
+        model: new $$.Model({ value: 'c' }),
+        content: 'value',
+        alternatives: new $$.Collection(
+            [
+             { name: 'Adam',    value: 'a' },
+             { name: 'Bert',    value: 'b' },
+             { name: 'Cathy',   value: 'c' },
+             { name: 'Douglas', value: 'd' },
+             { name: 'Ellen',   value: 'e' },
+             { name: 'Fred',    value: 'f' },
+             { name: 'Georgia', value: 'g' },
+            ]
+        ),
+        altLabelContent: 'name',
+        altValueContent: 'value'
+    }), 'RadioGroup');
+    
+    var KpCollection = $$.Collection.extend({
+        model: $$.Model.extend({
+            events: { click: function () { console.log(this.value); } }
+        })
+    });
+
+    test($$.navbar(
+        { brandContent: 'Footer' },
+        $$.navbarGroup(
+            $$.li($$.a({href: '#'}, 'Something')),
+            new $$.Dropdown({
+                tagName: 'li',
+                labelContent: 'Filters',
+                dropup: true,
+                model: new KpCollection([
+                    { label: 'Announcements', value: 'announcement' },
+                    { label: 'Activities', value: 'activity' },
+                    { label: 'Deadlines', value: 'deadline' },
+                    { label: 'Events', value: 'event' }
+                ])
+            }).render().el,
+            $$.li($$.a({href: '#'}, 'Something Else'))
+        )
+    ), 'Dropup On Navbar');
+
+    test($$.div, ' === END === ');
 });
