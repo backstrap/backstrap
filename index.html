@@ -242,6 +242,25 @@ For example:</p>
 </code></pre>
 
 <h4>
+<a name="dropdown" class="anchor" href="#dropdown"><span class="octicon octicon-link"></span></a>dropdown</h4>
+
+<p>The <code>$$.dropdown()</code> method creates either a <code>button</code> or <code>li</code> tag which contains
+a tag set that implements the Bootstrap <code>dropdown</code> component.
+The special attribute "labelContent" is used as the dropdown's label (with a dropdown caret automatically added.)
+The attribute "type" may be one of "plain (default), "button", or "split-button".
+The "align" attribute may be to used to set the text alignment to "right" or "left",
+and the "dropup" attribute, if true, makes the menu appear above the button instead of below it.
+</p>
+
+<h4>
+<a name="dropdownGroup" class="anchor" href="#dropdownGroup"><span class="octicon octicon-link"></span></a>dropdownGroup</h4>
+
+<p>The <code>$$.dropdownGroup()</code> method creates an <code>li</code> tag which contains a <code>ul</code>.
+These are decorated with Bootstrap classes to make them function as a group of selections in a <code>$$.dropdown</code>.
+The special attribute "labelContent", if provided, produces a section header in the dropdown menu.
+It should be populated with content in the form of <code>li</code> tags suitable for menu items.</p>
+
+<h4>
 <a name="form" class="anchor" href="#form"><span class="octicon octicon-link"></span></a>form</h4>
 
 <p>The <code>$$.form()</code> method creates a <code>form</code> tag decorated with the attribute 'role="form"'.</p>

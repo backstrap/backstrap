@@ -1,5 +1,22 @@
 @CHARSET "UTF-8";
 
+.open .dropdown-menu.dropdown-menu-group {
+	display: block;
+	list-style: none outside none;
+	margin: 9px 0;
+	box-shadow: 0 0 0;
+	float: none;
+	position: static;
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #e5e5e5;
+	border-radius: 0;
+}
+
+.dropup .dropdown-menu.dropdown-menu-group,
+.navbar-fixed-bottom .dropdown .dropdown-menu.dropdown-menu-group {
+	bottom: auto;
+}
+
 div.calendar.calendar-default {
 	width: 240px;
 	text-transform: capitalize;
