@@ -398,9 +398,22 @@ require(['jquery', 'backstrap'], function($, $$) {
                     { label: 'Events', value: 'event' }
                 ])
             }).render().el,
-            $$.li($$.a({href: '#'}, 'Something Else'))
+            $$.li($$.a({href: '#'}, 'Something Else')),
+            $$.dropdown({
+                    labelContent: 'Filters',
+                    dropup: true,
+                },
+                $$.li({className: 'header'}, 'Things!'),
+                $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Some thing')),
+                $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Thing two')),
+                $$.dropdownGroup({label: 'Special Things!'},
+                    $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Thing 3')),
+                    $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Thing 4'))
+                ),
+                $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Final thing'))
+            )
         )
-    ), 'Dropup On Navbar');
+    ), 'Dropups On a Navbar');
 
     test($$.div, ' === END === ');
 });
