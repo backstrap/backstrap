@@ -383,6 +383,15 @@ if you want it pulled right instead of left.
 Its body will be further wrapped in a div with class "media-body".</p>
 
 <h4>
+<a name="menuItem" class="anchor" href="#menuItem"><span class="octicon octicon-link"></span></a>menuItem</h4>
+
+<p>The <code>$$.menuItem(label, href)</code> method creates an <code>a</code> tag
+inside an <code>li</code> tag,
+decorated with the "menuitem" class and role. 
+Suitable for use as the content of a <code>$$.dropdown</code> or similar.
+</p>
+
+<h4>
 <a name="nav" class="anchor" href="#nav"><span class="octicon octicon-link"></span></a>nav</h4>
 
 <p>The <code>$$.nav()</code> method creates a <code>ul</code> tag decorated with the Bootstrap "nav" class.
@@ -734,6 +743,17 @@ var dropdown = new $$.Dropdown({labelContent: 'File', model: items}).render();
 
 <p>creates a dropdown with a header and three buttons; the last button is below a divider.
 You can also use a "separator" property - "separator" is a synonym for "divider".</p>
+
+<h4>
+<a name="DropdownGroup" class="anchor" href="#DropdownGroup"><span class="octicon octicon-link"></span></a>DropdownGroup</h4>
+
+<p>Creates an <code>li</code> tag which contains a <code>ul</code> populated with
+the contents of the given Model. The model objects should contain 'href' and 'label' properties,
+or you may pass an itemViewOptions option such as
+"itemViewOptions: { content: 'hrefProperty', labelContent: 'labelProperty' }".
+The DropdownGroup's labelContent option sets the content of a section header label.
+The DropdownGroup displays a set of related choices in a dropdown menu, grouped together.
+</p>
 
 <h4>
 <a name="glyph-1" class="anchor" href="#glyph-1"><span class="octicon octicon-link"></span></a>Glyph</h4>
