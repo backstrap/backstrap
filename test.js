@@ -404,16 +404,41 @@ require(['jquery', 'backstrap'], function($, $$) {
                     dropup: true,
                 },
                 $$.li({className: 'header'}, 'Things!'),
-                $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Some thing')),
-                $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Thing two')),
+                $$.menuItem('Some thing', '#'),
+                $$.menuItem('Thing two', '#'),
                 $$.dropdownGroup({labelContent: 'Special Things!'},
-                    $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Thing 3')),
-                    $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Thing 4'))
+                    $$.menuItem('Thing 3', '#'),
+                    $$.menuItem('Thing 4', '#')
                 ),
-                $$.li($$.a({href: '#', className: 'menuitem', role: 'menuitem', tabindex: -1}, 'Final thing'))
+                $$.menuItem('Final thing', '#')
             )
         )
     ), 'Dropups On a Navbar');
+
+    test($$.navbar(
+        { brandContent: 'Footer' },
+        $$.navbarGroup(
+            $$.li($$.a({href: '#'}, 'Something')),
+            $$.li($$.a({href: '#'}, 'Something Else')),
+            $$.dropdown({
+                    labelContent: 'Filters'
+                },
+                $$.li({className: 'header'}, 'Things!'),
+                $$.menuItem('Some thing', '#'),
+                $$.menuItem('Thing two', '#'),
+                new $$.DropdownGroup({
+                    labelContent: 'My Operations',
+                    itemViewOptions: { content: 'op', labelContent: 'name' },
+                    model: new $$.Collection([
+                            { op: '#a', name: 'Operation A' },
+                            { op: '#b', name: 'Operation B' },
+                            { op: '#c', name: 'Operation C' }
+                        ])
+                }).render().el,
+                $$.menuItem('Final thing', '#')
+            )
+        )
+    ), 'Dropdown Group On a Navbar');
 
     test($$.div, ' === END === ');
 });

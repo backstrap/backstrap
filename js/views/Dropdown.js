@@ -16,7 +16,7 @@
                 return (elem === 'divider' || elem === 'separator' || elem === 'header') ? 'span' : 'a';
             },
     
-            initialize: function render() {
+            initialize: function () {
                 var elem = this.model.get('element');
                 if (elem === 'header') {
                     this.$el.text(this.model.get('label'));
@@ -27,10 +27,8 @@
                         href: this.model.get('href')
                     }).append(this.model.get('label'));
                 }
-                return this;
             }
         });
-        
     
         return ($$[moduleName] = $$.views[moduleName] = $$.List.extend({
             options: {
