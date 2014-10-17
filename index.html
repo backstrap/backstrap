@@ -1046,6 +1046,20 @@ Tunable parameters are:</p>
 </ul>
 
 <h3>
+<a name="LocalCache" class="anchor" href="#LocalCache"><span class="octicon octicon-link"></span></a>LocalCache</h3>
+
+<p><code>$$.LocalCache</code> is a simple cache mechanism that can be used by <code>$$.Collection</code>.
+Whenever the collection fetches data from the server, a copy of the array of models is saved on the client
+via the <a href="http://www.w3schools.com/html/html5_webstorage.asp">localStorage</a> system, if available.
+Its constructor takes the name under which data should be stored/retrieved.
+If data exists in localStorage from a previous session, the collection will be populated with that data upon initialization.
+Example usage:
+</p>
+
+<pre><code>new $$.Collection(null, { localCache: new LocalCache('MyCollection'); });
+</code></pre>
+
+<h3>
 <a name="noconflict" class="anchor" href="#noconflict"><span class="octicon octicon-link"></span></a>noConflict</h3>
 
 <p>The <code>$$.noConflict()</code> method provides a mechanism for reverting the definition of <code>$$</code>.
