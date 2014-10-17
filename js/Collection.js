@@ -1,5 +1,7 @@
 /**
  * A generic Backbone Collection object, with extensions.
+ *
+ * Implements autoRefresh and localCache extensions.
  * 
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
@@ -11,7 +13,10 @@
         return ($$[moduleName] = Backbone.Collection.extend({
             options: {
               // Whether the Collection should automatically refresh at regular intervals.
-              autoRefresh: false
+              autoRefresh: false,
+              // LocalCache object for caching data in localStorage.
+              // To use, declare as "localCache: new LocalCache('collectionName')".
+              localCache: null
             },
     
             initialize: function(model, options) {
@@ -19,7 +24,10 @@
                 this.options = this.options ? _({}).extend(this.options, options) : options;
                 if (this.options.autoRefresh) {
                   $$.dispatcher.startRefresh(this);
-                }  
+                }
+                if (this.options.localCache) {
+                    this.options.localCache.attach(this);
+                }
             },
         
             pauseAutoRefresh: function () {

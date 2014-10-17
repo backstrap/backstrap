@@ -33,6 +33,7 @@
                 "js/backstrap.js",
                 "js/input_event.js",
                 "js/dispatcher.js",
+                "js/LocalCache.js",
                 "js/Model.js",
                 "js/Collection.js",
                 "js/View.js",
