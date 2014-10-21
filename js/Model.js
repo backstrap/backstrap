@@ -11,14 +11,22 @@
         return ($$[moduleName] = Backbone.Model.extend({
             options: {
               // Whether the Model should automatically refresh at regular intervals.
-              autoRefresh: false
+              autoRefresh: false,
+              // fetch() options for autoRefresh
+              autoRefreshOptions: null
             },
     
             initialize: function(options) {
                 Backbone.Model.prototype.initialize.call(this, options);
                 if(this.options.autoRefresh) {
                   this.resumeAutoRefresh();
-                }  
+                }
+                if (this.options.autoRefreshOptions) {
+                    this.autoRefreshOptions = this.options.autoRefreshOptions;
+                    this.autoRefreshOptions.ifModified = true;
+                } else {
+                    this.autoRefreshOptions = {ifModified: true};
+                }
             },
         
             pauseAutoRefresh: function () {
@@ -30,7 +38,7 @@
             },
     
             refresh: function () {
-                this.fetch();
+                this.fetch({ifModified: true});
             }
         }));
     };

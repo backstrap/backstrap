@@ -16,7 +16,9 @@
               autoRefresh: false,
               // LocalCache object for caching data in localStorage.
               // To use, declare as "localCache: new LocalCache('collectionName')".
-              localCache: null
+              localCache: null,
+              // fetch() options for autoRefresh
+              autoRefreshOptions: null
             },
     
             initialize: function(model, options) {
@@ -27,6 +29,12 @@
                 }
                 if (this.options.localCache) {
                     this.options.localCache.attach(this);
+                }
+                if (this.options.autoRefreshOptions) {
+                    this.autoRefreshOptions = this.options.autoRefreshOptions;
+                    this.autoRefreshOptions.ifModified = true;
+                } else {
+                    this.autoRefreshOptions = {ifModified: true};
                 }
             },
         
@@ -39,7 +47,7 @@
             },
     
             refresh: function () {
-                this.fetch();
+                this.fetch(this.autoRefreshOptions);
             }
     
         }));
