@@ -401,6 +401,13 @@
             );
         }
         
+        // Use an 'a' tag instead of 'button' if we have an 'href' property.
+        backstrap.button = function (opts) {
+            var tagName = (opts && opts.nodetype !== 1 && opts.href) ? 'a' : 'button';
+            return backstrap.apply(this,
+                    [tagName, 'btn'].concat(Array.prototype.slice.call(arguments)));
+        };
+
         // shortcut for creating CSS stylesheet links.
         backstrap.css = function (href) {
             return backstrap.plain.link({href: href, rel: "stylesheet", type: "text/css"});
