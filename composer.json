@@ -41,6 +41,7 @@
                 "js/components/dropdownGroup.js",
                 "js/components/grid.js",
                 "js/components/menuItem.js",
+                "js/components/menuToggle.js",
                 "js/components/nav.js",
                 "js/components/navbar.js",
                 "js/components/navbarForm.js",

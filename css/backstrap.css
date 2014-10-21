@@ -17,6 +17,22 @@
 	bottom: auto;
 }
 
+.menuitem .shortcut {
+    float: right;
+    color: #e5e5e5;
+}
+
+.menuitem input.menu-toggle {
+    width: 2-px;
+	margin-top: 7px;
+	margin-right: 7px;
+    display: inline-block;
+}
+
+.dropdown-menu .menuitem input.menu-toggle {
+	margin: 5px 4px 0 -16px;
+}
+
 div.calendar.calendar-default {
 	width: 240px;
 	text-transform: capitalize;

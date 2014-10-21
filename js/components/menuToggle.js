@@ -1,9 +1,7 @@
 /**
- * A 'tag' that defines a menu item.
+ * A 'tag' that defines a toggleable  menu item.
  * 
- * Given a label (string or DOM object) and an href (string),
- * this method manufactures an 'a' tag inside an 'li' tag.
- * The 'a' tag has attributes class="menuitem", role="menuitem", tabindex="-1".
+ * Adds a toggleable checkbox to a menuItem.
  *
  * @author Kevin Perry perry@princeton.edu
  */
@@ -13,10 +11,18 @@
     {
         return($$[moduleName] = $$.components[moduleName] = function (label, href, shortcut)
             {
-                return $$.li($$.a({href: href, className: 'menuitem', role: 'menuitem', tabindex: -1},
-                    label,
-                    shortcut ? $$.span({className: 'shortcut'}, shortcut) : ''
-		));
+                var input = $$.plain.input({type: 'checkbox', className: 'menu-toggle'});
+                var item = $$.li($$.a({href: href, className: 'menuitem', role: 'menuitem', tabindex: -1},
+                        input,
+                        label,
+                        shortcut ? $$.span({className: 'shortcut'}, shortcut) : ''
+                ));
+                $(item).on('click', function () {
+                    $(input).prop('checked', function(i, value) {
+                        return !value; 
+                    });
+                });
+		return item;
             }
         );
     };
@@ -41,4 +47,4 @@
         }
         fn(context.$$);
     }
-}(this, 'menuItem', [ 'backstrap' ]));
+}(this, 'menuToggle', [ 'backstrap' ]));

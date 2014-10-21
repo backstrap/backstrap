@@ -25,6 +25,15 @@
                     topTag = $$.button;
                 }
 
+                if (options.maxHeight) {
+                    $el.css('maxHeight', options.maxHeight);
+                }
+
+                if (options.multiSelect) {
+                    // TODO how to keep it from closing so you can select many things??
+                    var isActive = $($(this).attr('data-target')).hasClass('open');
+                }
+
                 var button = topTag.call($$,
                     {
                         className: 'dropdown-toggle',

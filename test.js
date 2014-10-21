@@ -44,7 +44,8 @@ require(['jquery', 'backstrap'], function($, $$) {
         ),
         $$.navbarGroup({align: 'right'},
                 $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#r1' }, 'R1')),
-                $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#r2' }, 'R2'))
+                $$.li({ className: 'nav navbar-item'}, $$.a({ href: '#r2' }, 'R2')),
+                $$.menuToggle('Toggleable', '#huh')
             )
     ), 'navbar');
     
@@ -408,7 +409,8 @@ require(['jquery', 'backstrap'], function($, $$) {
                 $$.menuItem('Thing two', '#'),
                 $$.dropdownGroup({labelContent: 'Special Things!'},
                     $$.menuItem('Thing 3', '#'),
-                    $$.menuItem('Thing 4', '#')
+                    $$.menuItem('Thing 4', '#'),
+                    $$.menuToggle('Toggleable', '#huh')
                 ),
                 $$.menuItem('Final thing', '#')
             )
