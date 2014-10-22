@@ -17,24 +17,24 @@
               // LocalCache object for caching data in localStorage.
               // To use, declare as "localCache: new LocalCache('collectionName')".
               localCache: null,
-              // fetch() options for autoRefresh
-              autoRefreshOptions: null
+              // Fetch options for refresh.
+              refreshOptions: {},
+              // URL params for refresh.
+              params: {}
             },
-    
+
             initialize: function(model, options) {
-                // NOOP Backbone.Collection.prototype.initialize.call(this, model, options);
-                this.options = this.options ? _({}).extend(this.options, options) : options;
-                if (this.options.autoRefresh) {
-                  $$.dispatcher.startRefresh(this);
-                }
+                this.options = _({}).extend(this.options, options);
+
+                this.refreshOptions = this.options.refreshOptions;
+                this.params = this.options.params;
+
                 if (this.options.localCache) {
                     this.options.localCache.attach(this);
                 }
-                if (this.options.autoRefreshOptions) {
-                    this.autoRefreshOptions = this.options.autoRefreshOptions;
-                    this.autoRefreshOptions.ifModified = true;
-                } else {
-                    this.autoRefreshOptions = {ifModified: true};
+
+                if (this.options.autoRefresh) {
+                  $$.dispatcher.startRefresh(this);
                 }
             },
         
@@ -47,9 +47,11 @@
             },
     
             refresh: function () {
-                this.fetch(this.autoRefreshOptions);
+                // Enforce ifModified: true; layer params on top of refreshOptions.data.
+                var opts = _({}).extend(this.refreshOptions, { ifModified: true });
+                opts.data = _.extend(opts.data ? _.clone(opts.data) : {}, this.params);
+                this.fetch(opts);
             }
-    
         }));
     };
 

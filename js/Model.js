@@ -1,6 +1,8 @@
 /**
  * A generic Backbone Model object, with extensions.
  * 
+ * Implements autoRefresh.
+ *
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
@@ -12,20 +14,20 @@
             options: {
               // Whether the Model should automatically refresh at regular intervals.
               autoRefresh: false,
-              // fetch() options for autoRefresh
-              autoRefreshOptions: null
+              // Fetch options for refresh.
+              refreshOptions: {},
+              // URL params for refresh.
+              params: {}
             },
     
             initialize: function(options) {
                 Backbone.Model.prototype.initialize.call(this, options);
-                if(this.options.autoRefresh) {
-                  this.resumeAutoRefresh();
-                }
-                if (this.options.autoRefreshOptions) {
-                    this.autoRefreshOptions = this.options.autoRefreshOptions;
-                    this.autoRefreshOptions.ifModified = true;
-                } else {
-                    this.autoRefreshOptions = {ifModified: true};
+
+                this.refreshOptions = this.options.refreshOptions;
+                this.params = this.options.params;
+
+                if (this.options.autoRefresh) {
+                  $$.dispatcher.startRefresh(this);
                 }
             },
         
@@ -38,7 +40,10 @@
             },
     
             refresh: function () {
-                this.fetch({ifModified: true});
+                // Enforce ifModified: true; layer params on top of refreshOptions.data.
+                var opts = _({}).extend(this.refreshOptions, { ifModified: true });
+                opts.data = _.extend(opts.data ? _.clone(opts.data) : {}, this.params);
+                this.fetch(opts);
             }
         }));
     };
