@@ -1004,18 +1004,38 @@ For example:</p>
 <h4>
 <a name="model" class="anchor" href="#model"><span class="octicon octicon-link"></span></a>Model</h4>
 
-<p><code>$$.Model</code> extends <code>Backbone.Model</code> and adds an autoRefresh option.
+<p><code>$$.Model</code> extends <code>Backbone.Model</code>,
+adding a refresh() method and an autoRefresh option.
 If autoRefresh is true, the Backstrap dispatcher will call model.fetch() on a regular basis
 to refresh the model data from the server.
 The interval is tunable (see <a href="#dispatcher">dispatcher</a>), and can be configured to slow down over time.</p>
+You can also set refreshOptions, which will be passed as options to fetch() during an autoRefresh
+(and also when model.refresh() is called); and params, which will be used as URL parameters.
+The jquery.ajax option "ifModified" is set to true for all refreshes.
+For example:</p>
+
+<pre><code>var model = new $$.Model({ params: { page: 0 } });
+model.params.page += 1;
+model.refresh();
+</code></pre>
 
 <h4>
 <a name="collection" class="anchor" href="#collection"><span class="octicon octicon-link"></span></a>Collection</h4>
 
-<p><code>$$.Collection</code> extends <code>Backbone.Collection</code> and adds an autoRefresh option.
+<p><code>$$.Collection</code> extends <code>Backbone.Collection</code>,
+adding a refresh() method and an autoRefresh option.
 If autoRefresh is true, the Backstrap dispatcher will call collection.fetch() on a regular basis
 to refresh the model data from the server.
 The interval is tunable (see <a href="#dispatcher">dispatcher</a>), and can be configured to slow down over time.</p>
+You can also set refreshOptions, which will be passed as options to fetch() during an autoRefresh
+(and also when collection.refresh() is called); and params, which will be used as URL parameters.
+The jquery.ajax option "ifModified" is set to true for all refreshes.
+For example:</p>
+
+<pre><code>var coll = new $$.Collection({ params: { page: 0 } });
+coll.params.page += 1;
+coll.refresh();
+</code></pre>
 
 <h4>
 <a name="view" class="anchor" href="#view"><span class="octicon octicon-link"></span></a>View</h4>
