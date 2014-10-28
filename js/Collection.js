@@ -27,7 +27,7 @@
                 this.options = _({}).extend(this.options, options);
 
                 this.refreshOptions = this.options.refreshOptions;
-                this.params = this.options.params;
+                this.params = _.clone(this.options.params);
 
                 if (this.options.localCache) {
                     this.options.localCache.attach(this);

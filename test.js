@@ -11,7 +11,7 @@ require(['jquery', 'backstrap'], function($, $$) {
     function testObj(obj, label) {
 	    test(obj.render().el, label);
     }
-    
+
     // implicit test of $$.css
 	$("head").append($$.css("components/require.css"));
 
@@ -417,8 +417,8 @@ require(['jquery', 'backstrap'], function($, $$) {
         )
     ), 'Dropups On a Navbar');
 
-    test($$.navbar(
-        { brandContent: 'Footer' },
+    test($$.div($$.navbar(
+        { brandContent: 'Footer', position: 'fixed-bottom' },
         $$.navbarGroup(
             $$.li($$.a({href: '#'}, 'Something')),
             $$.li($$.a({href: '#'}, 'Something Else')),
@@ -440,7 +440,8 @@ require(['jquery', 'backstrap'], function($, $$) {
                 $$.menuItem('Final thing', '#')
             )
         )
-    ), 'Dropdown Group On a Navbar');
+    )), 'Dropdown Group On a fixed-footer Navbar');
+    test($$.jumbotron('Hello!'), 'JT');
 
     test($$.div, ' === END === ');
 });
