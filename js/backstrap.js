@@ -266,6 +266,9 @@
                         el.appendChild(body);
                     }
                     break;
+                case 'select':
+                    classlist['form-control'] = true;
+                    break;
                 case 'table':
                     if (bootstrap.striped) {
                         classlist['table-striped'] = true;
@@ -329,7 +332,7 @@
                     'form', 'formGroup', 'input', 'inputGroup', 'inputGroupAddon',
                     'jumbotron', 'label', 'linkList', 'linkListItem', 'list',
                     'listItem', 'media', 'pageHeader', 'pagination', 'panel',
-                    'spanLabel', 'table', 'thumbnail', 'well'];
+                    'select', 'spanLabel', 'table', 'thumbnail', 'well'];
 
         // HTML tags for Bootstrap components
         var bootstrapTags = {
@@ -371,6 +374,7 @@
                 list: 'list-group',
                 listItem: 'list-group-item',
                 pageHeader: 'page-header',
+                select: 'form-control',
                 spanLabel: 'label'
         };
 
