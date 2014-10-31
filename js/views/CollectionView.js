@@ -103,15 +103,18 @@
             var view = this.itemViews[model.cid];
             if (view) {
                 var container = this.itemContainers[model.cid];
+                container = container ? container : view.el;
                 if (container && container.parentNode) {
                 	container.parentNode.removeChild(container);
                 }
                 delete(this.itemViews[model.cid]);
                 delete(this.itemContainers[model.cid]);
-            }
-            if (this.itemViews.length === 0) {
-                // Need to render the empty content.
-                this.render();
+	            if (this.itemViews.length === 0) {
+	                // Need to render the empty content.
+	                this.render();
+	            }
+            } else {
+            	this.render();
             }
 
             if (_.isFunction(this.onItemRemoved)) {
