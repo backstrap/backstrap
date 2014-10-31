@@ -423,9 +423,17 @@ require(['jquery', 'backstrap'], function($, $$) {
             $$.li($$.a({href: '#'}, 'Something')),
             $$.li($$.a({href: '#'}, 'Something Else')),
             $$.dropdown({
-                    labelContent: 'Filters'
+                    labelContent: 'Filters',
+                    maxHeight: '100px'
                 },
                 $$.li({className: 'header'}, 'Things!'),
+                $$.menuItem('Some thing', '#'),
+                $$.menuItem('Some thing', '#'),
+                $$.menuItem('Some thing', '#'),
+                $$.menuItem('Some thing', '#'),
+                $$.menuItem('Some thing', '#'),
+                $$.menuItem('Some thing', '#'),
+                $$.menuItem('Some thing', '#'),
                 $$.menuItem('Some thing', '#'),
                 $$.menuItem('Thing two', '#'),
                 new $$.DropdownGroup({

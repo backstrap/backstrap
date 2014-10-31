@@ -25,10 +25,6 @@
                     topTag = $$.button;
                 }
 
-                if (options.maxHeight) {
-                    $el.css('maxHeight', options.maxHeight);
-                }
-
                 if (options.multiSelect) {
                     // TODO how to keep it from closing so you can select many things??
                     var isActive = $($(this).attr('data-target')).hasClass('open');
@@ -66,19 +62,23 @@
                 }
                 
                 var collectionEl;
-                $el.append(collectionEl = $$.ul({
+                $el.append(collectionEl = $($$.ul({
                     className: 'dropdown-menu',
                     role: 'menu',
                     'aria-labelledby': button.id
-                }));
+                })));
+                if (options.maxHeight) {
+                    collectionEl.css({maxHeight: options.maxHeight, overflowY: 'scroll'});
+                }
+
                 if ('align' in options) {
-                    $(collectionEl).addClass(options.align === 'right' ?
+                    collectionEl.addClass(options.align === 'right' ?
                         'dropdown-menu-right' :
                         'dropdown-menu-left'
                     );
                 }
                 
-                $(collectionEl).append.apply($(collectionEl), Array.prototype.slice.call(arguments, offset));
+                collectionEl.append.apply(collectionEl, Array.prototype.slice.call(arguments, offset));
                 
                 return el;
             });
