@@ -80,7 +80,9 @@
 
             // Renders an item for the given model, at the given index.
             placeItem: function (content, model, index) {
-                this.collectionEl.appendChild($$.li({className: 'list-group-item'}, content));
+            	var li = $$.li({className: 'list-group-item'}, content);
+                this.collectionEl.appendChild(li);
+                return li;
             },
 
             placeEmpty: function (content) {

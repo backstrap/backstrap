@@ -26,66 +26,38 @@
             initialize : function(options) {
                 $$.CollectionView.prototype.initialize.call(this, options);
                 $(this.el).addClass('list');
-                _(this).bindAll('render');
-            },
-            
-            render : function() {
-                $(this.el).empty();
-                this.itemViews = {};
-
                 this.collectionEl = $$.ul({className: 'nav navbar-nav'});
-
-                // if the collection is empty, we render the empty content
-              if((!_(this.model).exists()  || this.model.length === 0) && this.options.emptyContent) {
-                this._emptyContent = _(this.options.emptyContent).isFunction() ? 
-                  this.options.emptyContent() : this.options.emptyContent;
-                this._emptyContent = $$.li(this._emptyContent);
-
-                if(!!this._emptyContent) {
-                  this.collectionEl.appendChild(this._emptyContent);
-                }
-              }
-
-              // otherwise, we render each row
-              else {
-                _(this.model.models).each(function(model, index) {
-                  var item = this._renderItem(model, index);
-                  this.collectionEl.appendChild(item);
-                }, this);
-              }
-
-              this.el.appendChild(this.collectionEl);
-              this.renderClassNames(this.collectionEl);
-
-              return this;
             },
 
-            // renders an item for the given model, at the given index
-            _renderItem : function(model, index) {
-              var content = null;
-              if(_(this.options.itemView).exists()) {
 
-                if(_(this.options.itemView).isString()) {
-                  content = this.resolveContent(model, this.options.itemView);
-                }
+            render: function () {
+                $(this.collectionEl).empty();
 
-                else {
-                  var view = new this.options.itemView(_({ model : model }).extend(
-                    this.options.itemViewOptions));
-                  view.render();
-                  this.itemViews[model.cid] = view;
-                  content = view.el;
-                }
-              }
+                $$.CollectionView.prototype.render.call(this);
 
-              var item = $$.li(content);
+                this.renderClassNames(this.collectionEl);
+                this.$el.append(this.collectionEl);
 
-              // bind the item click callback if given
-              if(this.options.onItemClick) {
-                $(item).click(_(this.options.onItemClick).bind(this, model));
-              }
+                return this;
+            },
 
-              return item;
+            // Renders an item for the given model, at the given index.
+            placeItem: function (content, model, index) {
+            	var li = $$.li({className: 'list-group-item'}, content);
+                this.collectionEl.appendChild(li);
+                return li;
+            },
+
+            placeEmpty: function (content) {
+                this.collectionEl.appendChild($$.li(content));
+            },
+
+            onItemAdded: function () {
+                this.renderClassNames(this.collectionEl);
+            },
+
+            onItemRemoved: function () {
+                this.renderClassNames(this.collectionEl);
             }
         });
     

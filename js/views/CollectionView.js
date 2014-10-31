@@ -29,14 +29,14 @@
                     this.itemViews[model.cid] = view;
                     content = view.el;
                 }
-            }
 
-            // Bind the item click callback if given.
-            if (this.options.onItemClick) {
-                $(content).click(_(this.options.onItemClick).bind(this, model));
+	            // Bind the item click callback if given.
+	            if (this.options.onItemClick) {
+	                $(content).click(_(this.options.onItemClick).bind(this, model));
+	            }
+	
+	            this.itemContainers[model.cid] = this.placeItem(content, model, index);
             }
-
-            this.placeItem(content, model, index);
         };
 
         /*
@@ -102,11 +102,12 @@
         var onItemRemoved = function (model, list, options) {
             var view = this.itemViews[model.cid];
             if (view) {
-                var liOrTrElement = view.el.parentNode;
-                if (liOrTrElement && liOrTrElement.parentNode) {
-                    liOrTrElement.parentNode.removeChild(liOrTrElement);
+                var container = this.itemContainers[model.cid];
+                if (container && container.parentNode) {
+                	container.parentNode.removeChild(container);
                 }
                 delete(this.itemViews[model.cid]);
+                delete(this.itemContainers[model.cid]);
             }
             if (this.itemViews.length === 0) {
                 // Need to render the empty content.
@@ -154,6 +155,7 @@
             },
 
             itemViews: {},
+            itemContainers: {},
 
             _emptyContent: null,
 
@@ -169,6 +171,7 @@
             render: function () {
                 this.$el.empty();
                 this.itemViews = {};
+                this.itemContainers = {};
 
                 if (this.options.emptyContent) {
                     this._emptyContent = _(this.options.emptyContent).isFunction() ? 
