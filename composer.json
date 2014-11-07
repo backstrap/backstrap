@@ -37,6 +37,7 @@
                 "js/Model.js",
                 "js/Collection.js",
                 "js/View.js",
+                "js/components/closeIcon.js",
                 "js/components/dropdown.js",
                 "js/components/dropdownGroup.js",
                 "js/components/grid.js",
