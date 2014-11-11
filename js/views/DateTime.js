@@ -1,11 +1,11 @@
 /**
- * Model-bound Mobiscroll widgets.
+ * Model-bound Mobiscroll widget.
  *
  * options should look like this:
  * {
  *     model: new $$.Model(),
  *     content: 'fieldName',
- *     format: 'MM-DD-YYYY hh:mm a', // date display format (?)
+ *     contentFormat: 'seconds',
  *     mobiscroll: { < mobiscroll options > }
  * }
  * 
@@ -17,26 +17,26 @@
 {
     var fn = function($$)
     {
-        // These two functions use special formats 'u' for milliseconds, 'U' for Unix seconds, and 'T' for Date.
+        // These two functions use special formats 'millis' for milliseconds, 'seconds' for Unix seconds, and 'date' for Date.
         // Other formats will be interpreted by moment() for string IO.
         var millisForValue = function (value, format) {
-            if (typeof value === 'number' ) {
-                if (format !== 'u' && (value < 31500000000 || format === 'U')) {
-                    return value * 1000;
-                } else {
-                    return value;
-                }
+            if (format === 'millis') {
+                return value;
+            } else if (format === 'seconds') {
+                return value * 1000;
+            } else if (format === 'date') {
+                return moment(value).valueOf();
             } else {
                 return moment(value, format).valueOf();
             }
         };
         
         var valueForMillis = function (millis, format) {
-            if (format === 'u') {
+            if (format === 'millis') {
                 return millis;
-            } else if (format === 'U') {
+            } else if (format === 'seconds') {
                 return millis / 1000;
-            } else if (format === 'T') {
+            } else if (format === 'date') {
                 return new Date(millis);
             } else {
                 return moment(millis).format(format);
@@ -45,9 +45,9 @@
         
         var refresh = function() {
             var newValue = this.resolveContent();
-            if (valueForMillis(this.$el.mobiscroll('getDate').valueOf(), this.options.format) !== newValue) {
+            if (valueForMillis(this.$el.mobiscroll('getDate').valueOf(), this.options.contentFormat) !== newValue) {
                 this.$el.mobiscroll('setDate', _(newValue).exists() ?
-                    new Date(millisForValue(newValue, this.options.format)) :
+                    new Date(millisForValue(newValue, this.options.contentFormat)) :
                     new Date(), true);
             }
         };
@@ -55,7 +55,7 @@
         var onSelect = function (value, inst) {
             _(this.model).setProperty(
                 this.options.content,
-                valueForMillis(this.$el.mobiscroll('getDate').valueOf(), this.options.format)
+                valueForMillis(this.$el.mobiscroll('getDate').valueOf(), this.options.contentFormat)
             );
             if (this.options.mobiscroll.onSelect) {
                 this.options.mobiscroll.onSelect(value, inst);
@@ -65,26 +65,29 @@
         return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             el: $$.input(),
     
-            initialize : function(options) {
+            initialize : function (options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.options.format = this.options.format ? this.options.format : 'U';
+                this.options.contentFormat = this.options.contentFormat ? this.options.contentFormat : 'millis';
                 this.mixin([$$.mixins.HasModel]);
                 _(this).bindAll('render');
                 this._observeModel(_.bind(refresh, this));
             },
     
-            render : function() {
-                var content = this.resolveContent();
+            render : function () {
                 var inputOpts = _.extend(
                     { preset: 'datetime', theme: 'mobiscroll' }, // defaults
                     this.options.mobiscroll ? this.options.mobiscroll : { },
                     { onSelect: _.bind(onSelect, this) } // overrides
                 );
-console.log(inputOpts);
+
                 this.$el.mobiscroll(inputOpts);
-                this.$el.mobiscroll('setDate', new Date(millisForValue(this.resolveContent(), this.options.format)), true);
+                this.$el.mobiscroll('setDate', new Date(millisForValue(this.resolveContent(), this.options.contentFormat)), true);
 
                 return this;
+            },
+            
+            mobiscroll: function () {
+                this.$el.mobiscroll(arguments);
             }
         }));
     };

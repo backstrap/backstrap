@@ -11,6 +11,33 @@
     var fn = function($$, moment)
     {
         var KEY_RETURN = 13;
+        
+        /**
+         * momentFor() - Creates a moment object from any date/time value,
+         * and accepts numbers as either seconds or milliseconds.
+         * 
+         * Takes a string, int, array of ints, Date, or plain-old object
+         * and creates a moment out  of it (see momentjs.com docs for details).
+         * For strings, an optional format string may be passed as the second
+         * argument.  All processing is handled by moment.js, except that we
+         * first apply the heuristic that if the value is numeric and less than
+         * 31500000000, it gets treated as Unix seconds (valid for years <= 2967);
+         * larger numbers get treated as milliseconds (valid for years >= 1971).
+         * This allows you to pass either seconds or milliseconds for all
+         * reasonable modern dates (1971 - 2967), without specifying a format.
+         * With a numeric value, passing either 's' or 'u' in the format parameter
+         * will force it to treat the number as seconds or milliseconds accordingly.
+         */
+        var momentFor = function (value, format) {
+            if (typeof value === 'number' &&
+                format !== 'u' &&
+                (value < 31500000000 || format === 's')
+            ) {
+                moment.unix(value);
+            } else {
+                moment(value, format);
+            }
+        };
 
         return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
@@ -30,7 +57,7 @@
             initialize : function(options) {
                 $$.View.prototype.initialize.call(this, options);
                 this.mixin([$$.mixins.HasModel, $$.mixins.HasFormLabel, $$.mixins.HasError]);
-                $(this.el).addClass('time_picker');
+                this.$el.addClass('time_picker');
 
                 this._timeModel = {};
                 this._menu = new $$.Select({
@@ -93,6 +120,7 @@
                 this._textField.setValue(timeString);
                 this._timeEdited();
 
+// options.selectedValue should match _collectTimes()
                 this._menu.options.selectedValue = time;
                 this._menu.render();
             },
@@ -111,7 +139,7 @@
                 while(d.date() === day) {
                     collection.push({
                         label : d.format(this.options.format),
-                        value : new Date(d)
+                        value : new Date(d) // storeFormat
                     });
 
                     d.add(this.options.interval, 'minutes');
@@ -160,12 +188,12 @@
                     // update our bound model (but only the date portion)
                     if(!!this.model && this.options.content) {
                         var boundDate = this.resolveContent();
-                        var updatedDate = new Date(boundDate);
+                        var updatedDate = new Date(boundDate); // storeFormat? (via moment())
                         // Ensure we are updating a valid Date object
-                        updatedDate = isNaN(updatedDate.getTime()) ? new Date() : updatedDate;
+                        updatedDate = isNaN(updatedDate.getTime()) ? new Date() : updatedDate; // storeFormat
                         updatedDate.setHours(newDate.hours());
                         updatedDate.setMinutes(newDate.minutes());
-                        _(this.model).setProperty(this.options.content, updatedDate);
+                        _(this.model).setProperty(this.options.content, updatedDate); // storeFormat
                     }
 
                     if(_(this.options.onChange).isFunction()) {
