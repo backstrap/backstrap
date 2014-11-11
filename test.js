@@ -1,4 +1,4 @@
-require(['jquery', 'backstrap'], function($, $$) {
+require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment) {
 
 	var n = 1;
 	
@@ -19,8 +19,18 @@ require(['jquery', 'backstrap'], function($, $$) {
 	
 	test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
     
-	var kptest1;
-	
+	var fred = new $$.Model({ when: moment().unix(), id: 1, name:'fred' });
+    testObj(new $$.DateTime({
+        model: fred,
+        content: 'when',
+        mobiscroll: {
+            // preset: 'datetime', // one of date, time, or datetime.
+            theme: 'ios7'
+        }
+    }), 'DateTime');
+    setTimeout(function () { fred.set('when', moment().unix() + 100000); }, 3000);
+
+    var kptest1;
     testObj(new $$.List({
         model: (kptest1 = new $$.Collection([
             { value: 'Hello, World', index: 1 },

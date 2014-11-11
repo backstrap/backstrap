@@ -18,7 +18,8 @@
     "require": {
         "components/backbone" : "~1.0",
         "components/bootstrap": "~3.1",
-        "moment/moment": "dev-develop"
+        "moment/moment": "dev-develop",
+        "backstrap/mobiscroll": "dev-master"
     },
     "require-dev": {
         "components/bootstrap-default": "dev-master"
@@ -65,6 +66,7 @@
                 "js/views/Context.js",
                 "js/views/Container.js",
                 "js/views/DatePicker.js",
+                "js/views/DateTime.js",
                 "js/views/Dropdown.js",
                 "js/views/DropdownGroup.js",
                 "js/views/Glyph.js",
@@ -103,5 +105,11 @@
         "component": {
             "noGlobal": false
         }
-    }
+    },
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/backstrap/mobiscroll"
+		}
+	]
 }
