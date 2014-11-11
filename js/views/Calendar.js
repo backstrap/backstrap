@@ -18,7 +18,9 @@
         };
 
         var daysInMonth = function(date) {
-            return [31, (isLeapYear(date.getYear()) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][date.getMonth()];
+            var month = date.getMonth();
+            return (month === 1) ? (isLeapYear(date.getYear()) ? 29 : 28) :
+                ([ 31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]);
         };
 
         var formatDateHeading = function(date) {
