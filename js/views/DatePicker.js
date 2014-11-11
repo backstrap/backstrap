@@ -106,12 +106,6 @@
             },
 
             _selectDate : function(date) {
-                var month = date.getMonth() + 1;
-                if(month < 10) month = '0' + month;
-
-                var day = date.getDate();
-                if(day < 10) day = '0' + day;
-
                 var dateString = moment(date).format(this.options.format);
                 this._textField.setValue(dateString);
                 this._dateEdited();
@@ -139,11 +133,11 @@
                     // update our bound model (but only the date portion)
                     if(!!this.model && this.options.content) {
                         var boundDate = this.resolveContent() || new Date();
-                        var updatedDate = new Date(boundDate.getTime());
+                        var updatedDate = new Date(boundDate.getTime()); // storeFormat
                         updatedDate.setMonth(newDate.month());
                         updatedDate.setDate(newDate.date());
                         updatedDate.setFullYear(newDate.year());
-                        _(this.model).setProperty(this.options.content, updatedDate);
+                        _(this.model).setProperty(this.options.content, updatedDate); // storeFormat
                     }
                     else {
                         this._calendar.date = this._selectedDate;
