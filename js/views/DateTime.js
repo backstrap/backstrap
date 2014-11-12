@@ -87,7 +87,8 @@
             },
             
             mobiscroll: function () {
-                this.$el.mobiscroll(arguments);
+                var result = this.$el.mobiscroll(arguments);
+                return (result === this.$el) ? this : result;
             }
         }));
     };
