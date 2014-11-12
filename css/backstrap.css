@@ -78,3 +78,8 @@ div.date_picker_calendar.calendar.calendar-default {
 .radio_group .radio_group_wrapper span {
     margin-left: .3em;
 }
+
+input.mobiscroll[readonly] {
+	background-color: #fff !important;
+    cursor: inherit !important;
+}

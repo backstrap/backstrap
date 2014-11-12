@@ -63,7 +63,7 @@
         };
 
         return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
-            el: $$.input(),
+            el: $$.input({className: 'mobiscroll'}),
     
             initialize : function (options) {
                 $$.View.prototype.initialize.call(this, options);
