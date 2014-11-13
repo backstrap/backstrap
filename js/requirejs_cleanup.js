@@ -5,5 +5,5 @@
  */
 if (typeof this.define === "function" && this.define.amd) {
 	this._$$_backstrap_built_flag();
-	this.define("backstrap", ["jquery", "backbone", "bootstrap"], this.$$.noConflict);
+	this.define("backstrap", ["jquery", "backbone"], this.$$.noConflict);
 }

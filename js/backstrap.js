@@ -742,7 +742,7 @@
             
             context.$$ = backstrap;
         } else {
-            context.define("backstrap", ["jquery", "backbone", "bootstrap"],
+            context.define("backstrap", ["jquery", "backbone"],
                 function ($, Backbone)
                 {
                     return fn({$: $, Backbone: Backbone});
@@ -750,7 +750,6 @@
             );
         }
     } else if (typeof context.module === "object" && typeof context.module.exports === "object") {
-        require("bootstrap");
         context.module.exports = fn({$: require("jquery"), Backbone: require("backbone")});
     } else {
         if (typeof context.$ === 'undefined') {
