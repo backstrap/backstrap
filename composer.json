@@ -96,7 +96,6 @@
                 "deps": [
                      "jquery",
                      "underscore",
-                     "bootstrap",
                      "backbone",
                      "moment"
                 ]
