@@ -63,8 +63,8 @@
         };
 
         return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
-            el: $$.input({className: 'mobiscroll'}),
-    
+            tagName: 'input',
+            className: 'mobiscroll form-control form-control-default',
             initialize : function (options) {
                 $$.View.prototype.initialize.call(this, options);
                 this.options.contentFormat = this.options.contentFormat ? this.options.contentFormat : 'millis';

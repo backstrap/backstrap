@@ -19,7 +19,7 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
 	
 	test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
     
-	var fred = new $$.Model({ when: moment().unix(), id: 1, name:'fred' });
+	var fred = new $$.Model({ when: moment(), id: 1, name:'fred' });
     testObj(new $$.DateTime({
         model: fred,
         content: 'when',
@@ -28,8 +28,17 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
             theme: 'ios7'
         }
     }), 'DateTime');
-    setTimeout(function () { fred.set('when', moment().unix() + 100000); }, 3000);
 
+    testObj(new $$.NumberField({
+        model: new $$.Model({ howmany: "2", id: 1, name:'fred' }),
+        content: 'howmany',
+        mobiscroll: {
+            // preset: 'datetime', // one of date, time, or datetime.
+            theme: 'ios7'
+        }
+    }), 'NumberField');
+    
+    
     var kptest1;
     testObj(new $$.List({
         model: (kptest1 = new $$.Collection([
