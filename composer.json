@@ -17,14 +17,15 @@
     ],
     "require": {
         "components/backbone" : "~1.0",
-        "components/bootstrap": "~3.1",
         "moment/moment": "dev-develop",
         "backstrap/mobiscroll": "dev-master"
     },
     "require-dev": {
+        "components/bootstrap": "~3.1",
         "components/bootstrap-default": "dev-master"
     },
     "suggest": {
+        "components/bootstrap": "~3.1",
         "components/bootstrap-default": "dev-master"
     },
     "extra": {
@@ -78,6 +79,7 @@
                 "js/views/ModelView.js",
                 "js/views/NavPills.js",
                 "js/views/NavTabs.js",
+                "js/views/NumberField.js",
                 "js/views/Panel.js",
                 "js/views/ProgressBar.js",
                 "js/views/RadioGroup.js",
