@@ -87,7 +87,7 @@
             },
             
             mobiscroll: function () {
-                var result = this.$el.mobiscroll(arguments);
+                var result = this.$el.mobiscroll.apply(this.$el, arguments);
                 return (result === this.$el) ? this : result;
             }
         }));
