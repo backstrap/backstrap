@@ -36,7 +36,7 @@
                 var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
                 var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
 
-                this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, content, this.el);
+                this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, document.createTextNode(content), this.el);
 
                 return this;
             }
