@@ -51,6 +51,16 @@
                 var opts = _({}).extend(this.refreshOptions, { ifModified: true });
                 opts.data = _.extend(opts.data ? _.clone(opts.data) : {}, this.params);
                 this.fetch(opts);
+            },
+
+            sync: function(method, model, options) {
+                var success = options.success;
+                options.success = function(resp, status) {
+                    if (status !== 'notmodified') {
+                        success.apply(null, arguments);
+                    }
+                };
+                return Backbone.sync.apply(this, arguments);
             }
         }));
     };
