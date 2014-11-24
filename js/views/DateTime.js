@@ -15,7 +15,7 @@
  */
 (function(context, moduleName, requirements)
 {
-    var fn = function($$)
+    var fn = function($$, moment)
     {
         // These two functions use special formats 'millis' for milliseconds, 'seconds' for Unix seconds, and 'date' for Date.
         // Other formats will be interpreted by moment() for string IO.
@@ -53,7 +53,7 @@
         };
 
         var onSelect = function (value, inst) {
-            _(this.model).setProperty(
+            this.model.set(
                 this.options.content,
                 valueForMillis(this.$el.mobiscroll('getDate').valueOf(), this.options.contentFormat)
             );
@@ -111,6 +111,9 @@
         if (typeof context.$$ !== 'function') {
             throw new Error('Backstrap not loaded');
         }
-        fn(context.$$);
+        if (typeof context.moment !== 'function') {
+            throw new Error('MomentJS not loaded');
+        }
+        fn(context.$$, context.moment);
     }
-}(this, 'DateTime', [ 'backstrap', 'backstrap/View', 'backstrap/mixins/HasModel' ]));
+}(this, 'DateTime', [ 'backstrap', 'moment', 'backstrap/View', 'backstrap/mixins/HasModel' ]));

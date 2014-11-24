@@ -171,7 +171,7 @@
             throw new Error('Backstrap not loaded');
         }
         if (typeof context.moment !== 'function') {
-            throw new Error('Moment not loaded');
+            throw new Error('MomentJS not loaded');
         }
         fn(context.$$, context.moment);
     }
