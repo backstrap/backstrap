@@ -46,9 +46,9 @@
                   $$.dispatcher.startRefresh(this);
             },
     
-            refresh: function () {
+            refresh: function (options) {
                 // Default ifModified to true; layer params on top of refreshOptions.data.
-                var opts = _({ ifModified: true }).extend(this.refreshOptions);
+                var opts = _({ ifModified: true }).extend(this.refreshOptions, options);
                 opts.data = _.extend(opts.data ? _.clone(opts.data) : {}, this.params);
                 this.fetch(opts);
             },
