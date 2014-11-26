@@ -55,7 +55,8 @@
                         numberText: defaultText,
                         min: 0,
                         max: 100,
-                        step: 1
+                        step: 1,
+                        invalid: []
                     },
                     this.options.mobiscroll ? this.options.mobiscroll : { },
                     // overrides

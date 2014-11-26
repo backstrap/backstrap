@@ -81,12 +81,17 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
         }
     }), 'DateTime Duration picker');
 
-    var foo;
-    testObj(foo=new $$.NumberField({
+    testObj(new $$.NumberField({
         model: new $$.Model({ howmany: 7, id: 1, name:'fred' }),
         content: 'howmany',
         mobiscroll: { min: 1, max: 24, step: 2, showLabel: true, invalid: [ 5 ] }
     }), 'NumberField');
+
+    testObj(new $$.DurationField({
+        model: new $$.Model({ duration: 500000, id: 1, name:'fred' }),
+        content: 'duration',
+        mobiscroll: { showLabel: true, wheelset: 'dhi' }
+    }), 'DurationField');
     
     var kptest1;
     testObj(new $$.List({
