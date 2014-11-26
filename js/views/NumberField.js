@@ -7,6 +7,9 @@
  *     content: 'fieldName',
  *     mobiscroll: { < mobiscroll options > }
  * }
+ *
+ * NumberField-specific mobiscroll options are:
+ * min, max, step and invalid (an array of values to be considered invalid).
  * 
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
@@ -18,13 +21,13 @@
     {
         var refresh = function() {
             var newValue = this.resolveContent();
-            if (this.$el.mobiscroll('getValue') !== newValue) {
-                this.$el.mobiscroll('setValue', _(newValue).exists() ? newValue : '');
+            if (this.$el.mobiscroll('getVal') !== newValue) {
+                this.$el.mobiscroll('setVal', _(newValue).exists() ? newValue : '', true);
             }
         };
 
         var onSelect = function (value, inst) {
-            _(this.model).setProperty(this.options.content, this.$el.mobiscroll('getValue'));
+            this.model.set(this.options.content, this.$el.mobiscroll('getVal'));
             if (this.options.mobiscroll.onSelect) {
                 this.options.mobiscroll.onSelect(value, inst);
             }
@@ -84,13 +87,14 @@
                     } ] ];
 
                 this.$el.mobiscroll(inputOpts);
-                this.$el.mobiscroll('setValue', this.resolveContent(), true);
+                this.$el.mobiscroll('setVal', this.resolveContent(), true);
 
                 return this;
             },
             
             mobiscroll: function () {
-                this.$el.mobiscroll(arguments);
+                var result = this.$el.mobiscroll.apply(this.$el, arguments);
+                return (result === this.$el) ? this : result;
             }
         }));
     };

@@ -13,36 +13,37 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
     }
 
     // implicit test of $$.css
-	$("head").append($$.css("components/require.css"));
+    $("head").append($$.css("components/require.css"));
 
-	// tag factories
+    // tag factories
 	
-	test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
+    test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
     
-	var fred = new $$.Model({ when: moment(), id: 1, name:'fred' });
+    var fred = new $$.Model({ when: moment().valueOf(), id: 1, name:'fred' });
     testObj(new $$.DateTime({
         model: fred,
         content: 'when',
+        contentFormat: 'millis',
         mobiscroll: {
             // preset: 'datetime', // one of date, time, or datetime.
-            theme: 'ios7'
-        }
-    }), 'DateTime');
-    var zzz;
-    testObj(zzz = new $$.DateTime({
-        model: fred, // new $$.Model({ when: moment(), id: 1, name:'fred' }),
-        content: 'when',
-        mobiscroll: {
-            preset: 'time', // one of date, time, or datetime.
             //theme: 'ios7'
         }
+    }), 'DateTime');
+
+    var zzz;
+    testObj(zzz = new $$.DateTime({
+        model: fred,
+        content: 'when',
+        mobiscroll: {
+            preset: 'time',
+        }
     }), 'DateTime again (shared data)');
-    var w = zzz.mobiscroll('getInst').settings.wheels;
-   // w[0][0].values = ['09',10,11,12,'01','02','03','04','05','06','07','08'];
-   // w[0][0].keys = [9,10,11,12,1,2,3,4,5,6,7,8];
-   // zzz.mobiscroll('option', 'wheels', w);
+    // var w = zzz.mobiscroll('getInst').settings.wheels;
+    // w[0][0].values = ['09',10,11,12,'01','02','03','04','05','06','07','08'];
+    // w[0][0].keys = [9,10,11,12,1,2,3,4,5,6,7,8];
+    // zzz.mobiscroll('option', 'wheels', w);
     //console.log(w);
-    
+
     testObj(new $$.DateTime({
         model:new $$.Model({ when: moment(21600000), id: 1, name:'fred' }),
         content: 'when',
@@ -79,13 +80,13 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
             },
         }
     }), 'DateTime Duration picker');
-    
-    testObj(new $$.NumberField({
+
+    var foo;
+    testObj(foo=new $$.NumberField({
         model: new $$.Model({ howmany: 7, id: 1, name:'fred' }),
         content: 'howmany',
         mobiscroll: { min: 1, max: 24, step: 2, showLabel: true, invalid: [ 5 ] }
     }), 'NumberField');
-    
     
     var kptest1;
     testObj(new $$.List({
