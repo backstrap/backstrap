@@ -17,46 +17,56 @@
 {
     var fn = function($$, moment)
     {
-        // These two functions use special formats 'millis' for milliseconds, 'seconds' for Unix seconds, and 'date' for Date.
-        // Other formats will be interpreted by moment() for string IO.
-        var millisForValue = function (value, format) {
-            if (format === 'millis') {
-                return value;
+        // These two functions use the special format values:
+        // '' for ISO-8601 string; 'millis' for milliseconds; 'seconds' for Unix seconds; and 'date' for Date.
+        // Other formats will be interpreted by moment(string, format) for string IO.
+        // The object defaults to ISO-8601 format.
+        var dateForValue = function (value, format) {
+            if (!_(value).exists()) {
+                return new Date();
+            } else if (format === '') {
+                return moment(value).toDate();
+            } else if (format === 'millis') {
+                return new Date(value);
             } else if (format === 'seconds') {
-                return value * 1000;
+                return new Date(value * 1000);
             } else if (format === 'date') {
-                return moment(value).valueOf();
+                return value;
             } else {
-                return moment(value, format).valueOf();
+                return moment(value, format).toDate();
             }
         };
         
-        var valueForMillis = function (millis, format) {
-            if (format === 'millis') {
-                return millis;
+        var valueForDate = function (obj) {
+            var dt = obj.$el.mobiscroll('getDate');
+            var format = obj.options.contentFormat;
+            if (format === '') {
+                return moment(dt).toISOString();
+            } else if (format === 'millis') {
+                return dt.valueOf();
             } else if (format === 'seconds') {
-                return millis / 1000;
+                return dt.valueOf() / 1000;
             } else if (format === 'date') {
-                return new Date(millis);
+                return dt;
             } else {
-                return moment(millis).format(format);
+                return moment(dt).format(format);
             }
+        };
+
+        var updateFromContent = function (obj, value, fill) {
+            var val = dateForValue(value, obj.options.contentFormat);
+            obj.$el.mobiscroll('setDate', val);
         };
         
         var refresh = function() {
             var newValue = this.resolveContent();
-            if (valueForMillis(this.$el.mobiscroll('getDate').valueOf(), this.options.contentFormat) !== newValue) {
-                this.$el.mobiscroll('setDate', _(newValue).exists() ?
-                    new Date(millisForValue(newValue, this.options.contentFormat)) :
-                    new Date(), true);
+            if (valueForDate(this) !== newValue) {
+                updateFromContent(this, newValue, false);
             }
         };
 
         var onSelect = function (value, inst) {
-            this.model.set(
-                this.options.content,
-                valueForMillis(this.$el.mobiscroll('getDate').valueOf(), this.options.contentFormat)
-            );
+            this.model.set(this.options.content, valueForDate(this));
             if (this.options.mobiscroll.onSelect) {
                 this.options.mobiscroll.onSelect(value, inst);
             }
@@ -67,7 +77,7 @@
             className: 'mobiscroll form-control form-control-default',
             initialize : function (options) {
                 $$.View.prototype.initialize.call(this, options);
-                this.options.contentFormat = this.options.contentFormat ? this.options.contentFormat : 'millis';
+                this.options.contentFormat = this.options.contentFormat ? this.options.contentFormat : '';
                 this.mixin([$$.mixins.HasModel]);
                 _(this).bindAll('render');
                 this._observeModel(_.bind(refresh, this));
@@ -81,7 +91,7 @@
                 );
 
                 this.$el.mobiscroll(inputOpts);
-                this.$el.mobiscroll('setDate', new Date(millisForValue(this.resolveContent(), this.options.contentFormat)), true);
+                updateFromContent(this, this.resolveContent(), true);
 
                 return this;
             },

@@ -19,14 +19,15 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
 	
     test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
     
-    var fred = new $$.Model({ when: moment().valueOf(), id: 1, name:'fred' });
+    var fred = new $$.Model({ when: '2014-11-10T09:10:00', id: 1, name:'fred' });
     testObj(new $$.DateTime({
         model: fred,
         content: 'when',
-        contentFormat: 'millis',
+        contentFormat: 'YYYY-MM-DDTHH:mm',
         mobiscroll: {
             // preset: 'datetime', // one of date, time, or datetime.
             //theme: 'ios7'
+            onSelect: function () { setTimeout(function () { console.log(fred.get('when')); }, 500); }
         }
     }), 'DateTime');
 
@@ -44,55 +45,19 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
     // zzz.mobiscroll('option', 'wheels', w);
     //console.log(w);
 
-    testObj(new $$.DateTime({
-        model:new $$.Model({ when: moment(21600000), id: 1, name:'fred' }),
-        content: 'when',
-        mobiscroll: {
-            preset: null,
-            showLabel: true,
-            wheels: [ [
-                      {
-                          "values":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
-                          "keys":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
-                          "label":"Days"
-                      }
-                    ], [
-                      {
-                          "values":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
-                          "keys":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
-                          "label":"Hours"
-                      },{
-                          "values":[30,35,40,45,50,55,0,5,10,15,20,25],
-                          "keys":[30,35,40,45,50,55,0,5,10,15,20,25],
-                          "label":"Minutes"
-                      }
-                    ] ],
-            formatResult: function(data) {
-                return moment(data[0] * 86400000 + data[1] * 3600000 +  data[2] * 60000).format('MM/DD/YYYY HH:mm:ss');
-            },
-            parseValue: function(value) {
-                var secs = moment(new Date(value)).valueOf()/1000;
-                var d = parseInt(secs/86400);
-                var h = parseInt((secs % 86400)/3600);
-                var m = parseInt((secs % 3600)/60);
-                console.log([d, h, m]);
-                return [ d, h, m ];
-            },
-        }
-    }), 'DateTime Duration picker');
-
     testObj(new $$.NumberField({
         model: new $$.Model({ howmany: 7, id: 1, name:'fred' }),
         content: 'howmany',
         mobiscroll: { min: 1, max: 24, step: 2, showLabel: true, invalid: [ 5 ] }
     }), 'NumberField');
 
+    var mark = new $$.Model({ duration: 'P1D2H', id: 1, name:'mark' });
     testObj(new $$.DurationField({
-        model: new $$.Model({ duration: 500000, id: 1, name:'fred' }),
+        model: mark,
         content: 'duration',
-        mobiscroll: { showLabel: true, wheelset: 'dhi' }
+        mobiscroll: { showLabel: true, wheelset: 'dhi', onSelect: function () { setTimeout(function () { console.log(mark.get('duration')); }, 500); } }
     }), 'DurationField');
-    
+ 
     var kptest1;
     testObj(new $$.List({
         model: (kptest1 = new $$.Collection([

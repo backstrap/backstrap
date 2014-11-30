@@ -17,7 +17,8 @@
     ],
     "require": {
         "components/backbone" : "~1.0",
-        "moment/moment": "dev-develop",
+        "moment/moment": "~2.8",
+        "backstrap/moment-interval": "dev-master",
         "backstrap/mobiscroll": "dev-master"
     },
     "require-dev": {
@@ -98,7 +99,8 @@
                      "jquery",
                      "underscore",
                      "backbone",
-                     "moment"
+                     "moment",
+                     "moment-interval"
                 ]
             }
         }
@@ -108,10 +110,14 @@
             "noGlobal": false
         }
     },
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/backstrap/mobiscroll"
-		}
-	]
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/backstrap/mobiscroll"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/backstrap/moment-interval"
+        }
+    ]
 }
