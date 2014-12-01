@@ -41,7 +41,7 @@
             var dt = obj.$el.mobiscroll('getDate');
             var format = obj.options.contentFormat;
             if (format === '') {
-                return moment(dt).toISOString();
+                return moment(dt).format();
             } else if (format === 'millis') {
                 return dt.valueOf();
             } else if (format === 'seconds') {
