@@ -53,15 +53,15 @@
             }
         };
 
-        var updateFromContent = function (obj, value, fill) {
+        var updateFromContent = function (obj, value) {
             var val = dateForValue(value, obj.options.contentFormat);
-            obj.$el.mobiscroll('setDate', val);
+            obj.$el.mobiscroll('setDate', val, true);
         };
         
         var refresh = function() {
             var newValue = this.resolveContent();
             if (valueForDate(this) !== newValue) {
-                updateFromContent(this, newValue, false);
+                updateFromContent(this, newValue);
             }
         };
 
@@ -91,7 +91,7 @@
                 );
 
                 this.$el.mobiscroll(inputOpts);
-                updateFromContent(this, this.resolveContent(), true);
+                updateFromContent(this, this.resolveContent());
 
                 return this;
             },
