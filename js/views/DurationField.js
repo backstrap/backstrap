@@ -49,7 +49,7 @@
             var newValue = this.resolveContent();
             var inst = this.$el.mobiscroll('getInst');
             if (inst.settings.toContent(this.$el.mobiscroll('getValue')) !== newValue) {
-                this.$el.mobiscroll('setValue', inst.settings.fromContent(_(newValue).exists() ? newValue : 0, this), true);
+                this.$el.mobiscroll('setValue', inst.settings.fromContent(_(newValue).exists() ? newValue : 0, inst), true);
             }
         };
 
