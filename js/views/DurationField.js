@@ -226,7 +226,7 @@
                     for (var v = min; v <= max; v += step) {
                         values.push(v);
                     }
-                    return { values: values, label: labels[w] };
+                    return { values: values, label: labels[w] ? labels[w] : param[w] };
                 });
 
                 return [ group ];
