@@ -67,7 +67,7 @@
 
         var onSelect = function (value, inst) {
             this.model.set(this.options.content, valueForDate(this));
-            if (this.options.mobiscroll.onSelect) {
+            if (this.options.mobiscroll && this.options.mobiscroll.onSelect) {
                 this.options.mobiscroll.onSelect(value, inst);
             }
         };

@@ -56,7 +56,7 @@
         var onSelect = function (value, inst) {
             var p = inst.settings.toContent(this.$el.mobiscroll('getValue'));
             this.model.set(this.options.content, inst.settings.toContent(this.$el.mobiscroll('getValue')));
-            if (this.options.mobiscroll.onSelect) {
+            if (this.options.mobiscroll && this.options.mobiscroll.onSelect) {
                 this.options.mobiscroll.onSelect(value, inst);
             }
         };
