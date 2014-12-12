@@ -13,7 +13,7 @@
                 formLabelContent : null
             },
 
-            wrapWithFormLabel : function(content) {
+            getFormLabel : function() {
                 var wrapped = $$.plain.label({'for': this.options.name});
                 
                 var formLabelText = this.options.formLabelContent ? 
@@ -22,9 +22,14 @@
                 if(formLabelText) {
                     wrapped.appendChild($$.span({className : 'form_label'}, formLabelText));
                 }
+                return wrapped;    
+            },
+
+            wrapWithFormLabel : function(content) {
+                var wrapped = this.getFormLabel();
                 wrapped.appendChild(content);
                 return wrapped;    
-            }    
+            }
         });
     };
 

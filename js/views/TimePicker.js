@@ -92,7 +92,8 @@
                 $(this._textField.input).click(_(this._showMenu).bind(this));
                 $(this._textField.input).blur(_(this._timeEdited).bind(this));
                 $(this._textField.input).keyup(_(this._hideMenu).bind(this));
-                this.el.appendChild(this.wrapWithFormLabel(this._textField.el));
+                this.el.appendChild(this.getFormLabel());
+                this.el.appendChild(this._textField.el);
 
                 var date = this.resolveContent();
 

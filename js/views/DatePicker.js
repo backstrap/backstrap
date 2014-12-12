@@ -63,7 +63,8 @@
                 $(this._textField.input).blur(_(this._dateEdited).bind(this));
                 $(this._textField.input).keyup(_(this._hideCalendar).bind(this));
 
-                this.el.appendChild(this.wrapWithFormLabel(this._textField.el));
+                this.el.appendChild(this.getFormLabel());
+                this.el.appendChild(this._textField.el);
 
                 this._selectedDate = (!!this.model && !!this.options.content) ? 
                     this.resolveContent() : this.options.date;

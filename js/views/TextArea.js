@@ -61,7 +61,8 @@
 
                 this._parent = $$.div({className : 'textarea_wrapper'}, this.textArea);
 
-                this.el.appendChild(this.wrapWithFormLabel(this._parent));
+                this.el.appendChild(this.getFormLabel());
+                this.el.appendChild(this._parent);
 
                 // add focusin / focusout
                 this.setupFocus(this.textArea, this._parent);

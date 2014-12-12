@@ -119,7 +119,8 @@
                 // set the selectedIndex on the select element
                 this.select.selectedIndex = this._selectedIndex;
 
-                this.el.appendChild(this.wrapWithFormLabel(this.select));
+                this.el.appendChild(this.getFormLabel());
+                this.el.appendChild(this.select);
 
                 // scroll to selected Item
                 this.scrollToSelectedItem();

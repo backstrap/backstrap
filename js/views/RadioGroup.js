@@ -90,7 +90,8 @@
 
                 }, this);
 
-                this.el.appendChild(this.wrapWithFormLabel(this.group));
+                this.el.appendChild(this.getFormLabel());
+                this.el.appendChild(this.group);
 
                 this.setEnabled(!this.options.disabled);
 

@@ -16,26 +16,28 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
     $("head").append($$.css("components/require.css"));
 
     // tag factories
-	
+
     test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
     
-    var fred = new $$.Model({ when: '2014-11-10T09:10:00', id: 1, name:'fred' });
+    var fred = new $$.Model({ when: '2014-11-10T09:10', id: 1, name:'fred' });
     testObj(new $$.DateTime({
         model: fred,
         content: 'when',
-        contentFormat: 'YYYY-MM-DDTHH:mm',
-        mobiscroll: {
+        contentFormat: 'YYYY-MM-DDTHH:mm'
+        //mobiscroll: {
             // preset: 'datetime', // one of date, time, or datetime.
             //theme: 'ios7'
-            onSelect: function () { setTimeout(function () { console.log(fred.get('when')); }, 500); }
-        }
+            //onSelect: function () { setTimeout(function () { console.log(fred.get('when')); }, 500); }
+        //}
     }), 'DateTime');
 
     var zzz;
     testObj(zzz = new $$.DateTime({
         model: fred,
         content: 'when',
+        contentFormat: 'YYYY-MM-DDTHH:mm',
         mobiscroll: {
+	    showLabel: true,
             preset: 'time',
         }
     }), 'DateTime again (shared data)');
@@ -356,7 +358,8 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
 		model: new $$.Model({
 			name: 'First M. Last', description: 'lorem ipsum quod erat and all that jazz.'
 		}),
-		content: 'name'
+		content: 'name',
+		formLabelContent: 'Your Name'
 	}), 'TextField');
 
 	testObj(new $$.Label({
