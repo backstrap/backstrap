@@ -10,6 +10,15 @@
 {
     var fn = function($$, Backbone)
     {
+        // Duplicates Backbone's wrapError() exactly.  Need it in fetch().
+        var wrapError = function(model, options) {
+            var error = options.error;
+            options.error = function(resp) {
+                if (error) error(model, resp, options);
+                model.trigger('error', model, resp, options);
+            };
+        };
+          
         return ($$[moduleName] = Backbone.Collection.extend({
             options: {
               // Whether the Collection should automatically refresh at regular intervals.
@@ -52,16 +61,24 @@
                 opts.data = _.extend(opts.data ? _.clone(opts.data) : {}, this.params);
                 this.fetch(opts);
             },
-
-            sync: function(method, model, options) {
+            
+            /* Override Backbone.Collection.fetch(), to handle 'notmodified' correctly (Backbone issue #3410) */
+            fetch: function(options) {
+                options = options ? _.clone(options) : {};
+                if (options.parse === void 0) options.parse = true;
                 var success = options.success;
+                var collection = this;
                 options.success = function(resp, status) {
                     if (status !== 'notmodified') {
-                        success.apply(null, arguments);
+                        var method = options.reset ? 'reset' : 'set';
+                        collection[method](resp, options);
                     }
+                    if (success) success(collection, resp, options);
+                    collection.trigger('sync', collection, resp, options);
                 };
-                return Backbone.sync.apply(this, arguments);
-            }
+                wrapError(this, options);
+                return this.sync('read', this, options);
+              }
         }));
     };
 
