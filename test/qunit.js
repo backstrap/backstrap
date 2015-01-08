@@ -30,6 +30,88 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
         assert.equal(count + 1, $(selector).length);
     });
     
+    QUnit.test('HTML tags', function (assert) {
+        var fixture = $('#qunit-fixture');
+        ['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio',
+         'b', 'base', 'bdi', 'bdo', 'blockquote', 'body', 'br', 'button',
+         'canvas', 'caption', 'cite', 'code', 'col', 'colgroup',
+         'datalist', 'dd', 'del', 'details',
+         'dfn', 'dialog', 'div', 'dl', 'dt',
+         'em', 'embed', 'fieldset', 'figcaption', 'figure', 'footer', 'form',
+         'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+         'head', 'header', 'hgroup', 'hr', 'html',
+         'i', 'img', 'input', 'ins', 'kbd', 'keygen',
+         'label', 'legend', 'li', 'link',
+         'main', 'map', 'mark', 'menu', 'meta', 'meter',
+         'noscript', 'object', 'ol', 'optgroup', 'option', 'output',
+         'p', 'param', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby',
+         's', 'samp', 'script', 'section', 'select', 'small', 'source',
+         'span', 'strong', 'style', 'sub', 'summary', 'sup',
+         'table', 'tbody', 'td', 'textarea', 'tfoot', 'th',
+         'thead', 'time', 'title', 'tr', 'track',
+         'u', 'ul', 'var', 'video', 'wbr'
+        ].forEach(function (htmltag) {
+            fixture.append(($$[htmltag])('content'));
+            assert.equal($(htmltag, fixture).length, 1, htmltag);
+        });
+    });
+    // TODO: menuItem, nav, iframe
+    
+    QUnit.test('Bootstrap tags', function (assert) {
+        var fixture = $('#qunit-fixture');
+        var components = {
+                alert: 'div',
+                badge: 'span',
+                breadcrumb: 'ol',
+                buttonGroup: 'div',
+                buttonToolbar: 'div',
+                caret: 'span',
+                container: 'div',
+                formGroup: 'div',
+                inputGroup: 'div',
+                inputGroupAddon: 'span',
+                jumbotron: 'div',
+                linkList: 'div',
+                linkListItem: 'a',
+                list: 'ul',
+                listItem: 'li',
+                media: 'div',
+                pageHeader: 'div',
+                pagination: 'ul',
+                spanLabel: 'span',
+                thumbnail: 'div',
+                well: 'div',
+                form: 'form',
+                label: 'label',
+                select: 'select',
+                input: 'input',
+                table: 'table'
+            };
+            var bootstrapClasses = {
+                    button: 'btn',
+                    buttonGroup: 'btn-group',
+                    buttonToolbar: 'btn-toolbar',
+                    formGroup: 'form-group',
+                    input: 'form-control',
+                    inputGroup: 'input-group',
+                    inputGroupAddon: 'input-group-addon',
+                    linkList: 'list-group',
+                    linkListItem: 'list-group-item',
+                    list: 'list-group',
+                    listItem: 'list-group-item',
+                    pageHeader: 'page-header',
+                    select: 'form-control',
+                    spanLabel: 'label'
+            };
+        for (var comp in components) {
+            var cl = bootstrapClasses[comp] ? bootstrapClasses[comp] : comp;
+            fixture.empty();
+            fixture.append(($$[comp])());
+            assert.equal($(components[comp]+'.'+cl, fixture).length, 1, comp);
+        }
+    });
+
+    appendTest($$.panel('test'), 'div.panel div.panel-body', 'panel');
     appendTest($$.pageHeader('test'), 'div', 'pageHeader');
     appendTest($$.h1('test'), 'h1', 'h1');
     
@@ -243,33 +325,99 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
                         labelContent: 'b',
                         maxHeight: '100px'
                     },
-                    $$.li({className: 'header'}, 'c'),
                     $$.menuItem('d', '#'),
-                    $$.menuItem('e', '#')
+                    $$.menuItem('e', 'href')
                 )
             )
         ),
         {
-            'ul.nav.navbar.navbar-fixed-bottom': 1,
-            'ul.nav.navbar.navbar-fixed-bottom': 1,
+            'ul.nav.navbar.navbar-fixed-bottom[role=navigation]': 1,
+            'ul.nav.navbar div.navbar-header a.navbar-brand': 1,
+            'ul.nav.navbar div.navbar-collapse ul.nav.navbar-nav.navbar-left': 1,
+            'ul.nav.navbar div.navbar-collapse ul.nav.navbar-nav li.dropdown ul.dropdown-menu': 1,
+            'ul.nav.navbar div.navbar-collapse ul.nav.navbar-nav li.dropdown ul.dropdown-menu li a.menuitem[href=href]': 1
         },
-        'navbar, navbarGroup, dropdown');
+        'navbar, navbarGroup, dropdown, menuItem');
 
+    // TODO navbarForm, menuToggle, dropdownGroup
     
     ///////////////////////////////////////////////////////////////////////////////////////////////
     QUnit.module('mixins');
     
+    // TODO mixins
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     QUnit.module('views');
 
-    testObj(new $$.Span({content: 'Hello'}), 'span', 'Span');
-    
+    testObj(new $$.Span({content: 'content'}), 'span', 'Span');
+
     testObj(new $$.Badge({content: '1'}), 'span.badge', 'Badge');
+
+    testObj(new $$.Label({content: 'content'}), 'label.label', 'Label');
+    
+    testObj(new $$.Panel({content: 'content'}), 'div.panel', 'Panel');
+
+    testObj(new $$.Link({content: 'content'}), 'a.link span', 'Link');
+    
+    testObj(new $$.Container({content: 'content'}), 'div.container', 'Container');
     
     testObj(new $$.Glyph({content: 'ok'}), 'span.glyphicon-ok', 'Glyph');
 
-    testObj(new $$.Button({size: 'lg', context: 'info', content: 'Hello'}), 'div.button.btn.btn-lg.btn-info', 'Button');
+    testObj(new $$.Button({size: 'lg', context: 'info', content: 'content'}), 'div.button.btn.btn-lg.btn-info', 'Button with size & context');
+
+    testObj(new $$.TextArea({content: 'content'}), 'div.text_area div.textarea_wrapper textarea', 'TextArea');
+    
+    testObj(
+        new $$.Checkbox({
+            model: new $$.Model({ value: true, label: 'label' }),
+            content: 'value',
+            labelContent: 'label'
+        }),
+        {
+            'div.checkbox': 1,
+            'div.checkbox label input[type=checkbox][checked]': 1,
+            'div.checkbox label div.checkbox_wrapper span': 1
+        },
+        'Checkbox'
+    );
+
+    testObj(
+        new $$.TextField({
+            model: new $$.Model({ value: 'content', label: 'label' }),
+            content: 'value',
+            formLabelContent: 'label'
+        }),
+        {
+        'div.text_field.form-group label.text-default span.form_label': 1,
+        'div.text_field.form-group div.text_wrapper input.form-control[type=text]': 1
+        },
+        'TextField'
+    );
+
+    testObj(
+        new $$.RadioGroup({
+            model: new $$.Model({ value: 'c' }),
+            content: 'value',
+            alternatives: new $$.Collection(
+                [
+                 { name: 'Adam',    value: 'a' },
+                 { name: 'Bert',    value: 'b' },
+                 { name: 'Cathy',   value: 'c' },
+                 { name: 'Douglas', value: 'd' }
+                ]
+            ),
+            altLabelContent: 'name',
+            altValueContent: 'value'
+        }),
+        {
+            'div.radio_group > div.radio_group_wrapper': 1,
+            'div.radio_group div.radio_group_wrapper label.first.odd': 1,
+            'div.radio_group div.radio_group_wrapper label input[type=radio]': 4,
+            'div.radio_group div.radio_group_wrapper label input[checked]': 1,
+            'div.radio_group div.radio_group_wrapper label div.radio_group_wrapper span': 4,
+        },
+        'RadioGroup'
+    );
     
     testObj(new $$.BasicNavbar({brand: 'brand', model: new $$.Collection([
         { name: 'first', href: '#first', label: 'First' },
@@ -285,5 +433,21 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
         'div.navbar div.container div.navbar-collapse ul.nav.navbar-nav li.list-group-item': 3
     },
     'BasicNavbar');
+    
+    // TODO Calendar CollectionView DatePicker DateTime Dropdown{,Group} Grid List...
+    //      Menu ModelView NavPills/Tabs NumberField ProgressBar Select Table TimePicker
+
+    QUnit.test('DurationField', function(assert) {
+        var fixture = $('#qunit-fixture');
+        var model = new $$.Model({ duration: 'P1D2H' });
+        var obj = new $$.DurationField({
+            model: model,
+            content: 'duration',
+            mobiscroll: { showLabel: true, wheelset: 'dhi' }
+        });
+        fixture.append(obj.render().el);
+        assert.equal($('input.form-control.mobiscroll[readonly]', fixture).length, 1, 'DOM content');
+        // TODO functional testing
+    });
     
 });

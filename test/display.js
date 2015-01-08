@@ -356,10 +356,10 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
 
 	testObj(new $$.TextField({
 		model: new $$.Model({
-			name: 'First M. Last', description: 'lorem ipsum quod erat and all that jazz.'
+			name: 'First M. Last', description: 'lorem ipsum quod erat and all that jazz.', label: 'Your Name'
 		}),
 		content: 'name',
-		formLabelContent: 'Your Name'
+		formLabelContent: 'label'
 	}), 'TextField');
 
 	testObj(new $$.Label({
