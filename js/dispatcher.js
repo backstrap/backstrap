@@ -1,4 +1,6 @@
 /**
+ * Dispatcher extends Backbone.Events to provide
+ * an automatic refresh service for Collections.
  * 
  * @author Kevin Perry perry@princeton.edu
  */
@@ -6,15 +8,16 @@
 {
     var fn = function($$, $)
     {
-        var timeout = null;
-        var dispatcher = {
-                minInterval: 30,
+        var defaults = {
+                minInterval: 10,
                 maxInterval: 1000,
-                decayFrequency: 4,
+                decayFrequency: 6,
                 decayFactor: 2
         };
-        var activeInterval = 0;
-        var lastRefresh = 99999999999;
+        var dispatcher = defaults;
+        var activeInterval = defaults.minInterval;
+        var timeout = null;
+        var lastRefresh = 99999999999999;
         var touchTime = (new Date()).getTime();
 
         var touch = function () {
@@ -25,7 +28,9 @@
             }
         };
 
-        var doRefresh = function doRefresh() {
+        var doRefresh = null;
+        
+        doRefresh = function doRefresh() {
             if (!(dispatcher.minInterval > 0)) {
                 console.log('$$.dispatcher.minInterval must be positive');
                 return;
@@ -54,10 +59,10 @@
         };
 
         dispatcher = _.extend({
-            minInterval: 10,
-            maxInterval: 1000,
-            decayFrequency: 6,
-            decayFactor: 2,
+            minInterval: defaults.minInterval,
+            maxInterval: defaults.maxInterval,
+            decayFrequency: defaults.decayFrequency,
+            decayFactor: defaults.decayFactor,
 
             refresh: function () {
                 console.log('refresh!');
