@@ -1,13 +1,9 @@
 /**
- * Stores a copy of Collection data in localStorage without interrupting the normal sync().
+ * Stores a copy of Backbone Collection or Model data
+ * in localStorage without interrupting the normal sync() processing.
  * 
- * To cache data in the localCache object,
- * the Collection should set its sync() method to
- * the function returned by localCache.getSync().
- * On initialization, the Collection may pre-load the saved data
- * from a previous incarnation using
- * collection.reset(collection.localCache.load()) 
- * All the above may be accomplished by calling localCache.attach().
+ * To cache/retrieve data in the localCache object,
+ * the Collection or Model should call localCache.attach().
  * 
  * @author Kevin Perry perry@princeton.edu
  */
@@ -32,7 +28,7 @@
                   return JSON.stringify(item);
                 },
                 deserialize: function (data) {
-                  return data ? JSON.parse(data) : [];
+                  return data ? JSON.parse(data) : null;
                 }
             };
         };
@@ -42,43 +38,48 @@
                 return localStorage;
             },
 
-            attach: function(collection) {
-                collection.reset(this.load());
-                collection._$$sync = collection.sync;
+            attach: function(obj) {
+                var cached = this.load();
+                if ('reset' in obj) {
+                    obj.reset(cached ? cached : []);
+                } else {
+                    obj.set(cached ? cached : {}, {silent: true});
+                    obj.trigger('reset', obj);
+                }
+                obj._$$sync = obj.sync;
                 console.log('attaching');
-                collection.sync = this.getSync();
+                obj.sync = this.getSync();
             },
 
-            detach: function(collection) {
-                if (collection._$$sync) {
-                    collection.sync = collection._$$sync;
-                    delete(collection._$$sync);
+            detach: function(obj) {
+                if (obj._$$sync) {
+                    obj.sync = obj._$$sync;
+                    delete(obj._$$sync);
                 }
             },
 
-            // Save the array of models to localStorage.
-            save: function (models) {
+            // Save the object to localStorage.
+            save: function (obj) {
                 console.log('save');
-                console.log(models);
-                this.localStorage().setItem(this.name, this.serializer.serialize(models));
+                this.localStorage().setItem(this.name, this.serializer.serialize(obj));
             },
 
-            // Return the array of models currently in localStorage.
+            // Return the data currently in localStorage.
             load: function () {
-                console.log(this.name);
+                console.log('load ' + this.name);
                 return this.serializer.deserialize(this.localStorage().getItem(this.name));
             },
 
             getSync: function () {
                 var localCache = this;
-                return function(method, collection, options) {
+                return function(method, obj, options) {
                     console.log('sync: ' + method);
                     if (method == 'read') {
                         options = options ? _.clone(options) : {};
                         var success = options.success;
                         options.success = function (resp) {
                             if (success) success(resp);
-                            localCache.save(collection.models);
+                            localCache.save(obj);
                         };
                     }
                     return (this._$$sync ? this._$$sync : Backbone.sync).call(this, method, this, options);

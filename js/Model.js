@@ -1,7 +1,7 @@
 /**
  * A generic Backbone Model object, with extensions.
  * 
- * Implements autoRefresh.
+ * Implements autoRefresh and localCache extensions.
  *
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
@@ -12,12 +12,18 @@
     {
         return ($$[moduleName] = Backbone.Model.extend({
             options: {
-              // Whether the Model should automatically refresh at regular intervals.
-              autoRefresh: false,
-              // Fetch options for refresh.
-              refreshOptions: {},
-              // URL params for refresh.
-              params: {}
+                // LocalCache object for caching data in localStorage.
+                // To use, declare as "localCache: new LocalCache('objectId')".
+                localCache: null,
+                
+                // Whether the Model should automatically refresh at regular intervals.
+                autoRefresh: false,
+                
+                // Fetch options for refresh.
+                refreshOptions: {},
+                
+                // URL params for refresh.
+                params: {}
             },
     
             initialize: function(options) {
@@ -25,6 +31,10 @@
 
                 this.refreshOptions = this.options.refreshOptions;
                 this.params = this.options.params;
+
+                if (this.options.localCache) {
+                    this.options.localCache.attach(this);
+                }
 
                 if (this.options.autoRefresh) {
                   $$.dispatcher.startRefresh(this);

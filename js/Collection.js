@@ -21,13 +21,16 @@
           
         return ($$[moduleName] = Backbone.Collection.extend({
             options: {
+                // LocalCache object for caching data in localStorage.
+                // To use, declare as "localCache: new LocalCache('collectionName')".
+                localCache: null,
+                
               // Whether the Collection should automatically refresh at regular intervals.
               autoRefresh: false,
-              // LocalCache object for caching data in localStorage.
-              // To use, declare as "localCache: new LocalCache('collectionName')".
-              localCache: null,
+              
               // Fetch options for refresh.
               refreshOptions: {},
+              
               // URL params for refresh.
               params: {}
             },
