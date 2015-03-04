@@ -1,7 +1,7 @@
 /**
  * A generic Backbone Model object, with extensions.
  * 
- * Implements autoRefresh and localCache extensions.
+ * Implements autoRefresh, localCache and mixin extensions.
  *
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
@@ -54,6 +54,16 @@
                 var opts = _({}).extend(this.refreshOptions, { ifModified: true });
                 opts.data = _.extend(opts.data ? _.clone(opts.data) : {}, this.params);
                 this.fetch(opts);
+            },
+            
+            mixin: function (objects) {
+                var options = _(this.options).clone();
+
+                _(objects).each(function (object) {
+                    $.extend(true, this, object);
+                }, this);
+
+                $.extend(true, this.options, options);
             }
         }));
     };

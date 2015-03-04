@@ -1,7 +1,7 @@
 /**
  * A generic Backbone Collection object, with extensions.
  *
- * Implements autoRefresh and localCache extensions.
+ * Implements autoRefresh, localCache and mixin extensions.
  * 
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
@@ -25,17 +25,17 @@
                 // To use, declare as "localCache: new LocalCache('collectionName')".
                 localCache: null,
                 
-              // Whether the Collection should automatically refresh at regular intervals.
-              autoRefresh: false,
+                // Whether the Collection should automatically refresh at regular intervals.
+                autoRefresh: false,
               
-              // Fetch options for refresh.
-              refreshOptions: {},
+                // Fetch options for refresh.
+                refreshOptions: {},
               
-              // URL params for refresh.
-              params: {}
+                // URL params for refresh.
+                params: {}
             },
 
-            initialize: function(model, options) {
+            initialize: function(models, options) {
                 this.options = _({}).extend(this.options, options);
 
                 this.refreshOptions = this.options.refreshOptions;
@@ -81,6 +81,16 @@
                 };
                 wrapError(this, options);
                 return this.sync('read', this, options);
+              },
+              
+              mixin: function (objects) {
+                  var options = _(this.options).clone();
+
+                  _(objects).each(function (object) {
+                      $.extend(true, this, object);
+                  }, this);
+
+                  $.extend(true, this.options, options);
               }
         }));
     };

@@ -47,7 +47,6 @@
                     obj.trigger('reset', obj);
                 }
                 obj._$$sync = obj.sync;
-                console.log('attaching');
                 obj.sync = this.getSync();
             },
 
@@ -60,20 +59,17 @@
 
             // Save the object to localStorage.
             save: function (obj) {
-                console.log('save');
                 this.localStorage().setItem(this.name, this.serializer.serialize(obj));
             },
 
             // Return the data currently in localStorage.
             load: function () {
-                console.log('load ' + this.name);
                 return this.serializer.deserialize(this.localStorage().getItem(this.name));
             },
 
             getSync: function () {
                 var localCache = this;
                 return function(method, obj, options) {
-                    console.log('sync: ' + method);
                     if (method == 'read') {
                         options = options ? _.clone(options) : {};
                         var success = options.success;
