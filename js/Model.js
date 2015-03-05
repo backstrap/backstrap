@@ -27,6 +27,7 @@
             },
     
             initialize: function(options) {
+                this.options = this.options ? _({}).extend(this.options, options) : options;
                 Backbone.Model.prototype.initialize.call(this, options);
 
                 this.refreshOptions = this.options.refreshOptions;

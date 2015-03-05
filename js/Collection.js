@@ -36,7 +36,7 @@
             },
 
             initialize: function(models, options) {
-                this.options = _({}).extend(this.options, options);
+                this.options = this.options ? _({}).extend(this.options, options) : options;
 
                 this.refreshOptions = this.options.refreshOptions;
                 this.params = _.clone(this.options.params);
