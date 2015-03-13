@@ -413,8 +413,8 @@
         };
 
         // shortcut for creating CSS stylesheet links.
-        backstrap.css = function (href) {
-            return backstrap.plain.link({href: href, rel: "stylesheet", type: "text/css"});
+        backstrap.css = function (href, onload) {
+            return backstrap.plain.link({href: href, rel: "stylesheet", type: "text/css", onload: onload});
         };
 
         // shortcut for creating glyphicons.
