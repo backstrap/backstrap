@@ -53,6 +53,7 @@
 
                 this.textArea = $$.textarea({
                     id : this.options.textAreaId,
+                    className: 'form-control form-control-default',
                     tabIndex : this.options.tabIndex, 
                     placeholder : this.options.placeholder,
                     maxLength : this.options.maxLength}, value);
