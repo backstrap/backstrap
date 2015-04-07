@@ -14,7 +14,7 @@
 
         return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
             options : {
-                className : 'text_area',
+                className : 'text_area form-group',
 
                 // id to use on the actual textArea 
                 textAreaId : null,
@@ -39,7 +39,6 @@
                 this.mixin([$$.mixins.HasModel, $$.mixins.HasFormLabel,
                     $$.mixins.HasError, $$.mixins.HasFocus]);
 
-                $(this.el).addClass('text_area');
                 if(this.options.name){
                     $(this.el).addClass(this.options.name);
                 }
