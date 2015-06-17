@@ -45,23 +45,27 @@
         var listenToModel = function (model, onOff) {
             if (model) {
                 var actions = {
-                    add:    onItemAdded,
-                    remove: onItemRemoved,
-                    reset:  this.render
+                    add:    _(onItemAdded),
+                    remove: _(onItemRemoved),
+                    reset:  _(this.render)
                 };
 
                 if (this.options.renderOnChange) {
+                    var onChanged = _(onItemChanged);
                     var props = this.options.renderOnChange;
                     if (props === true) {
-                        actions.change = onItemChanged;
+                        actions.change = onChanged;
                     } else {
                         (_.isArray(props) ? props : [props]).forEach(function (prop) {
-                            this['change:' + prop] = onItemChanged;
+                            this['change:' + prop] = onChanged;
                         }, actions);
                     }
                 }  
 
-                (onOff ? model.on : model.off).call(model, actions, this);
+                onOff = onOff ? model.on : model.off;
+                for (var action in actions) {
+                    onOff.call(model, action, actions[action].bind(this));
+                }
             }
         };
 
