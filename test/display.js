@@ -31,8 +31,7 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
         //}
     }), 'DateTime');
 
-    var zzz;
-    testObj(zzz = new $$.DateTime({
+    var zzz = new $$.DateTime({
         model: fred,
         content: 'when',
         contentFormat: 'YYYY-MM-DDTHH:mm',
@@ -40,7 +39,8 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
 	    showLabel: true,
             preset: 'time',
         }
-    }), 'DateTime again (shared data)');
+    });
+    testObj(zzz, 'DateTime again (shared data)');
     // var w = zzz.mobiscroll('getInst').settings.wheels;
     // w[0][0].values = ['09',10,11,12,'01','02','03','04','05','06','07','08'];
     // w[0][0].keys = [9,10,11,12,1,2,3,4,5,6,7,8];
@@ -252,6 +252,10 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
     testObj(new $$.Button({size: 'lg', context: 'info', content: 'Hello'}), 'Button');
     
     testObj(new $$.Span({content: 'Hello'}), 'Span');
+
+    var subviewtest = new $$.View();
+    subviewtest.appendView(new $$.Span({content: 'Hello Kevin'}));
+    testObj(subviewtest, 'SubViews');
 	
 	testObj(new $$.BasicNavbar({brand: 'Wow!', model: new $$.Collection([
 		{ name: 'first', href: '#first', label: 'First' },
@@ -492,6 +496,7 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
             )
         )
     )), 'Dropdown Group On a fixed-footer Navbar');
+    
     test($$.jumbotron('Hello!'), 'JT');
 
     test($$.div, ' === END === ');

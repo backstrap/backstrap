@@ -16,7 +16,8 @@
                 return (elem === 'divider' || elem === 'separator' || elem === 'header') ? 'span' : 'a';
             },
     
-            initialize: function () {
+            initialize: function (options) {
+                $$.View.prototype.initialize.call(this, options);
                 var elem = this.model.get('element');
                 if (elem === 'header') {
                     this.$el.text(this.model.get('label'));

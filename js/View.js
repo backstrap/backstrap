@@ -12,6 +12,7 @@
         return ($$[moduleName] = Backbone.View.extend({
             initialize: function (options) {
                 this.options = this.options ? _({}).extend(this.options, options) : options;
+                this.allSubViews = _(new Array());
             },
 
             // resolves the appropriate content from the given choices
@@ -40,6 +41,16 @@
                 }, this);
 
                 $.extend(true, this.options, options);
+            },
+            
+            appendView: function (view, el) {
+                view.$el.appendTo(el ? el : this.el);
+                this.allSubViews.push(view);
+            },
+            
+            render: function () {
+                this.allSubViews.each(function (view) { view.render(); });
+                return this;
             }
         }));
     };
