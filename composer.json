@@ -17,7 +17,7 @@
     ],
     "require": {
         "components/backbone" : "~1.0",
-        "moment/moment": "~2.8",
+        "moment/moment": "~2.9.0",
         "backstrap/moment-interval": "dev-master",
         "backstrap/mobiscroll": "dev-master"
     },
