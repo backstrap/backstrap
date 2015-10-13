@@ -39,8 +39,8 @@
                 this._observeModel(this.render);
 
                 if (value !== this.content) {
-                    this.$el.toggleClass(contextClasses);
-                    this.$glyph.toggleClass(contentClasses);
+                    this.$el.toggleClass(this.contextClasses);
+                    this.$glyph.toggleClass(this.contentClasses);
                     this.content = value;
                 }
                 return this;
