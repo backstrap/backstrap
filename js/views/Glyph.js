@@ -31,8 +31,14 @@
             },
     
             render : function() {
-                var contextName = this.resolveContent(this.options.model, this.options.contextMap ? this.options.contextMap : this.options.context);
-                var contentName = this.resolveContent(this.options.model, this.options.contentMap);
+                var contextName = this.resolveContent(this.options.model, this.options.context, this.context);
+                if (this.options.contextMap && this.options.contextMap[contextName]) {
+                    contextName = this.options.contextMap[contextName];
+                }
+                var contentName = this.resolveContent(this.options.model, this.options.content, this.content);
+                if (this.options.contentMap && this.options.contentMap[contentName]) {
+                    contentName = this.options.contentMap[contentName];
+                }
                 this._observeModel(this.render);
                 if (contextName !== this.context) {
                     this.$el.removeClass(this.prefix + this.context).addClass(this.prefix + contextName);

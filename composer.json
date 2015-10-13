@@ -82,6 +82,7 @@
                 "js/views/NavPills.js",
                 "js/views/NavTabs.js",
                 "js/views/NumberField.js",
+                "js/views/OnOffGlyph.js",
                 "js/views/Panel.js",
                 "js/views/ProgressBar.js",
                 "js/views/RadioGroup.js",

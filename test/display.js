@@ -247,7 +247,11 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
 
 	testObj(new $$.Badge({content: '1'}), 'Badge');
 
-	testObj(new $$.Glyph({content: 'retweet'}), 'Glyph');
+    testObj(new $$.Glyph({content: 'retweet'}), 'Glyph');
+
+    testObj(new $$.Glyph({model: {value: 'retweet'}, content: 'value'}), 'Glyph+Model');
+
+    testObj(new $$.OnOffGlyph({model: {value: false}, content: 'value', offGlyph: 'remove'}), 'OnOffGlyph');
 
     testObj(new $$.Button({size: 'lg', context: 'info', content: 'Hello'}), 'Button');
     
