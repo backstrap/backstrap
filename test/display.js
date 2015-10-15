@@ -19,6 +19,17 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
 
     test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
     
+    // Test the various types of allowed children.
+    var div1 = $$.div();
+    $(div1).append('This div was created empty.');
+    test($$.div(
+        {style: 'background-color: #eeeeee'},
+        div1,
+        $$.div('This div has no options.'),
+        $($$.div('This div was appended as a jQuery obj.')),
+        [$$.span('An array '), 'of ', 'text ', document.createTextNode('strings.')]
+    ), 'divs');
+    
     var fred = new $$.Model({ when: '2014-11-10T09:10', id: 1, name:'fred' });
     testObj(new $$.DateTime({
         model: fred,
@@ -323,7 +334,7 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
 		}),
 		content: 'value',
 		labelContent: 'label'
-	}).render().el), 'Checkbox');
+	}).render()), 'Checkbox');
 
 	testObj(new $$.Calendar({
 		model: new $$.Model({
@@ -449,7 +460,7 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
                     { label: 'Deadlines', value: 'deadline' },
                     { label: 'Events', value: 'event' }
                 ])
-            }).render().el,
+            }).render(),
             $$.li($$.a({href: '#'}, 'Something Else')),
             $$.dropdown({
                     labelContent: 'Filters',
@@ -495,7 +506,7 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
                             { op: '#b', name: 'Operation B' },
                             { op: '#c', name: 'Operation C' }
                         ])
-                }).render().el,
+                }).render(),
                 $$.menuItem('Final thing', '#')
             )
         )

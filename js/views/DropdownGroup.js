@@ -21,6 +21,8 @@
                     },
                     this.resolveContent(this.model, this.options.labelContent, 'label')
                 ));
+                
+                return this;
             }
         });
     

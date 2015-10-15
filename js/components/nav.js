@@ -12,45 +12,43 @@
 {
     var fn = function($$)
     {
-        return($$[moduleName] = $$.components[moduleName] = function (attrs)
-            {
-                var el;
-                var type = '';
+        return($$[moduleName] = $$.components[moduleName] = function (attrs) {
+            var el;
+            var type = '';
 
-                if (typeof attrs === 'object' && attrs.nodeType !== 1) {
-                    if ('type' in attrs) {
-                        if (attrs.type === 'tabs' && !('role' in attrs)) {
-                            attrs.role = 'tablist';
-                        }
-                        if (attrs.type === 'tabs' || attrs.type === 'pills') {
-                            type = ' nav-' + attrs.type;
-                        }
-                        delete(attrs.type);
+            if (typeof attrs === 'object' && attrs.nodeType !== 1) {
+                if ('type' in attrs) {
+                    if (attrs.type === 'tabs' && !('role' in attrs)) {
+                        attrs.role = 'tablist';
                     }
-                    if ('justified' in attrs) {
-                        if (attrs.justified) {
-                            type += ' nav-justified';
-                        }
-                        delete(attrs.justified);
+                    if (attrs.type === 'tabs' || attrs.type === 'pills') {
+                        type = ' nav-' + attrs.type;
                     }
-                    if ('stacked' in attrs) {
-                        if (attrs.stacked) {
-                            type += ' nav-stacked';
-                        }
-                        delete(attrs.stacked);
-                    }
+                    delete(attrs.type);
                 }
-
-                el = $$.ul.apply($$, arguments);
-                $(el).addClass('nav' + type);
-                el.clearActive = function () {
-                    $('> *', this).removeClass('active');
-                    return this;
-                };
-
-                return el;
+                if ('justified' in attrs) {
+                    if (attrs.justified) {
+                        type += ' nav-justified';
+                    }
+                    delete(attrs.justified);
+                }
+                if ('stacked' in attrs) {
+                    if (attrs.stacked) {
+                        type += ' nav-stacked';
+                    }
+                    delete(attrs.stacked);
+                }
             }
-        );
+
+            el = $$.ul.apply($$, arguments);
+            $(el).addClass('nav' + type);
+            el.clearActive = function () {
+                $('> *', this).removeClass('active');
+                return this;
+            };
+
+            return el;
+        });
     };
 
     if (typeof context.define === 'function'

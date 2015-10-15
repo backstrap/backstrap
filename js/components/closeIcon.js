@@ -8,14 +8,12 @@
 {
     var fn = function($$)
     {
-        return($$[moduleName] = $$.components[moduleName] = function ()
-            {
-                return $$.plain.button({className: 'close', type: 'button'},
-                        $$.span({'aria-hidden': true}, String.fromCharCode(215)),
-                        $$.span({className: 'sr-only'}, 'Close')
-                );
-            }
-        );
+        return($$[moduleName] = $$.components[moduleName] = function () {
+            return $$.plain.button({className: 'close', type: 'button'},
+                $$.span({'aria-hidden': true}, String.fromCharCode(215)),
+                $$.span({className: 'sr-only'}, 'Close')
+            );
+        });
     };
 
     if (typeof context.define === 'function'

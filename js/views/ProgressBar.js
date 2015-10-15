@@ -36,6 +36,7 @@
                 }).style('width', (value - min)/(max - min) + '%');
                 // TODO Allow for "minutes left" style label (computed if flag set?)
                 this.span.text(value + this.model.labelSuffix);
+                return this;
             }
         });
         

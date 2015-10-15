@@ -81,6 +81,41 @@
             'xs'           : 'xs',
             'block'        : 'block' // for buttons only
         };
+        
+        var appendAny = function (el, child) {
+            // if the argument is a DOM element node or text node,
+            // we simply append it.  Don't append other DOM constructs.
+            if (child.nodeType) {
+                if (child.nodeType === 1 || child.nodeType === 3) {
+                    el.appendChild(child);
+                }
+                return true;
+            }
+
+            // if the argument is a string or a number, we append it as
+            // a new text node.
+            else if (
+                    (!!(child === '' || (child && child.charCodeAt && child.substr))) ||
+                    (!!(child === 0  || (child && child.toExponential && child.toFixed)))) {
+
+                el.appendChild(document.createTextNode(child));
+                return true;
+            }
+            
+            // if the argument is a jQuery object, append its elements.
+            else if (child.jquery) {
+                child.appendTo(el);
+                return true;
+            }
+            
+            // if the argument is a Backbone View, append its root element.
+            else if (child instanceof Backbone.View) {
+                el.appendChild(child.el);
+                return true;
+            }
+            
+            return false;
+        };
 
         // The backstrap function serves as a generic method for generating
         // DOM content, and also as a placeholder for helper functions.
@@ -95,10 +130,13 @@
         // after the tag and class names.
         // 
         // Additional arguments will be considered children of the new
-        // element and may consist of elements, strings, or numbers.
+        // element and may consist of DOM elements, strings, numbers,
+        // BackBone View objects, jQuery objects, or arrays containing
+        // any of these things (but not nested arrays.)
         // 
-        // for example:
+        // For example:
         // backstrap('div', 'btn', {'class' : 'foo'}, 'bar');
+        // makes a button-styled div with class "foo", containing the text "bar".
         var backstrap = function $$(tag, bootstrapClass) {
             // handle Bootstrap special attributes
             var bootstrap = {
@@ -115,105 +153,95 @@
                 var arg = arguments[i];
                 if (arg === null || typeof arg === 'undefined') continue;
 
-                // if the argument is a dom node, we simply append it
-                if (arg.nodeType === 1) {
-                    el.appendChild(arg);
+                console.log(arg);
+                if (appendAny(el, arg)) {
+                    continue;
                 }
 
-                // if the argument is a string or a number, we append it as
-                // a new text node
-                else if (
-                        (!!(arg === '' || (arg && arg.charCodeAt && arg.substr))) ||
-                        (!!(arg === 0  || (arg && arg.toExponential && arg.toFixed)))) {
-
-                    el.appendChild(document.createTextNode(arg));
-                }
-
-                // if the argument is a plain-old object, and we're processing the first
-                // argument, then we apply the object's values as element attributes
-                else if (i === 2 && typeof(arg) === 'object') {
-                    for (var key in arg) {
-                        if (arg.hasOwnProperty(key)) {
-                            var value = arg[key];
-                            if (value !== null && typeof value !== 'undefined') {
-                                key = key.toLowerCase();
-                                key = attributeMap[key] || key;
-
-                                // if the key represents an event (onclick, onchange, etc)
-                                // we'll set the href to '#' if none is given, and we'll apply
-                                // the attribute directly to the element for IE7 support.
-                                if (key.substr(0, 2) === 'on') {
-                                    if (!('href' in arg) && key === 'onclick') {
-                                        el.setAttribute('href', '#');
-                                    }
-                                    el[key] = value;
-                                } else {
-                                    switch (key) {
-                                        case 'style':
-                                            // if we're setting the style attribute, we may need to
-                                            // use the cssText property.
-                                            if (key === 'style' && el.style.setAttribute) {
-                                                el.style.setAttribute('cssText', value);
-                                            } else {
-                                                el.setAttribute('style', value);
-                                            }
-                                            break;
-        
-                                        case 'className':
-                                            value.split(" ").forEach(function (name) {
-                                                classlist[name] = true;
-                                            });
-                                            break;
-        
-                                        case 'htmlFor':
-                                            // if we're setting an attribute that's not properly supported,
-                                            // then we apply the attribute directly to the element
-                                            el.htmlFor = value;
-                                            break;
-        
-                                        // The rest of the cases are for Bootstrap attributes.
-                                        case 'size':
-                                            if (value in sizeMap) {
-                                                bootstrap.size = sizeMap[value];
-                                            } else {
-                                                el.setAttribute('size', value);
-                                            }
-                                            break;
-
-                                        case 'bgcontext':
-                                            classlist['bg-' + value] = true;
-                                            break;
-
-                                        case 'context':
-                                        case 'fluid':
-                                        case 'footer':
-                                        case 'heading':
-                                        case 'inline':
-                                        case 'media':
-                                        case 'pull':
-                                        case 'striped':
-                                        case 'bordered':
-                                        case 'hover':
-                                        case 'condensed':
-                                            bootstrap[key] = value;
-                                            break;
-
-                                        // otherwise, we use the standard setAttribute
-                                        default:
-                                            el.setAttribute(key, value);
-                                    }
-                                }
-                            }
-                        }
+                // if the argument is an array, we append each element.
+                if (Object.prototype.toString.call(arg) === '[object Array]') {
+                    for (var j=0; j<arg.length; j++) {
+                        appendAny(el, arg[j]);
                     }
                 }
 
-                // if the argument is an array, we append each element
-                else if (Object.prototype.toString.call(arg) === '[object Array]') {
-                    for (var j=0; j<arg.length; j++) {
-                        var child = arg[j];
-                        if (child.nodeType === 1) {
-                            el.appendChild(child);
+                // if the argument is a plain-old object, and we're processing the first
+                // argument, then we apply the object's values as element attributes.
+                else if (typeof(arg) === 'object') {
+                    if (i === 2) {
+                        for (var key in arg) {
+                            if (arg.hasOwnProperty(key)) {
+                                var value = arg[key];
+                                if (value !== null && typeof value !== 'undefined') {
+                                    key = key.toLowerCase();
+                                    key = attributeMap[key] || key;
+    
+                                    // if the key represents an event (onclick, onchange, etc)
+                                    // we'll set the href to '#' if none is given, and we'll apply
+                                    // the attribute directly to the element for IE7 support.
+                                    if (key.substr(0, 2) === 'on') {
+                                        if (!('href' in arg) && key === 'onclick') {
+                                            el.setAttribute('href', '#');
+                                        }
+                                        el[key] = value;
+                                    } else {
+                                        switch (key) {
+                                            case 'style':
+                                                // if we're setting the style attribute, we may need to
+                                                // use the cssText property.
+                                                if (key === 'style' && el.style.setAttribute) {
+                                                    el.style.setAttribute('cssText', value);
+                                                } else {
+                                                    el.setAttribute('style', value);
+                                                }
+                                                break;
+            
+                                            case 'className':
+                                                value.split(" ").forEach(function (name) {
+                                                    classlist[name] = true;
+                                                });
+                                                break;
+            
+                                            case 'htmlFor':
+                                                // if we're setting an attribute that's not properly supported,
+                                                // then we apply the attribute directly to the element.
+                                                el.htmlFor = value;
+                                                break;
+            
+                                            // The rest of the cases are for Bootstrap attributes.
+                                            case 'size':
+                                                if (value in sizeMap) {
+                                                    bootstrap.size = sizeMap[value];
+                                                } else {
+                                                    el.setAttribute('size', value);
+                                                }
+                                                break;
+    
+                                            case 'bgcontext':
+                                                classlist['bg-' + value] = true;
+                                                break;
+    
+                                            case 'context':
+                                            case 'fluid':
+                                            case 'footer':
+                                            case 'heading':
+                                            case 'inline':
+                                            case 'media':
+                                            case 'pull':
+                                            case 'striped':
+                                            case 'bordered':
+                                            case 'hover':
+                                            case 'condensed':
+                                                bootstrap[key] = value;
+                                                break;
+    
+                                            // otherwise, we use the standard setAttribute.
+                                            default:
+                                                el.setAttribute(key, value);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

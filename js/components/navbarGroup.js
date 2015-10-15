@@ -8,26 +8,24 @@
 {
     var fn = function($$)
     {
-        return($$[moduleName] = $$.components[moduleName] = function (attrs)
-            {
-                var el;
-                var align = 'left';
+        return($$[moduleName] = $$.components[moduleName] = function (attrs) {
+            var el;
+            var align = 'left';
 
-                if (typeof attrs === 'object' && attrs.nodeType !== 1) {
-                    if ('align' in attrs) {
-                        if (attrs.align === 'right') {
-                            align = attrs.align;
-                        }
-                        delete(attrs.align);
+            if (typeof attrs === 'object' && attrs.nodeType !== 1) {
+                if ('align' in attrs) {
+                    if (attrs.align === 'right') {
+                        align = attrs.align;
                     }
+                    delete(attrs.align);
                 }
-
-                el = $$.ul.apply($$, arguments);
-                $(el).addClass('nav navbar-nav navbar-' + align);
-
-                return el;
             }
-        );
+
+            el = $$.ul.apply($$, arguments);
+            $(el).addClass('nav navbar-nav navbar-' + align);
+
+            return el;
+        });
     };
 
     if (typeof context.define === 'function'

@@ -11,14 +11,12 @@
 {
     var fn = function($$)
     {
-        return($$[moduleName] = $$.components[moduleName] = function (label, href, shortcut)
-            {
-                return $$.li($$.a({href: href, className: 'menuitem', role: 'menuitem', tabindex: -1},
-                    label,
-                    shortcut ? $$.span({className: 'shortcut'}, shortcut) : ''
-		));
-            }
-        );
+        return($$[moduleName] = $$.components[moduleName] = function (label, href, shortcut) {
+            return $$.li($$.a({href: href, className: 'menuitem', role: 'menuitem', tabindex: -1},
+                label,
+                shortcut ? $$.span({className: 'shortcut'}, shortcut) : ''
+            ));
+        });
     };
 
     if (typeof context.define === 'function'
