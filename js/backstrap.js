@@ -153,7 +153,6 @@
                 var arg = arguments[i];
                 if (arg === null || typeof arg === 'undefined') continue;
 
-                console.log(arg);
                 if (appendAny(el, arg)) {
                     continue;
                 }
