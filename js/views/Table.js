@@ -173,7 +173,9 @@
             },
 
             placeEmpty: function (content) {
-                $(this.collectionEl).append($$.tr($$.td(content)));
+                if (content) {
+                    $(this.collectionEl).append(this._emptyContent = $$.tr($$.td(content)));
+                }
             },
 
             _sort: function (column, silent) {
