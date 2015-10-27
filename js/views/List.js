@@ -82,11 +82,17 @@
             placeItem: function (content, model, index) {
             	var li = $$.li({className: 'list-group-item'}, content);
                 this.collectionEl.appendChild(li);
+                if (this.placedEmpty) {
+                    $(this.placedEmpty).remove();
+                    this.placedEmpty = null;
+                }
                 return li;
             },
 
             placeEmpty: function (content) {
-                this.collectionEl.appendChild($$.li({className: 'list-group-item'}, content));
+                if (content) {
+                    this.collectionEl.appendChild(this.placedEmpty = $$.li({className: 'list-group-item'}, content));
+                }
             },
 
             onItemAdded: function () {
