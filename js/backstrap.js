@@ -148,6 +148,11 @@
             // create a new element of the requested type
             var el = document.createElement(tag);
 
+            // make sure buttons always default to type=button, not type=submit.
+            if (tag === 'button') {
+                el.setAttribute('type', 'button');
+            }
+
             // walk through the rest of the arguments
             for (var i=2; i<arguments.length; i++) {
                 var arg = arguments[i];
