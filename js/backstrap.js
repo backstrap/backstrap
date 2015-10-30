@@ -438,7 +438,7 @@
             el = backstrap.apply(this,
                     [tagName, 'btn'].concat(Array.prototype.slice.call(arguments)));
             if (tagName === 'button') {
-                el.attr('type', 'button');
+                el.type = 'button';
             }
             return el;
         };
@@ -447,7 +447,7 @@
         backstrap.submitButton = function () {
             var el = backstrap.apply(this,
                     ['button', 'btn'].concat(Array.prototype.slice.call(arguments)));
-            el.attr('type', 'submit');
+            el.type = 'submit';
             return el;
         };
 
@@ -455,7 +455,7 @@
         backstrap.resetButton = function () {
             var el = backstrap.apply(this,
                     ['button', 'btn'].concat(Array.prototype.slice.call(arguments)));
-            el.attr('type', 'reset');
+            el.type = 'reset';
             return el;
         };
         
