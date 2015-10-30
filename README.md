@@ -78,7 +78,7 @@ produces this DOM tree:
 	    Hello, star!
 	    <span class="glyphicon glyphicon-star"></span>
 	  </span>
-	  <button class="btn btn-lg">OK</button>
+	  <button type="button" class="btn btn-lg">OK</button>
 	</div>
 
 [bootstrap]:   http://getbootstrap.com/ "Bootstrap Homepage"
@@ -152,7 +152,7 @@ produces:
 
 	<div>
 		<button>Click me!</button>
-		<button class="btn btn-lg">No, click me!</button>
+		<button type="button" class="btn btn-lg">No, click me!</button>
 	</div>
 
 There are also constructors for building various Bootstrap.View extensions,
@@ -181,8 +181,11 @@ The `$$.breadcrumb()` method creates an `ol` tag decorated with the Bootstrap "b
 
 The `$$.button()` method creates a `button` tag decorated with the Bootstrap "btn" class,
 and optionally with "btn-*" classes for sizing and context.
+It also sets the button's "type" attribute to "button".
+There are special methods for creating buttons with type=submit or type=reset.
 
 `$$.plain.button()` gives you a bare `button` tag.
+(Note that you should always set the type attribute of a button!)
 
 #### buttonGroup
 
@@ -323,6 +326,18 @@ to embed them within a `div` with the Bootstrap "panel-heading" or "panel-footer
 #### pageHeader
 
 The `$$.pageHeader()` method creates a `div` tag decorated with the Bootstrap "page-header" class.
+
+#### resetButton
+
+The `$$.resetButton()` method creates a `button` tag decorated with the Bootstrap "btn" class,
+and optionally with "btn-*" classes for sizing and context.
+It also sets the button's "type" attribute to "reset".
+
+#### submitButton
+
+The `$$.submitButton()` method creates a `button` tag decorated with the Bootstrap "btn" class,
+and optionally with "btn-*" classes for sizing and context.
+It also sets the button's "type" attribute to "submit".
 
 #### spanlabel
 

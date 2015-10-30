@@ -148,11 +148,6 @@
             // create a new element of the requested type
             var el = document.createElement(tag);
 
-            // make sure buttons always default to type=button, not type=submit.
-            if (tag === 'button') {
-                el.setAttribute('type', 'button');
-            }
-
             // walk through the rest of the arguments
             for (var i=2; i<arguments.length; i++) {
                 var arg = arguments[i];
@@ -436,14 +431,34 @@
                     (bootstrapClasses[name] ? bootstrapClasses[name] : name)
             );
         }
-        
+
         // Use an 'a' tag instead of 'button' if we have an 'href' property.
         backstrap.button = function (opts) {
             var tagName = (opts && opts.nodetype !== 1 && opts.href) ? 'a' : 'button';
-            return backstrap.apply(this,
+            el = backstrap.apply(this,
                     [tagName, 'btn'].concat(Array.prototype.slice.call(arguments)));
+            if (tagName === 'button') {
+                el.attr('type', 'button');
+            }
+            return el;
         };
 
+        // shortcut for button with type=submit.
+        backstrap.submitButton = function () {
+            var el = backstrap.apply(this,
+                    ['button', 'btn'].concat(Array.prototype.slice.call(arguments)));
+            el.attr('type', 'submit');
+            return el;
+        };
+
+        // shortcut for button with type=reset.
+        backstrap.resetButton = function () {
+            var el = backstrap.apply(this,
+                    ['button', 'btn'].concat(Array.prototype.slice.call(arguments)));
+            el.attr('type', 'reset');
+            return el;
+        };
+        
         // shortcut for creating CSS stylesheet links.
         backstrap.css = function (href, onload) {
             return backstrap.plain.link({href: href, rel: "stylesheet", type: "text/css", onload: onload});

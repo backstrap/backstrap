@@ -58,6 +58,8 @@
                         type : 'submit',
                         value : ''
                     });
+                } else {
+                    this.$el.attr({type: 'button'});
                 }
 
                 var content = $$.span(labelText);
