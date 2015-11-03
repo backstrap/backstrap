@@ -130,7 +130,7 @@
                 return this;
             },
 
-         // sets the enabled state
+            // sets the enabled state
             setEnabled : function(enabled) {
                 $(this.el).toggleClass('disabled', !enabled);
                 this.select.disabled = !enabled;
@@ -161,9 +161,10 @@
                 if(val === null) {
                     return val;
                 }
+                comp = JSON.stringify(val);
                 var item = _(this._collectionArray()).find(function(item) {
                     var isItem = val === item;
-                    var itemHasValue = this.resolveContent(item, this.options.altValueContent) === val;
+                    var itemHasValue = JSON.stringify(this.resolveContent(item, this.options.altValueContent)) === comp;
                     return isItem || itemHasValue;
                 }, this);
 

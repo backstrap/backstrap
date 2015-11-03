@@ -36,12 +36,13 @@
 
                 // if a bound property has been given, we attempt to resolve it
                 if(_(this.model).exists() && _(this.options.content).exists()) {
-                    item = _(this.model).resolveProperty(this.options.content);
+                    item = this.resolveContent(this.model, this.options.content);
+                    var comp = JSON.stringify(item);
 
                     // if a value property is given, we further resolve our selected item
                     if(_(this.options.altValueContent).exists()) {
                         var otherItem = _(this._collectionArray()).detect(function(collectionItem) {
-                            return (collectionItem.attributes || collectionItem)[this.options.altValueContent] === item;
+                            return (JSON.stringify(this.resolveContent(collectionItem, this.options.altValueContent)) === comp);
                         }, this);
                         if(!_(otherItem).isUndefined()) item = otherItem;
                     }
