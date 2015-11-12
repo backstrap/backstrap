@@ -6,37 +6,42 @@
  */
 (function(context, moduleName, requirements)
 {
-    var fn = function($$)
+    var fn = function($, $$)
     {
         return ($$.mixins[moduleName] = $$[moduleName] = {
-            insertGlyphLayout : function(glyphLeftClassName, glyphRightClassName, content, parent) {
-
-                // append left glyph
+            insertGlyphLayout: function(glyphLeft, glyphRight, content, parent) {
                 if(glyphLeftClassName) {
-                    var glyphLeft = $$.span({
-                        className : 'glyph left ' + glyphLeftClassName
-                    });
+                    var glyphLeft = $$.span({className: 'glyph left ' + glyphLeftClassName});
                     parent.appendChild(glyphLeft);
                     $(parent).addClass('hasGlyphLeft');
                 }
 
-                // append content
-                if(content) {
+                if (content) {
                     parent.appendChild(content);
                 }
 
-                // append right glyph
                 if(glyphRightClassName) {
-                    var glyphRight = $$.span({
-                        className : 'glyph right ' + glyphRightClassName
-                    });
+                    var glyphRight = $$.span({className: 'glyph right ' + glyphRightClassName});
                     parent.appendChild(glyphRight);
                     $(parent).addClass('hasGlyphRight');
                 }
-             
             },
 
-            resolveGlyph : function(model, content) {
+            wrapWithGlyphs: function (content) {
+                var glyphLeft = this.resolveGlyph(this.model, this.options.glyphLeftClassname);
+                var glyphRight = this.resolveGlyph(this.model, this.options.glyphRightClassName);
+                var $content = $(content);
+                if (glyphLeft) {
+                    $content.before($$.span({className: 'glyph left ' + glyphLeft}));
+                    $content.parent().addClass('hasGlyphLeft');
+                }
+                if (glyphRight) {
+                    $content.after($$.span({className: 'glyph right ' + glyphRight}));
+                    $content.parent().addClass('hasGlyphRight');
+                }
+            },
+
+            resolveGlyph: function(model, content) {
                 if(content === null) return null;
                 var glyph = null;
                 if(_(model).exists() && _((model.attributes || model)[content]).exists()) {
@@ -67,4 +72,4 @@
         }
         fn(context.$$);
     }
-}(this, 'HasGlyph', [ 'backstrap' ]));
+}(this, 'HasGlyph', ['jquery', 'backstrap']));

@@ -43,9 +43,9 @@
                     $$.mixins.HasFormLabel, $$.mixins.HasError, $$.mixins.HasFocus]);
                 _(this).bindAll('_refreshValue');
             
-                $(this.el).addClass('text_field form-group');
+                this.$el.addClass('text_field form-group');
                 if(this.options.name){
-                    $(this.el).addClass(this.options.name);
+                    this.$el.addClass(this.options.name);
                 }
 
                 this.input = $$.input({maxLength : this.options.maxLength});
@@ -76,10 +76,9 @@
 
                 // insert glyph if exist
                 this._parent = $$.div({className : 'text_wrapper'});
-                var content = this.input;
                 var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
                 var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
-                this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, content, this._parent);
+                this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, this.input, this._parent);
                 
                 // add focusin / focusout
                 this.setupFocus(this.input, this._parent);
@@ -104,9 +103,9 @@
             // sets the enabled state
             setEnabled : function(enabled) {
                 if(enabled) { 
-                    $(this.el).removeClass('disabled');
+                    this.$el.removeClass('disabled');
                 } else {
-                    $(this.el).addClass('disabled');
+                    this.$el.addClass('disabled');
                 }
                 this.input.disabled = !enabled;
             },
