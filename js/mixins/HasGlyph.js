@@ -10,20 +10,20 @@
     {
         return ($$.mixins[moduleName] = $$[moduleName] = {
             insertGlyphLayout: function(glyphLeft, glyphRight, content, parent) {
-                if(glyphLeftClassName) {
-                    var glyphLeft = $$.span({className: 'glyph left ' + glyphLeftClassName});
-                    parent.appendChild(glyphLeft);
-                    $(parent).addClass('hasGlyphLeft');
+                if(glyphLeft) {
+                    $(parent).addClass('hasGlyphLeft').append(
+                        $$.span({className: 'glyph left ' + glyphLeft})
+                    );
                 }
 
                 if (content) {
                     parent.appendChild(content);
                 }
 
-                if(glyphRightClassName) {
-                    var glyphRight = $$.span({className: 'glyph right ' + glyphRightClassName});
-                    parent.appendChild(glyphRight);
-                    $(parent).addClass('hasGlyphRight');
+                if(glyphRight) {
+                    $(parent).addClass('hasGlyphRight').append(
+                        $$.span({className: 'glyph right ' + glyphRight})
+                    );
                 }
             },
 
