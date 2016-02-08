@@ -67,9 +67,12 @@
             }
         ));
     } else {
+        if (typeof context.$ !== 'function') {
+            throw new Error('jQuery not loaded');
+        }
         if (typeof context.$$ !== 'function') {
             throw new Error('Backstrap not loaded');
         }
-        fn(context.$$);
+        fn(context.$, context.$$);
     }
 }(this, 'HasGlyph', ['jquery', 'backstrap']));
