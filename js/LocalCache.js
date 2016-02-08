@@ -50,6 +50,12 @@
                 obj.sync = this.getSync();
             },
 
+            saveAttach: function(obj) {
+                this.save(obj);
+                obj._$$sync = obj.sync;
+                obj.sync = this.getSync();
+            },
+
             detach: function(obj) {
                 if (obj._$$sync) {
                     obj.sync = obj._$$sync;
