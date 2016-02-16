@@ -6,14 +6,10 @@
     forked by dodo (https://github.com/dodo)
     MIT license
     www.opensource.org/licenses/mit-license.php
-*/
 
-/*jshint eqeqeq:false */
-/*jshint asi:true */
-/*jshint undef:false */
-/*jshint shadow:true */
-if(window.jQuery) {
-  (function($, udf) {
+    modified for require.js context - perry@princeton.edu
+*/
+define("backstrap/input_event", ["jquery"], function ($, udf) {
       var ns = ".inputEvent ",
           // A bunch of data strings that we use regularly
           dataBnd = "bound.inputEvent",
@@ -129,5 +125,4 @@ if(window.jQuery) {
       $.fn.input = function (handler) {
           return handler ? $(this).bind("txtinput", handler) : this.trigger("txtinput");
       };
-  })(window.jQuery);
-}
+});

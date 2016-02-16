@@ -6,89 +6,65 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-(function(context, moduleName, requirements)
+define("backstrap/views/Link", ["../core", "underscore"], function ($$, _)
 {
-    var fn = function($$)
-    {
-        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
-            options : {
-                // disables the link (non-clickable) 
-                disabled : false,
+    return ($$.Link = $$.views.Link = $$.View.extend({
+        options : {
+            // disables the link (non-clickable) 
+            disabled : false,
 
-                // A callback to invoke when the link is clicked
-                onClick : null,
-                
-                size: 'default',
-                context: 'default'
-            },
+            // A callback to invoke when the link is clicked
+            onClick : null,
+            
+            size: 'default',
+            context: 'default'
+        },
 
-            tagName : 'a',
+        tagName : 'a',
 
-            initialize : function(options) {
-                $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.mixins.HasModel, $$.mixins.HasGlyph]);
-                _(this).bindAll('render');
-                this.$el.addClass('link text-' + $$._mapSize(this.options.size));
-                if (this.options.size !== this.options.context) {
-                    this.$el.addClass(' text-' + this.options.context);
-                }
-                this.$el.bind('click', _(function(e) {
-                    return this.options.disabled ? false :
-                        (this.options.onClick ? this.options.onClick(e) : true);
-                }).bind(this));
-            },
-
-            render : function() {
-                var labelText = this.resolveContent();
-
-                this._observeModel(this.render);
-
-                this.$el.empty();
-
-                var content = $$.span(labelText);
-
-                var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
-                var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
-
-                this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, content, this.el);
-
-                // add appropriate class names
-                this.setEnabled(!this.options.disabled);
-
-                return this;
-            },
-
-            // sets the enabled state of the button
-            setEnabled : function(enabled) {
-                if(enabled) {
-                    this.el.href = '#';
-                } else { 
-                    this.el.removeAttribute('href');
-                }
-                this.options.disabled = !enabled;
-                this.$el.toggleClass('disabled', !enabled);
+        initialize : function(options) {
+            $$.View.prototype.initialize.call(this, options);
+            this.mixin([$$.mixins.HasModel, $$.mixins.HasGlyph]);
+            _(this).bindAll('render');
+            this.$el.addClass('link text-' + $$._mapSize(this.options.size));
+            if (this.options.size !== this.options.context) {
+                this.$el.addClass(' text-' + this.options.context);
             }
-        }));
-    };
+            this.$el.bind('click', _(function(e) {
+                return this.options.disabled ? false :
+                    (this.options.onClick ? this.options.onClick(e) : true);
+            }).bind(this));
+        },
 
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/views/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
+        render : function() {
+            var labelText = this.resolveContent();
+
+            this._observeModel(this.render);
+
+            this.$el.empty();
+
+            var content = $$.span(labelText);
+
+            var glyphLeftClassName = this.resolveGlyph(this.model, this.options.glyphLeftClassName);
+            var glyphRightClassName = this.resolveGlyph(this.model, this.options.glyphRightClassName);
+
+            this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, content, this.el);
+
+            // add appropriate class names
+            this.setEnabled(!this.options.disabled);
+
+            return this;
+        },
+
+        // sets the enabled state of the button
+        setEnabled : function(enabled) {
+            if(enabled) {
+                this.el.href = '#';
+            } else { 
+                this.el.removeAttribute('href');
             }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
+            this.options.disabled = !enabled;
+            this.$el.toggleClass('disabled', !enabled);
         }
-        fn(context.$$);
-    }
-}(this, 'Link', [ 'backstrap', 'backstrap/View', 'backstrap/mixins/HasModel', 'backstrap/mixins/HasGlyph' ]));
+    }));
+});

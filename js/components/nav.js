@@ -8,67 +8,43 @@
  *
  * @author Kevin Perry perry@princeton.edu
  */
-(function(context, moduleName, requirements)
+define("backstrap/components/nav", ["../core", "jquery"], function ($$, $)
 {
-    var fn = function($$)
-    {
-        return($$[moduleName] = $$.components[moduleName] = function (attrs) {
-            var el;
-            var type = '';
+    return($$.nav = $$.components.nav = function (attrs) {
+        var el;
+        var type = '';
 
-            if (typeof attrs === 'object' && attrs.nodeType !== 1) {
-                if ('type' in attrs) {
-                    if (attrs.type === 'tabs' && !('role' in attrs)) {
-                        attrs.role = 'tablist';
-                    }
-                    if (attrs.type === 'tabs' || attrs.type === 'pills') {
-                        type = ' nav-' + attrs.type;
-                    }
-                    delete(attrs.type);
+        if (typeof attrs === 'object' && attrs.nodeType !== 1) {
+            if ('type' in attrs) {
+                if (attrs.type === 'tabs' && !('role' in attrs)) {
+                    attrs.role = 'tablist';
                 }
-                if ('justified' in attrs) {
-                    if (attrs.justified) {
-                        type += ' nav-justified';
-                    }
-                    delete(attrs.justified);
+                if (attrs.type === 'tabs' || attrs.type === 'pills') {
+                    type = ' nav-' + attrs.type;
                 }
-                if ('stacked' in attrs) {
-                    if (attrs.stacked) {
-                        type += ' nav-stacked';
-                    }
-                    delete(attrs.stacked);
-                }
+                delete(attrs.type);
             }
-
-            el = $$.ul.apply($$, arguments);
-            $(el).addClass('nav' + type);
-            el.clearActive = function () {
-                $('> *', this).removeClass('active');
-                return this;
-            };
-
-            return el;
-        });
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/components/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
+            if ('justified' in attrs) {
+                if (attrs.justified) {
+                    type += ' nav-justified';
+                }
+                delete(attrs.justified);
             }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
+            if ('stacked' in attrs) {
+                if (attrs.stacked) {
+                    type += ' nav-stacked';
+                }
+                delete(attrs.stacked);
+            }
         }
-        fn(context.$$);
-    }
-}(this, 'nav', [ 'backstrap' ]));
+
+        el = $$.ul.apply($$, arguments);
+        $(el).addClass('nav' + type);
+        el.clearActive = function () {
+            $('> *', this).removeClass('active');
+            return this;
+        };
+
+        return el;
+    });
+});

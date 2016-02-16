@@ -32,8 +32,7 @@
     "extra": {
         "component": {
             "scripts": [
-                "js/requirejs_setup.js",
-                "js/backstrap.js",
+                "js/core.js",
                 "js/input_event.js",
                 "js/dispatcher.js",
                 "js/LocalCache.js",
@@ -90,7 +89,10 @@
                 "js/views/Table.js",
                 "js/views/TextArea.js",
                 "js/views/TimePicker.js",
-                "js/requirejs_cleanup.js"
+                "js/components.js",
+                "js/mixins.js",
+                "js/views.js",
+                "js/backstrap.js"
             ],
             "styles": [
                "css/backstrap.css"
@@ -108,7 +110,7 @@
     },
     "config": {
         "component": {
-            "noGlobal": false
+            "noGlobal": true
         }
     },
     "repositories": [

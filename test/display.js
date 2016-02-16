@@ -64,7 +64,7 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
         mobiscroll: { min: 1, max: 24, step: 2, showLabel: true, invalid: [ 5 ] }
     }), 'NumberField');
 
-    var mark = new $$.Model({ duration: 'P1D2H', id: 1, name:'mark' });
+    var mark = new $$.Model({ duration: 'P1DT2H', id: 1, name:'mark' });
     testObj(new $$.DurationField({
         model: mark,
         content: 'duration',

@@ -3,54 +3,37 @@
  * 
  * @author Kevin Perry perry@princeton.edu
  */
-(function(context, moduleName, requirements)
+define("backstrap/mixins/HasFormLabel", ["../core"], function ($$)
 {
-    var fn = function($$)
-    {
-        return($$.mixins[moduleName] = $$[moduleName] = {
-            options: {
-                // If provided this content will wrap the component with additional label.
-                formLabelContent : null
-            },
+    return($$.mixins.HasFormLabel = $$.HasFormLabel = {
+        options: {
+            // If provided this content will wrap the component with additional label.
+            formLabelContent : null
+        },
 
-            getFormLabel : function() {
-                var wrapped = $$.plain.label({'for': this.options.name});
-                
-                var formLabelText = this.options.formLabelContent ? 
-                    this.resolveContent(this.model, this.options.formLabelContent, 
-                        this.options.formLabelContent) || this.options.formLabelContent : null;
-                if(formLabelText) {
-                    wrapped.appendChild($$.span({className : 'form_label'}, formLabelText));
-                }
-                return wrapped;    
-            },
-
-            wrapWithFormLabel : function(content) {
-                var wrapped = this.getFormLabel();
-                wrapped.appendChild(content);
-                return wrapped;    
+        getFormLabel : function() {
+            var wrapped = $$.plain.label({'for': this.options.name});
+            
+            var formLabelText = this.options.formLabelContent ? 
+                this.resolveContent(
+                    this.model,
+                    this.options.formLabelContent, 
+                    this.options.formLabelContent
+                ) || this.options.formLabelContent : null;
+            
+            if (formLabelText) {
+                wrapped.appendChild($$.span({className : 'form_label'}, formLabelText));
             }
-        });
-    };
+            
+            return wrapped;    
+        },
 
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/mixins' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
+        wrapWithFormLabel : function(content) {
+            var wrapped = this.getFormLabel();
+            
+            wrapped.appendChild(content);
+            
+            return wrapped;    
         }
-        fn(context.$$);
-    }
-}(this, 'HasFormLabel', [ 'backstrap' ]));
+    });
+});

@@ -4,75 +4,48 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-(function(context, moduleName, requirements)
+define("backstrap/mixins/HasGlyph", ["../core", "jquery", "underscore"], function ($$, $, _)
 {
-    var fn = function($, $$)
-    {
-        return ($$.mixins[moduleName] = $$[moduleName] = {
-            insertGlyphLayout: function(glyphLeft, glyphRight, content, parent) {
-                if(glyphLeft) {
-                    $(parent).addClass('hasGlyphLeft').append(
-                        $$.span({className: 'glyph left ' + glyphLeft})
-                    );
-                }
-
-                if (content) {
-                    parent.appendChild(content);
-                }
-
-                if(glyphRight) {
-                    $(parent).addClass('hasGlyphRight').append(
-                        $$.span({className: 'glyph right ' + glyphRight})
-                    );
-                }
-            },
-
-            wrapWithGlyphs: function (content) {
-                var glyphLeft = this.resolveGlyph(this.model, this.options.glyphLeftClassname);
-                var glyphRight = this.resolveGlyph(this.model, this.options.glyphRightClassName);
-                var $content = $(content);
-                if (glyphLeft) {
-                    $content.before($$.span({className: 'glyph left ' + glyphLeft}));
-                    $content.parent().addClass('hasGlyphLeft');
-                }
-                if (glyphRight) {
-                    $content.after($$.span({className: 'glyph right ' + glyphRight}));
-                    $content.parent().addClass('hasGlyphRight');
-                }
-            },
-
-            resolveGlyph: function(model, content) {
-                if(content === null) return null;
-                var glyph = null;
-                if(_(model).exists() && _((model.attributes || model)[content]).exists()) {
-                    glyph = this.resolveContent(model, content);
-                }
-                return _(glyph).exists() ? glyph : content;
+    return ($$.mixins.HasGlyph = $$.HasGlyph = {
+        insertGlyphLayout: function(glyphLeft, glyphRight, content, parent) {
+            if(glyphLeft) {
+                $(parent).addClass('hasGlyphLeft').append(
+                    $$.span({className: 'glyph left ' + glyphLeft})
+                );
             }
-        });
-    };
 
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/mixins' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
+            if (content) {
+                parent.appendChild(content);
             }
-        ));
-    } else {
-        if (typeof context.$ !== 'function') {
-            throw new Error('jQuery not loaded');
+
+            if(glyphRight) {
+                $(parent).addClass('hasGlyphRight').append(
+                    $$.span({className: 'glyph right ' + glyphRight})
+                );
+            }
+        },
+
+        wrapWithGlyphs: function (content) {
+            var glyphLeft = this.resolveGlyph(this.model, this.options.glyphLeftClassname);
+            var glyphRight = this.resolveGlyph(this.model, this.options.glyphRightClassName);
+            var $content = $(content);
+            if (glyphLeft) {
+                $content.before($$.span({className: 'glyph left ' + glyphLeft}));
+                $content.parent().addClass('hasGlyphLeft');
+            }
+            if (glyphRight) {
+                $content.after($$.span({className: 'glyph right ' + glyphRight}));
+                $content.parent().addClass('hasGlyphRight');
+            }
+        },
+
+        resolveGlyph: function(model, content) {
+            if(content === null) return null;
+            var glyph = null;
+            if(_(model).exists() && _((model.attributes || model)[content]).exists()) {
+                glyph = this.resolveContent(model, content);
+            }
+            return _(glyph).exists() ? glyph : content;
         }
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
-        }
-        fn(context.$, context.$$);
-    }
-}(this, 'HasGlyph', ['jquery', 'backstrap']));
+    });
+});

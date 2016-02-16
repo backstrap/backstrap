@@ -439,7 +439,7 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
 
     QUnit.test('DurationField', function(assert) {
         var fixture = $('#qunit-fixture');
-        var model = new $$.Model({ duration: 'P1D2H' });
+        var model = new $$.Model({ duration: 'P1DT2H' });
         var obj = new $$.DurationField({
             model: model,
             content: 'duration',

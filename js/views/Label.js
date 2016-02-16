@@ -5,70 +5,46 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-(function(context, moduleName, requirements)
+define("backstrap/views/Label", ["../core", "underscore"], function ($$, _)
 {
-    var fn = function($$)
-    {
-        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
-    
-            options : {
-                emptyContent : '',
-                size: 'default',
-                context: 'default'
-            },
+    return ($$.Label = $$.views.Label = $$.View.extend({
+
+        options : {
+            emptyContent : '',
+            size: 'default',
+            context: 'default'
+        },
+        
+        tagName : 'label',
+
+        initialize : function(options) {
+            $$.View.prototype.initialize.call(this, options);
+            this.mixin([$$.mixins.HasModel]);
+            _(this).bindAll('render');
+            this.$el.addClass('label label-' + $$._mapSize(this.options.size));
+            if (this.options.size !== this.options.context) {
+                this.$el.addClass(' label-' + this.options.context);
+            }
+            if(this.options.name){
+                this.$el.addClass(this.options.name);
+            }
+
+        },
+
+        render : function() {
+            var labelText = this.resolveContent(this.model, this.options.labelContent) || this.options.labelContent;
+            // if the label is undefined use the emptyContent option
+            if(labelText === undefined){
+                labelText = this.options.emptyContent;
+            }
+            this._observeModel(this.render);
+
+            this.$el.empty();
             
-            tagName : 'label',
+            // insert label
+            this.el.appendChild(document.createTextNode(labelText));
 
-            initialize : function(options) {
-                $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.mixins.HasModel]);
-                _(this).bindAll('render');
-                this.$el.addClass('label label-' + $$._mapSize(this.options.size));
-                if (this.options.size !== this.options.context) {
-                    this.$el.addClass(' label-' + this.options.context);
-                }
-                if(this.options.name){
-                    this.$el.addClass(this.options.name);
-                }
-
-            },
-
-            render : function() {
-                var labelText = this.resolveContent(this.model, this.options.labelContent) || this.options.labelContent;
-                // if the label is undefined use the emptyContent option
-                if(labelText === undefined){
-                    labelText = this.options.emptyContent;
-                }
-                this._observeModel(this.render);
-
-                this.$el.empty();
-                
-                // insert label
-                this.el.appendChild(document.createTextNode(labelText));
-
-                return this;
-            }
-        }));
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/views/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
+            return this;
         }
-        fn(context.$$);
-    }
-}(this, 'Label', [ 'backstrap', 'backstrap/View', 'backstrap/mixins/HasModel' ]));
+    }));
+});

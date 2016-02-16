@@ -9,58 +9,34 @@
  *
  * @author Kevin Perry, perry@princeton.edu
  */
-(function (context, moduleName, requirements)
+define("backstrap/views/ModelView", ["../core", "underscore"], function ($$, _)
 {
-    var fn = function ($$)
-    {
-        return ($$[moduleName] = $$.views[moduleName] = $$.View.extend({
-            options: {
-                // The Model instance the view is bound to.
-                model: null,
+    return ($$.ModelView = $$.views.ModelView = $$.View.extend({
+        options: {
+            // The Model instance the view is bound to.
+            model: null,
 
-                // Whether to render the model view on change in model.
-                // Can also take the name of a property, or an array of property names.
-                renderOnChange: true
-            },
+            // Whether to render the model view on change in model.
+            // Can also take the name of a property, or an array of property names.
+            renderOnChange: true
+        },
 
-            initialize: function(options) {
-                $$.View.prototype.initialize.call(this, options);
-                if (this.model) {
-                    var renderOnChange = this.options.renderOnChange;
-                    if (renderOnChange) {
-                        if (_(renderOnChange).isArray()) {
-                            renderOnChange.forEach(function (property) {
-                                this.model.on('change:' + property, this.render, this);
-                            }, this);
-                        } else if (renderOnChange === true) {
-                            this.model.on('change', this.render, this);
-                        } else { // Assume string
-                            this.model.on('change:' + renderOnChange, this.render, this);
-                        }
+        initialize: function(options) {
+            $$.View.prototype.initialize.call(this, options);
+            if (this.model) {
+                var renderOnChange = this.options.renderOnChange;
+                if (renderOnChange) {
+                    if (_(renderOnChange).isArray()) {
+                        renderOnChange.forEach(function (property) {
+                            this.model.on('change:' + property, this.render, this);
+                        }, this);
+                    } else if (renderOnChange === true) {
+                        this.model.on('change', this.render, this);
+                    } else { // Assume string
+                        this.model.on('change:' + renderOnChange, this.render, this);
                     }
                 }
             }
-        }));
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/views/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
-            }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
         }
-        fn(context.$$);
-    }
-}(this, 'ModelView', [ 'backstrap', 'backstrap/View' ]));
+    }));
+});

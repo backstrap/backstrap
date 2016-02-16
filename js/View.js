@@ -5,82 +5,55 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-(function(context, moduleName, requirements)
+define("backstrap/View", ["./core", "jquery", "underscore", "backbone"], function ($$, $, _, Backbone)
 {
-    var fn = function($$, Backbone)
-    {
-        return ($$[moduleName] = Backbone.View.extend({
-            initialize: function (options) {
-                this.options = this.options ? _({}).extend(this.options, options) : options;
-            },
+    return ($$.View = Backbone.View.extend({
+        initialize: function (options) {
+            this.options = this.options ? _({}).extend(this.options, options) : options;
+        },
 
-            // resolves the appropriate content from the given choices
-            resolveContent: function (model, content, defaultOption) {
-                defaultOption = (defaultOption === null || _(defaultOption).isUndefined())
-                    ? this.options.content : defaultOption;
-                model = _(model).exists() ? model : this.model;
-                content = _(content).exists() ? content : defaultOption;
-                var hasModelProperty = _(model).exists() && _(content).exists();
-                return _(content).isFunction()
-                    ? content(model)
-                    : hasModelProperty && _(model[content]).isFunction()
-                        ? model[content]()
-                        : hasModelProperty && _(_(model).resolveProperty(content)).isFunction()
-                            ? _(model).resolveProperty(content)(model)
-                            : hasModelProperty
-                                ? _(model).resolveProperty(content)
-                                : content;
-            },
+        // resolves the appropriate content from the given choices
+        resolveContent: function (model, content, defaultOption) {
+            defaultOption = (defaultOption === null || _(defaultOption).isUndefined())
+                ? this.options.content : defaultOption;
+            model = _(model).exists() ? model : this.model;
+            content = _(content).exists() ? content : defaultOption;
+            var hasModelProperty = _(model).exists() && _(content).exists();
+            return _(content).isFunction()
+                ? content(model)
+                : hasModelProperty && _(model[content]).isFunction()
+                    ? model[content]()
+                    : hasModelProperty && _(_(model).resolveProperty(content)).isFunction()
+                        ? _(model).resolveProperty(content)(model)
+                        : hasModelProperty
+                            ? _(model).resolveProperty(content)
+                            : content;
+        },
 
-            mixin: function (objects) {
-                var options = _(this.options).clone();
+        mixin: function (objects) {
+            var options = _(this.options).clone();
 
-                _(objects).each(function (object) {
-                    $.extend(true, this, object);
-                }, this);
+            _(objects).each(function (object) {
+                $.extend(true, this, object);
+            }, this);
 
-                $.extend(true, this.options, options);
-            },
-            
-            appendView: function (view, el) {
-                view.$el.appendTo(el ? el : this.el);
-                if (this.allSubViews) {
-                    this.allSubViews.push(view);
-                } else {
-                    this.allSubViews = _([view]);
-                }
-            },
-            
-            render: function () {
-                if (this.allSubViews) {
-                    this.allSubViews.each(function (view) { view.render(); });
-                }
-                return this;
+            $.extend(true, this.options, options);
+        },
+        
+        appendView: function (view, el) {
+            view.$el.appendTo(el ? el : this.el);
+            if (this.allSubViews) {
+                this.allSubViews.push(view);
+            } else {
+                this.allSubViews = _([view]);
             }
-        }));
-    };
-
-    if (typeof context.define === 'function'
-        && context.define.amd
-        && !context._$$_backstrap_built_flag
-    ) {
-        context.define('backstrap/' + moduleName, requirements, fn);
-    } else if (typeof context.module === 'object'
-        && typeof context.module.exports === 'object'
-    ) {
-        context.module.exports = fn.call(requirements.map(
-            function (reqName)
-            {
-                return require(reqName);
+        },
+        
+        render: function () {
+            if (this.allSubViews) {
+                this.allSubViews.each(function (view) { view.render(); });
             }
-        ));
-    } else {
-        if (typeof context.$$ !== 'function') {
-            throw new Error('Backstrap not loaded');
+            return this;
         }
-        if (typeof context.Backbone.View !== 'function') {
-            throw new Error('Backbone not loaded');
-        }
-        fn(context.$$, context.Backbone);
-    }
-}(this, 'View', [ 'backstrap', 'backbone' ]));
+    }));
+});
