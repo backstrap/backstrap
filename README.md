@@ -1,10 +1,6 @@
 Backstrap
 =========
 
-**UNDER CONSTRUCTION**
-
-**VERSION 1.0 COMING SOON!**
-
 Are you looking for something meaty to connect
 the MVC backbone and the UI skin
 of your client-side JavaScript app?
@@ -57,9 +53,11 @@ Try out the [Examples Page][examples]!
 
 Also see an example of a ["No-HTML" web page][nohtml].
 
-In non-CommonJS environments, Backstrap defines the global namespace `$$`.
-It provides a [`noConflict()`](#noconflict) method to revert the definition of `$$` if needed.
-It can also be used in a RequireJS context.
+Backstrap follows the RequireJS loading protocol. To use it...
+
+    require(["backstrap"], function ($$) {
+        ... 
+    });
 
 Sample suggested usage:
 
