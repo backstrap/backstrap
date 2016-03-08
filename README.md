@@ -705,7 +705,12 @@ Pass attributes to set the various table options available in Bootstrap:
 	});
 
 will give you a zebra-striped, bordered, condensed,
-responsive table with hover highlighting.	
+responsive table with hover highlighting.
+
+The "columns" parameter allows you to describe each column,
+including title, content, width, className and headingClassName properties
+(the column's heading cell will use className if headingClassName is not specified.)
+
 
 #### TextArea
 

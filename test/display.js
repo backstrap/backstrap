@@ -108,14 +108,16 @@ require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment)
 
     testObj(new $$.Table({
         model: new $$.Collection([
-            { name: 'a', value: 'Hello' },
-            { name: 'b', value: 'This is a value' },
-            { name: 'c', value: 'Hello' }
+            { name: 'a', x: 'text', value: 'Hello' },
+            { name: 'b', x: 'value', value: 'This is a value' },
+            { name: 'c', x: 'string', value: 'Hello' }
         ]),
         columns: [
-                  { title: 'Name', content: 'name' },
-                  { title: 'Value String', content: 'value' }
-        ]
+            { title: 'Name', content: 'name', width: 60 },
+            { title: 'X', content: 'x', className: 'foo', width: 100 },
+            { title: 'Value String', content: 'value' }
+        ],
+        sortable: true
     }), 'Table');
 	
 	test($$.container(

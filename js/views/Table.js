@@ -27,14 +27,15 @@ define("backstrap/views/Table", ["../core", "jquery", "underscore"], function ($
                 tagName: 'tr',
 
                 render: function () {
+                    this.contentDivs = [];
                     // walk through each column and generate the container
                     _(this.options.parentView.options.columns).each(function (column, index, list) {
                         var width = !!column.width ? parseInt(column.width, 10) + 5 : null;
                         var style = width ? 'width:' + width + 'px; max-width:' + width + 'px': null;
                         this.$el.append($$.td({
-                            className: _(list).nameForIndex(index), 
+                            className: _(list).nameForIndex(index) + (column.className ? ' ' + column.className : ''), 
                             style: style
-                        }, $$.div({className: 'wrapper', style: style})));
+                        }, this.contentDivs[index] = $($$.div({className: 'wrapper', style: style}))));
                     }, this);
     
                     // bind the item click callback if given
@@ -46,7 +47,7 @@ define("backstrap/views/Table", ["../core", "jquery", "underscore"], function ($
                         // walk through each column and fill in the content
                         _(this.options.parentView.options.columns).each(function (column, index, list) {
                             var content = this.resolveContent(this.model, column.content);
-                            this.$('td.' + _(list).nameForIndex(index) + ' div.wrapper').empty().append(content);
+                            this.contentDivs[index].empty().append(content);
                         }, this);
 
                         return this;
@@ -113,7 +114,7 @@ define("backstrap/views/Table", ["../core", "jquery", "underscore"], function ($
                 var firstSort = (sortFirstColumn && firstHeading === null);
                 var sortHeader = this._sortState.content === column.content || firstSort;
                 var sortClass = sortHeader ? (this._sortState.reverse && !firstSort ? ' asc' : ' desc') : '';
-                var sortLabel = $$.div({className: 'glyph'}, 
+                var sortLabel = $$.span({className: 'glyph'}, 
                     sortClass === ' asc' ? '\u25b2 ' : sortClass === ' desc' ? '\u25bc ' : '');
 
                 var onclick = this.options.sortable ? (_(this.options.onSort).isFunction() ?
@@ -121,21 +122,24 @@ define("backstrap/views/Table", ["../core", "jquery", "underscore"], function ($
                     _(function (e, silent) { this._sort(column, silent); }).bind(this)) : $.noop;
 
                 var th = $$.th({
-                        className: _(list).nameForIndex(index) + (sortHeader ? ' sorted' : ''), 
+                        className: _(list).nameForIndex(index) + (sortHeader ? ' sorted' : '') +
+                        (column.headingClassName ? ' ' + column.headingClassName :  
+                            (column.className ? ' ' + column.className : '')), 
                         style: style, 
                         onclick: onclick
                     }, 
-                    $$.div({className: 'wrapper' + (sortHeader ? ' sorted': '')}, label),
-                    sortHeader ? $$.div({className: 'sort_wrapper' + sortClass}, sortLabel) : null).appendTo(headingRow);
+                    $$.span({className: 'wrapper' + (sortHeader ? ' sorted': '')}, label),
+                    sortHeader ? $$.span({className: 'sort_wrapper' + sortClass}, sortLabel) : null).appendTo(headingRow);
 
                 if (firstHeading === null) firstHeading = th;
             }).bind(this));
+            
             if (sortFirstColumn && !!firstHeading) {
                 firstHeading.onclick(null, true);
             }
 
-            // now we'll generate the body of the content table, with a row
-            // for each model in the bound collection
+            // now we'll generate the body of the content table,
+            // with a row for each model in the bound collection.
             this.collectionEl = $$.tbody();
             table.appendChild(this.collectionEl);
 
@@ -155,7 +159,8 @@ define("backstrap/views/Table", ["../core", "jquery", "underscore"], function ($
                         cellPadding: '0',
                         cellSpacing: '0'
                     },
-                    $$.thead(headingRow)),
+                    $$.thead(headingRow)
+                ),
                 container
             );
 
