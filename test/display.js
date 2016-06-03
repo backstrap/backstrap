@@ -289,17 +289,39 @@ require(['jquery', 'backstrap', 'moment', 'bootstrap', 'mobiscroll'], function($
 	obj.$el.append(new $$.Badge({content: '33'}).render().el);
 	testObj(obj, 'Context(bg) + Glyph + Badge');
 
-	testObj(new $$.Dropdown({align: 'left', context: 'primary',
-	    type: 'button',
-	    labelContent: 'Things',
-	    model: new $$.Collection([
-    		{ name: 'first', href: '#first', label: 'First' },
+    testObj(new $$.Dropdown({align: 'left', context: 'primary',
+        type: 'button',
+        labelContent: 'Things',
+        model: new $$.Collection([
+            { name: 'first', href: '#first', label: 'First' },
             { element: 'divider' },
-    		{ element: 'header', label: 'More things'},
-    		{ name: 'second', href: '#second', label: 'Second' },
+            { element: 'header', label: 'More things'},
+            { name: 'second', href: '#second', label: 'Second' },
             { name: 'third', href: '#third', label: 'Third' },
             { name: 'fourth', href: '#fourth', label: $$.span($$.glyph('star'), ' Star!') },
-	])}), 'Dropdown');
+    ])}), 'Dropdown');
+
+    var dropdown;
+    
+    testObj(dropdown = new $$.Dropdown({
+        type: 'split-button',
+        model: new $$.Collection([
+            { name: 'first', label: 'First' },
+            { name: 'second', label: 'Second' },
+            { name: 'third', label: 'Third' },
+        ]),
+        itemView: $$.View.extend({
+            events: {
+                'click': function () { alert(this.model.get('label')); dropdown.setLabel(this.$el.clone()); }
+            },
+            render: function () {
+                this.$el.append(
+                    $$.em(this.model.get('name')),
+                    $$.strong(this.model.get('label'))
+                );
+            }
+        })
+    }), 'Dropdown2');
 
 	testObj(new $$.NavPills({context: 'primary', model: new $$.Collection([
 		{ name: 'first', href: '#first', label: 'First' },

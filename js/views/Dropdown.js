@@ -70,8 +70,10 @@ define("backstrap/views/Dropdown", ["../core", "jquery", "underscore"], function
                     this.options.labelContent
                 );
                 $(this.button).append($$.span({className: 'sr-only'}, 'Toggle Dropdown'));
+                this.labelContainer = $(this.labelButton);
             } else {
-                $(this.button).prepend(this.options.labelContent);
+                this.labelContainer = $($$.span(this.options.labelContent));
+                $(this.button).prepend(this.labelContainer);
             }
             
             if ('align' in this.options) {
@@ -103,6 +105,10 @@ define("backstrap/views/Dropdown", ["../core", "jquery", "underscore"], function
                 className: (elem === 'divider' || elem === 'separator') ? 'divider' :
                     (elem === 'header') ? 'dropdown-header' : ''
             }, content));
+        },
+        
+        setLabel: function (content) {
+            this.labelContainer.empty().append(content);
         }
     }));
 });
