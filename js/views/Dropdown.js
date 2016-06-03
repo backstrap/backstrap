@@ -31,11 +31,11 @@ define("backstrap/views/Dropdown", ["../core", "jquery", "underscore"], function
 
     return ($$.Dropdown = $$.views.Dropdown = $$.List.extend({
         options: {
-            type: 'plain' // also allowed: 'button' or 'split-button'.
+            type: 'plain', // also allowed: 'button' or 'split-button'.
+            itemView: ItemView
         },
-
+        
         initialize: function (options) {
-            this.options.itemView = ItemView;
             $$.List.prototype.initialize.call(this, options);
 
             var topTag = $$.a;

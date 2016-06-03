@@ -1,4 +1,4 @@
-require(['jquery', 'backstrap', 'moment', 'mobiscroll'], function($, $$, moment) {
+require(['jquery', 'backstrap', 'moment', 'bootstrap', 'mobiscroll'], function($, $$, moment) {
 
 	var n = 1;
 	
