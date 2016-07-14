@@ -111,7 +111,7 @@ define("backstrap/views/CollectionView", ["../core", "jquery", "underscore"], fu
             }
             delete(this.itemViews[model.cid]);
             delete(this.itemContainers[model.cid]);
-            if (this.itemViews.length === 0) {
+            if (Object.keys(this.itemViews).length === 0) {
                 // Need to render the empty content.
                 this.render();
             }
