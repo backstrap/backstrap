@@ -43,7 +43,7 @@ define("backstrap/Model", ["./core", "jquery", "underscore", "backbone"], functi
         destroy: function (options) {
             // Make the default return type be text, since we normally expect no data back.
             // Otherwise, Backbone attempts to JSON decode the empty string and throws an error.
-            $$.Model.prototype.destroy.call(this, $.extend({dataType: 'text'}, options));
+            Backbone.Model.prototype.destroy.call(this, $.extend({dataType: 'text'}, options));
         },
     
         pauseAutoRefresh: function () {
