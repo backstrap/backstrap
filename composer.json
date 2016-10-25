@@ -17,17 +17,19 @@
     ],
     "require": {
         "components/backbone" : "~1.0",
-        "moment/moment": "~2.9.0",
-        "backstrap/moment-interval": "dev-master",
-        "backstrap/mobiscroll": "dev-master"
+        "moment/moment": "~2.9.0"
     },
     "require-dev": {
         "components/bootstrap": "~3.1",
-        "components/bootstrap-default": "dev-master"
+        "components/bootstrap-default": "dev-master",
+        "backstrap/moment-interval": "dev-master",
+        "backstrap/mobiscroll": "dev-master"
     },
     "suggest": {
         "components/bootstrap": "~3.1",
-        "components/bootstrap-default": "dev-master"
+        "components/bootstrap-default": "dev-master",
+        "backstrap/moment-interval": "dev-master",
+        "backstrap/mobiscroll": "dev-master"
     },
     "extra": {
         "component": {
