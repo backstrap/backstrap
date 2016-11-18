@@ -102,18 +102,16 @@ define("backstrap/views/FileInput", ["../core", "jquery", "underscore"], functio
             if (this.input && this.input.files && this.input.files.length > 0) {
                 var reader = new FileReader();
 
-                for (var i = 0; i < this.input.files.length; i+= 1) {
-                    var file = this.input.files[i];
-
+                _.each(this.input.files, function (file, index) {
                     if (this.validate(file)) {
                         var that = this;
 
                         reader.addEventListener('load', function () {
                             var value;
 
-                            if (that.multiple) {
-                                value =  _.clone(_(that.model).getProperty(that.options.content));
-                                value[i] = this.result;
+                            if (that.options.multiple) {
+                                value =  _.clone(that.model.get(that.options.content));
+                                value[index] = this.result;
                             } else {
                                 value = this.result;
                             }
@@ -123,9 +121,9 @@ define("backstrap/views/FileInput", ["../core", "jquery", "underscore"], functio
 
                         reader.readAsDataURL(file);
                     } else {
-                        alert('File item ' + i + ': validation failed');
+                        alert('File item ' + index + ': validation failed');
                     }
-                }
+                }, this);
             }
         }
     }));

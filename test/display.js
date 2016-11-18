@@ -467,11 +467,18 @@ require(['jquery', 'backstrap', 'moment', 'bootstrap', 'mobiscroll'], function($
     var KPmodel = $$.Model.extend({
         initialize: function () {
             $$.Model.prototype.initialize.apply(this, arguments);
-            this.on('change:fn', function (f,v) {console.log('got ' + v.length + ' bytes: ' + v.substr(0,32) + '...')});
+            this.on('change:fn', function (f,v) {
+                if (v.length < 50) { // assume "multi"
+                    console.log('got ' + v.length + ' items');
+                } else {
+                    console.log('got ' + v.length + ' bytes: ' + v.substr(0,32) + '...');
+                }
+            });
         }
     });
 
     testObj(new $$.FileInput({model: new KPmodel({fn:null}), content: 'fn'}), 'FileInput');
+    testObj(new $$.FileInput({model: new KPmodel({fn:[]}), content: 'fn', multiple: true}), 'FileInput - multi');
 
     var KpCollection = $$.Collection.extend({
         model: $$.Model.extend({
