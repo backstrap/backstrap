@@ -463,7 +463,16 @@ require(['jquery', 'backstrap', 'moment', 'bootstrap', 'mobiscroll'], function($
         altLabelContent: 'name',
         altValueContent: 'value'
     }), 'RadioGroup');
-    
+
+    var KPmodel = $$.Model.extend({
+        initialize: function () {
+            $$.Model.prototype.initialize.apply(this, arguments);
+            this.on('change:fn', function (f,v) {console.log('got ' + v.length + ' bytes: ' + v.substr(0,32) + '...')});
+        }
+    });
+
+    testObj(new $$.FileInput({model: new KPmodel({fn:null}), content: 'fn'}), 'FileInput');
+
     var KpCollection = $$.Collection.extend({
         model: $$.Model.extend({
             events: { click: function () { console.log(this.value); } }

@@ -13,6 +13,7 @@ define("backstrap/views", [
     "./views/DropdownGroup",
     "./views/Dropdown",
     "./views/DurationField",
+    "./views/FileInput",
     "./views/Glyph",
     //"./views/AltGlyph",
     "./views/Grid",

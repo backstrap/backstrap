@@ -73,6 +73,7 @@
                 "js/views/Dropdown.js",
                 "js/views/DropdownGroup.js",
                 "js/views/DurationField.js",
+                "js/views/FileInput.js",
                 "js/views/Glyph.js",
                 "js/views/Grid.js",
                 "js/views/Label.js",
