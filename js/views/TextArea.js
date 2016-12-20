@@ -58,9 +58,8 @@ define("backstrap/views/TextArea", ["../core", "jquery", "underscore"], function
                 id: this.options.textAreaId,
                 className: 'form-control form-control-default',
                 tabIndex: this.options.tabIndex,
-                placeholder: this.options.placeholder,
-                value: value
-            });
+                placeholder: this.options.placeholder
+            }).val(value);
 
             this._parent = $$.div({className: 'textarea_wrapper'}, this.textArea);
 
@@ -80,8 +79,7 @@ define("backstrap/views/TextArea", ["../core", "jquery", "underscore"], function
         },
 
         setValue: function (value) {
-            $(this.textArea).empty();
-            this.textArea.value = value;
+            $(this.textArea).empty().val(value);
             this._updateModel();
         },
 
