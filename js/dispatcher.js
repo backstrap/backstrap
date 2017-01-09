@@ -80,6 +80,17 @@ define("backstrap/dispatcher", ["./core", "jquery", "underscore"], function ($$,
 
         stopRefresh: function (model) {
             model.stopListening(this, 'refresh', model.refresh);
+        },
+        
+        setMinInterval: function (interval) {
+            this.minInterval = interval;
+            if (activeInterval < dispatcher.minInterval) {
+                activeInterval = dispatcher.minInterval;
+            }
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = setTimeout(doRefresh, activeInterval*1000);
+            }
         }
     }, $$.Events);
 
