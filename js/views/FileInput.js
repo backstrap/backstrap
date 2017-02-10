@@ -48,15 +48,18 @@ define("backstrap/views/FileInput", ["../core", "jquery", "underscore"], functio
         },
 
         render: function () {
+            if (this._parent) {
+                $(this._parent).detach();
+            }
             this.$el.empty();
-
+    
             $(this.input).attr({
                 id: this.options.name,
                 type: 'file',
                 name: this.options.name,
                 tabIndex: this.options.tabIndex,
                 multiple: this.options.multiple ? 'multiple' : null
-            });
+            }).val('');
 
             // insert glyph if exist
             this._parent = $$.div({className: 'file_wrapper'});
