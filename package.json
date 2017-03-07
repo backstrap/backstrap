@@ -1,0 +1,27 @@
+{
+  "name": "backstrap",
+  "version": "1.0.0",
+  "description": "The Backstrap JavaScript library provides a layer of functionality tying together Bootstrap and Backbone.",
+  "homepage": "http://backstrap.github.io/backstrap",
+  "author": "Kevin Perry <perry@princeton.edu>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/backstrap/backstrap/issues"
+  },
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/backstrap/backstrap.git"
+  },
+  "dependencies": {
+    "backbone": "^1.3.3",
+    "jquery": "^2.2.4",
+    "moment": "^2.17.1"
+  }
+}
