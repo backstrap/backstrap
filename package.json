@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/backstrap/backstrap/issues"
   },
-  "main": "index.js",
+  "main": "backstrap.js",
   "directories": {
     "test": "test"
   },
