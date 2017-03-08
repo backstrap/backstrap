@@ -6,7 +6,13 @@
  * Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/DatePicker", ["../core", "jquery", "underscore", "moment"], function ($$, $, _, moment)
+define(
+    "backstrap/views/DatePicker",
+    [
+        "../core", "jquery", "underscore", "moment",
+        "../View", "./Calendar", "./TextField",
+        "../mixins/HasError", "../mixins/HasFormLabel", "../mixins/HasModel"
+    ], function ($$, $, _, moment)
 {
     var KEY_RETURN = 13;
 

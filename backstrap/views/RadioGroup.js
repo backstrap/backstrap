@@ -6,7 +6,13 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/RadioGroup", ["../core", "jquery", "underscore"], function ($$, $, _)
+define(
+    "backstrap/views/RadioGroup",
+    [
+        "../core", "jquery", "underscore", "../View", 
+        "../mixins/HasModel", "../mixins/HasAlternativeProperty",
+        "../mixins/HasGlyph", "../mixins/HasFormLabel", "../mixins/HasError"
+    ], function ($$, $, _)
 {
     return ($$.RadioGroup = $$.views.RadioGroup = $$.View.extend({
 

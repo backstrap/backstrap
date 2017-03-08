@@ -5,7 +5,11 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Glyph", ["../core", "jquery", "underscore"], function ($$, $, _)
+define(
+    "backstrap/views/Glyph",
+    [
+        "../core", "jquery", "underscore", "../View", "../mixins/HasModel"
+    ], function ($$, $, _)
 {
     return ($$.Glyph = $$.views.Glyph = $$.View.extend({
         options : {

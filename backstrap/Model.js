@@ -6,7 +6,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/Model", ["./core", "jquery", "underscore", "backbone"], function ($$, $, _, Backbone)
+define("backstrap/Model", ["./core", "jquery", "underscore", "backbone", './dispatcher'], function ($$, $, _, Backbone)
 {
     return ($$.Model = Backbone.Model.extend({
         options: {

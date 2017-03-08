@@ -4,7 +4,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/DropdownGroup", ["../core", "jquery"], function ($$, $)
+define("backstrap/views/DropdownGroup", ["../core", "jquery", "./CollectionView"], function ($$, $)
 {
     var ItemView = $$.View.extend({
         tagName: 'li',

@@ -6,7 +6,11 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Link", ["../core", "underscore"], function ($$, _)
+define(
+    "backstrap/views/Link",
+    [
+        "../core", "underscore", "../View", "../mixins/HasGlyph", "../mixins/HasModel"
+    ], function ($$, _)
 {
     return ($$.Link = $$.views.Link = $$.View.extend({
         options : {

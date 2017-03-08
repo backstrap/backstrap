@@ -7,7 +7,13 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Select", ["../core", "jquery", "underscore"], function ($$, $, _)
+define(
+    "backstrap/views/Select",
+    [
+        "../core", "jquery", "underscore", "../View",
+        "../mixins/HasModel", "../mixins/HasAlternativeProperty",
+        "../mixins/HasFormLabel", "../mixins/HasError"
+    ], function ($$, $, _)
 {
     return($$.Select = $$.views.Select = $$.View.extend({
         options : {

@@ -4,7 +4,11 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Span", ["../core", "underscore"], function ($$, _)
+define(
+    "backstrap/views/Span",
+    [
+        "../core", "underscore", "../View", "../mixins/HasGlyph", "../mixins/HasModel"
+    ], function ($$, _)
 {
     return ($$.Span = $$.views.Span = $$.View.extend({
         options : {

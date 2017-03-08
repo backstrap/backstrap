@@ -13,7 +13,11 @@
  * @license MIT
  * 
  */
-define("backstrap/views/DateTime", ["../core", "underscore", "moment"], function ($$, _, moment)
+define(
+    "backstrap/views/DateTime",
+    [
+        "../core", "underscore", "moment", "../View", "../mixins/HasModel"
+    ], function ($$, _, moment)
 {
     // These two functions use the special format values:
     // '' for ISO-8601 string; 'millis' for milliseconds; 'seconds' for Unix seconds; and 'date' for Date.

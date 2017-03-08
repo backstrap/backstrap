@@ -9,7 +9,7 @@
  *
  * @author Kevin Perry, perry@princeton.edu
  */
-define("backstrap/views/ModelView", ["../core", "underscore"], function ($$, _)
+define("backstrap/views/ModelView", ["../core", "underscore", "../View"], function ($$, _)
 {
     return ($$.ModelView = $$.views.ModelView = $$.View.extend({
         options: {

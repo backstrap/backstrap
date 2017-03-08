@@ -5,7 +5,12 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/FileInput", ["../core", "jquery", "underscore"], function ($$, $, _)
+define(
+    "backstrap/views/FileInput",
+    [
+        "../core", "jquery", "underscore", "../View",
+        "../mixins/HasModel", "../mixins/HasFormLabel", "../mixins/HasGlyph",
+    ], function ($$, $, _)
 {
     return ($$.FileInput = $$.views.FileInput = $$.View.extend({
         options: {

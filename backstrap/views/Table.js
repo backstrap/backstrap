@@ -6,7 +6,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Table", ["../core", "jquery", "underscore"], function ($$, $, _)
+define("backstrap/views/Table", ["../core", "jquery", "underscore", "./CollectionView"], function ($$, $, _)
 {
     return ($$.Table = $$.views.Table = $$.CollectionView.extend({
         options: _({}).extend($$.CollectionView.prototype.options, {

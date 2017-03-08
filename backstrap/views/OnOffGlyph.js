@@ -5,7 +5,11 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/OnOffGlyph", ["../core", "jquery", "underscore"], function ($$, $, _)
+define(
+    "backstrap/views/OnOffGlyph",
+    [
+        "../core", "jquery", "underscore", "../View", "../mixins/HasModel"
+    ], function ($$, $, _)
 {
     return ($$.OnOffGlyph = $$.views.OnOffGlyph = $$.View.extend({
         options : {

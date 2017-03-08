@@ -15,7 +15,11 @@
  * @license MIT
  * 
  */
-define("backstrap/views/NumberField", ["../core", "jquery", "underscore"], function ($$, $, _)
+define(
+    "backstrap/views/NumberField",
+    [
+        "../core", "jquery", "underscore", "../View", "../mixins/HasModel"
+    ], function ($$, $, _)
 {
     var refresh = function() {
         var newValue = this.resolveContent();

@@ -4,7 +4,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Panel", ["../core"], function ($$)
+define("backstrap/views/Panel", ["../core", "../View"], function ($$)
 {
     return ($$.Panel = $$.views.Panel = $$.View.extend({
         initialize : function(options) {

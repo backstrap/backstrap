@@ -4,7 +4,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Grid", ["../core", "jquery"], function ($$, $)
+define("backstrap/views/Grid", ["../core", "jquery", "../View"], function ($$, $)
 {
     var sizeMap = {
             'large'        : 'lg',

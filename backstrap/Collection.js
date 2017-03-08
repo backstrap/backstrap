@@ -6,7 +6,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/Collection", ["./core", "jquery", "underscore", "backbone"], function ($$, $, _, Backbone)
+define("backstrap/Collection", ["./core", "jquery", "underscore", "backbone", "./dispatcher"], function ($$, $, _, Backbone)
 {
     // Duplicates Backbone's wrapError() exactly.  Need it in fetch().
     var wrapError = function(model, options) {

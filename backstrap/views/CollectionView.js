@@ -9,7 +9,7 @@
  * @author Kevin Perry, perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/CollectionView", ["../core", "jquery", "underscore"], function ($$, $, _)
+define("backstrap/views/CollectionView", ["../core", "jquery", "underscore", "../View"], function ($$, $, _)
 {
     /*
      * Render an item for the given model, at the given index.

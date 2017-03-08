@@ -6,7 +6,12 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Checkbox", ["../core", "jquery", "underscore"], function ($$, $, _)
+define(
+    "backstrap/views/Checkbox",
+    [
+        "../core", "jquery", "underscore", "../View",
+        "../mixins/HasError", "../mixins/HasGlyph", "../mixins/HasModel"
+    ], function ($$, $, _)
 {
     return ($$.Checkbox = $$.views.Checkbox = $$.View.extend({
         options : {

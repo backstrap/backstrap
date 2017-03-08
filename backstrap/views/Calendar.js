@@ -6,7 +6,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Calendar", ["../core", "underscore", "moment"], function ($$, _, moment)
+define("backstrap/views/Calendar", ["../core", "underscore", "moment", "../View"], function ($$, _, moment)
 {
     var monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
     var dayNames   = ['s', 'm', 't', 'w', 't', 'f', 's'];

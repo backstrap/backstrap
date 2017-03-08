@@ -1,11 +1,13 @@
-
 define([
     './backstrap/core.js',
+    //'./backstrap/ajaxPrefilter',
     './backstrap/input_event.js',
     './backstrap/dispatcher.js',
     './backstrap/Collection.js',
+    //'./backstrap/DragSession',
     './backstrap/LocalCache.js',
     './backstrap/Model.js',
+    //'./backstrap/PagedCollection',
     './backstrap/View.js',
     './backstrap/components.js',
     './backstrap/mixins.js',
@@ -13,4 +15,3 @@ define([
 ], function ($$) {
     return $$;
 });
-

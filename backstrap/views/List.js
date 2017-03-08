@@ -6,7 +6,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/List", ["../core", "jquery", "underscore"], function ($$, $, _)
+define("backstrap/views/List", ["../core", "jquery", "underscore", "./CollectionView"], function ($$, $, _)
 {
     var ensureProperPosition = function (model) {
         if (this.model.comparator) {

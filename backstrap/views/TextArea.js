@@ -6,7 +6,12 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/TextArea", ["../core", "jquery", "underscore"], function ($$, $, _)
+define(
+    "backstrap/views/TextArea",
+    [
+        "../core", "jquery", "underscore", "../View", 
+        "../mixins/HasModel", "../mixins/HasFormLabel", "../mixins/HasError", "../mixins/HasFocus"
+    ], function ($$, $, _)
 {
     return ($$.TextArea = $$.views.TextArea = $$.View.extend({
         options: {

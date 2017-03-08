@@ -6,7 +6,13 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/TextField", ["../core", "jquery", "underscore"], function ($$, $, _)
+define(
+    "backstrap/views/TextField",
+    [
+        "../core", "jquery", "underscore",
+        "../mixins/HasModel", "../mixins/HasFormLabel", "../mixins/HasGlyph",
+        "../mixins/HasError", "../mixins/HasFocus"
+    ], function ($$, $, _)
 {
     return ($$.TextField = $$.views.TextField = $$.View.extend({
         options: {

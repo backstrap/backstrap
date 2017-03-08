@@ -6,7 +6,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Dropdown", ["../core", "jquery", "underscore"], function ($$, $, _)
+define("backstrap/views/Dropdown", ["../core", "jquery", "underscore", "./List"], function ($$, $, _)
 {
     var ItemView = $$.View.extend({
         tagName: function () {

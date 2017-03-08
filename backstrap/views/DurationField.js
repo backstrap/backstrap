@@ -16,8 +16,12 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/DurationField", ["../core", "jquery", "underscore", "moment", "moment-interval"],
-function ($$, $, _, moment)
+define(
+    "backstrap/views/DurationField",
+    [
+        "../core", "jquery", "underscore", "moment", "moment-interval", "../View", "../mixins/HasModel"
+    ],
+    function ($$, $, _, moment)
 {
     var param = {
         y: 'Year',

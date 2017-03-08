@@ -6,7 +6,11 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/ProgressBar", ["../core", "jquery", "underscore"], function ($$, $, _)
+define(
+    "backstrap/views/ProgressBar",
+    [
+        "../core", "jquery", "underscore", "../Collection", "./CollectionView", "../mixins/HasModel"
+    ], function ($$, $, _)
 {
     var ItemView = $$.View.extend({
         initialize: function () {

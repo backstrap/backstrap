@@ -32,6 +32,8 @@
  **/
 define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, Backbone)
 {
+    var noGlobal = true;
+
     // properly-cased attribute names for IE setAttribute support
     var attributeMap = {
         'acceptcharset'     : 'acceptCharset',
@@ -755,7 +757,9 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
 
     /******** End of Backbone-UI stuff ****************/
 
-    window.backstrap = window.$$ = backstrap;
+    if (!noGlobal) {
+        window.backstrap = window.$$ = backstrap;
+    }
     
     return backstrap;
 });

@@ -6,7 +6,12 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Menu", ["../core", "jquery", "underscore"], function ($$, $, _)
+define(
+    "backstrap/views/Menu",
+    [
+        "../core", "jquery", "underscore", "../View", "../mixins/HasModel",
+        "../mixins/HasAlternativeProperty", "../mixins/HasFormLabel", "../mixins/HasError"
+    ], function ($$, $, _)
 {
     // TODO: Major overhaul - should not use <select>
     var noop = function(){};

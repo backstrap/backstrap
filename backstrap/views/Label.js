@@ -5,7 +5,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Label", ["../core", "underscore"], function ($$, _)
+define("backstrap/views/Label", ["../core", "underscore", "../View", "../mixins/HasModel"], function ($$, _)
 {
     return ($$.Label = $$.views.Label = $$.View.extend({
 

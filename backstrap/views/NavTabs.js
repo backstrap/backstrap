@@ -4,7 +4,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/NavTabs", ["../core"], function ($$)
+define("backstrap/views/NavTabs", ["../core", "./List"], function ($$)
 {
     var ItemView = $$.View.extend({
         tagName: 'a',

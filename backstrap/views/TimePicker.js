@@ -6,7 +6,12 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/TimePicker", ["../core", "jquery", "underscore", "moment"], function ($$, $, _, moment)
+define(
+    "backstrap/views/TimePicker",
+    [
+        "../core", "jquery", "underscore", "moment", "../View", "./Select", "./TextField",
+        "../mixins/HasModel", "../mixins/HasFormLabel", "../mixins/HasError"
+    ], function ($$, $, _, moment)
 {
     var KEY_RETURN = 13;
     

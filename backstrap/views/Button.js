@@ -6,7 +6,10 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Button", ["../core"], function ($$)
+define(
+    "backstrap/views/Button",
+    ["../core", "underscore", "../View", "../mixins/HasModel", "../mixins/HasGlyph"],
+    function ($$, _)
 {
     return ($$.Button = $$.views.Button = $$.View.extend({
         options : {

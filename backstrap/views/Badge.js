@@ -6,7 +6,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Badge", ["../core"], function ($$)
+define("backstrap/views/Badge", ["../core", "underscore", "../View", "../mixins/HasModel"], function ($$, _)
 {
     return ($$.Badge = $$.views.Badge = $$.View.extend({
         tagName: 'span',

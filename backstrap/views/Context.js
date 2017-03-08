@@ -5,7 +5,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/Context", ["../core", "underscore"], function ($$, _)
+define("backstrap/views/Context", ["../core", "underscore", "../View", "../mixins/HasModel"], function ($$, _)
 {
     return ($$.Context = $$.views.Context = $$.View.extend({
         options : {
