@@ -1,15 +1,15 @@
 /**
  * The core Backstrap object. Provides various tag and object factory methods.
- * 
+ *
  * This is based heavily on Joe Stelmach's nifty laconic.js
  * https://github.com/joestelmach/laconic
- * 
+ *
  * It also uses Backbone-UI
  * https://github.com/perka/backbone-ui
- * 
+ *
  * It enhances the laconic tag generator and Backbone-UI components
  * with an awareness of Bootstrap class decoration.
- * 
+ *
  * Both those packages are under the MIT license:
  * https://github.com/joestelmach/laconic/blob/master/LICENSE
  * https://github.com/perka/backbone-ui/blob/master/LICENSE
@@ -78,7 +78,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
         'xs'           : 'xs',
         'block'        : 'block' // for buttons only
     };
-    
+
     var appendAny = function (el, child) {
         // if the argument is a DOM element node or text node,
         // we simply append it.  Don't append other DOM constructs.
@@ -98,19 +98,19 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
             el.appendChild(document.createTextNode(child));
             return true;
         }
-        
+
         // if the argument is a jQuery object, append its elements.
         else if (child.jquery) {
             child.appendTo(el);
             return true;
         }
-        
+
         // if the argument is a Backbone View, append its root element.
         else if (child instanceof Backbone.View) {
             el.appendChild(child.el);
             return true;
         }
-        
+
         return false;
     };
 
@@ -119,18 +119,18 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
     //
     // The first parameter MUST be a string specifying the element's
     // tag name.
-    // 
+    //
     // The second parameter MUST be a string specifying the element's
     // bootstrap class name.
-    // 
+    //
     // An optional object of element attributes may follow directly
     // after the tag and class names.
-    // 
+    //
     // Additional arguments will be considered children of the new
     // element and may consist of DOM elements, strings, numbers,
     // BackBone View objects, jQuery objects, or arrays containing
     // any of these things (but not nested arrays.)
-    // 
+    //
     // For example:
     // backstrap('div', 'btn', {'class' : 'foo'}, 'bar');
     // makes a button-styled div with class "foo", containing the text "bar".
@@ -141,7 +141,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
         };
         var classlist = {};
         if (bootstrapClass) { classlist[bootstrapClass] = true; }
-        
+
         // create a new element of the requested type
         var el = document.createElement(tag);
 
@@ -191,19 +191,19 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
                                                 el.setAttribute('style', value);
                                             }
                                             break;
-        
+
                                         case 'className':
                                             value.split(" ").forEach(function (name) {
                                                 classlist[name] = true;
                                             });
                                             break;
-        
+
                                         case 'htmlFor':
                                             // if we're setting an attribute that's not properly supported,
                                             // then we apply the attribute directly to the element.
                                             el.htmlFor = value;
                                             break;
-        
+
                                         // The rest of the cases are for Bootstrap attributes.
                                         case 'size':
                                             if (value in sizeMap) {
@@ -242,7 +242,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
                 }
             }
         }
-        
+
         // handle the Bootstrap details
         classlist[(bootstrapClass !== null ? bootstrapClass : 'text') + '-' + bootstrap.context] = true;
         if (bootstrap.size != null) {
@@ -269,7 +269,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
             case 'panel':
                 var content = $('> *', el);
                 var body = $$.div({className: 'panel-body'});
-                
+
                 $(body).append(content);
                 if (bootstrap.heading && bootstrap.heading.nodeType === 1) {
                     el.appendChild($$.div({className: 'panel-heading'}, bootstrap.heading));
@@ -284,7 +284,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
                     var content = $('> *', el);
                     var body = $$.div({className: 'media-body'});
                     var pullClass = 'pull-' + (bootstrap.pull === 'right' ? 'right' : 'left');
-                    
+
                     $(body).append(content);
                     el.appendChild($$.span({className: pullClass}, bootstrap.media));
                     el.appendChild(body);
@@ -308,7 +308,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
                 }
                 break;
         }
-        
+
         // Set className from classlist.
         el.className = Object.keys(classlist).join(' ');
 
@@ -455,7 +455,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
         el.type = 'reset';
         return el;
     };
-    
+
     // shortcut for creating CSS stylesheet links.
     backstrap.css = function (href, onload) {
         return backstrap.plain.link({href: href, rel: "stylesheet", type: "text/css", onload: onload});
@@ -477,7 +477,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
             };
         }
     };
-    
+
     backstrap._mapSize = function (value) {
         return sizeMap[value];
     };
@@ -499,22 +499,22 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
     backstrap.history = Backbone.history;
 
     /************* Add some utility methods to underscore **********/
-    
+
     _.mixin({
         // produces a natural language description of the given
         // index in the given list
         nameForIndex : function (list, index) {
-            return list.length === 1 ? 'first last' : 
-                index === 0 ? 'first' : 
-                    index === list.length - 1 ? 
+            return list.length === 1 ? 'first last' :
+                index === 0 ? 'first' :
+                    index === list.length - 1 ?
                         'last' : 'middle';
         },
 
         exists : function (object) {
             return !_(object).isNull() && !_(object).isUndefined();
         },
-          
-        // resolves the value of the given property on the given 
+
+        // resolves the value of the given property on the given
         // object.
         resolveProperty : function (object, property) {
             var result = null;
@@ -531,19 +531,30 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
             return result;
         },
 
-        // sets the given value for the given property on the given 
-        // object.
+        // sets the given value for the given property on the given object.
         setProperty : function (object, property, value, silent) {
             if (!property) return;
 
             var parts = property.split('.');
             _(parts.slice(0, parts.length - 2)).each(function (part) {
-                if (!_(object).isNull() && !_(object).isUndefined()){ 
-                  object = _(object.get).isFunction() ? object.get(part) : object[part];
+                if (!_(object).isNull() && !_(object).isUndefined()){
+                  var elem = _(object.get).isFunction() ? object.get(part) : object[part];
+                  if (_(elem).isNull() || _(elem).isUndefined()) {
+                      elem = {};
+                      if (_(object.set).isFunction()) {
+                          var attributes = {};
+                          attributes[part] = value;
+                          object.set(attributes, {silent : silent});
+                      } else {
+                          object[part] = value;
+                      }
+                  }
+                  object = elem;
                 }
             });
 
             if (!!object) {
+                property = parts[parts.length - 1];
                 if (_(object.set).isFunction()) {
                     var attributes = {};
                     attributes[property] = value;
@@ -593,7 +604,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
         } else { // Default = centered
             y = bOffset.top + (bDim.height - elbDim.height)/2;
         }
-      
+
         // Check for constrainment (default true)
         //var constraint = true;
         //if (pos.indexOf('no-constraint') >= 0) constraint = false;
@@ -635,23 +646,23 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
          *   <dt>center</dt>
          *     <dd>The default alignment, centers the element along either the
          *     vertical or horizontal axis.</dd>
-         *   <dt>top</dt>    
+         *   <dt>top</dt>
          *     <dd>places target element above the anchor</dd>
-         *   <dt>bottom</dt> 
+         *   <dt>bottom</dt>
          *     <dd>places target element below the anchor</dd>
-         *   <dt>left</dt>   
+         *   <dt>left</dt>
          *     <dd>places target element to the left of the anchor</dd>
-         *   <dt>right</dt>  
+         *   <dt>right</dt>
          *     <dd>places target element to the right of the anchor</dd>
-         *   <dt>-top</dt>   
+         *   <dt>-top</dt>
          *     <dd>aligns top edge of target with top of anchor</dd>
          *   <dt>-bottom</dt>
          *     <dd>aligns bottom edge of target with bottom of anchor</dd>
-         *   <dt>-left</dt>  
+         *   <dt>-left</dt>
          *     <dd>aligns left edge of target with left of anchor</dd>
-         *   <dt>-right</dt> 
+         *   <dt>-right</dt>
          *     <dd>aligns right edge of target with right of anchor</dd>
-         *   <dt>no-constraint</dt> 
+         *   <dt>no-constraint</dt>
          *     <dd>
          *      By default, the target is constrained to the viewport.
          *      This allows you to let it overflow the page.
@@ -716,7 +727,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
 
                 el._autoignore = true;
                 setTimeout(function () {
-                    el._autoignore = false; $(el).removeAttr('_autoignore'); 
+                    el._autoignore = false; $(el).removeAttr('_autoignore');
                 }, 0);
 
                 if (!el._autohider) {
@@ -729,7 +740,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
                         if (el._autoignore) return;
                         // pass in a list of keys to ignore as autohide triggers
                         if (e.type && e.type.match(/keypress/) && _.include(options.ignoreKeys, e.keyCode)) return;
-                  
+
                         // allows you to provide an array of elements that should not trigger autohiding.
                         // This is useful for doing thigns like a flyout menu from a pulldown
                         if (options.leaveOpenTargets) {
@@ -738,7 +749,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
                             });
                             if (!!ancestor) return;
                         }
-                  
+
                         var proceed = (options.hideCallback) ? options.hideCallback(el) : true;
                         if (!proceed) return;
 
@@ -760,6 +771,6 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
     if (!noGlobal) {
         window.backstrap = window.$$ = backstrap;
     }
-    
+
     return backstrap;
 });
