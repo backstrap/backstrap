@@ -30,7 +30,9 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  **/
-define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, Backbone)
+define(
+    ['underscore', 'jquery', 'backbone'],
+    function (_, $, Backbone)
 {
     var noGlobal = true;
 
@@ -193,7 +195,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
                                             break;
 
                                         case 'className':
-                                            value.split(" ").forEach(function (name) {
+                                            value.split(' ').forEach(function (name) {
                                                 classlist[name] = true;
                                             });
                                             break;
@@ -458,7 +460,7 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
 
     // shortcut for creating CSS stylesheet links.
     backstrap.css = function (href, onload) {
-        return backstrap.plain.link({href: href, rel: "stylesheet", type: "text/css", onload: onload});
+        return backstrap.plain.link({href: href, rel: 'stylesheet', type: 'text/css', onload: onload});
     };
 
     // shortcut for creating glyphicons.
@@ -514,8 +516,9 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
             return !_(object).isNull() && !_(object).isUndefined();
         },
 
-        // resolves the value of the given property on the given
-        // object.
+        // Resolves the value of the given property on the given object.
+        // Supports dotted-property notation ('item.value') to get
+        // properties of properties which are themselves objects.
         resolveProperty : function (object, property) {
             var result = null;
             if (_(property).exists() && _(property).isString()) {
@@ -531,36 +534,34 @@ define("backstrap/core", ["jquery", "underscore", "backbone"], function ($, _, B
             return result;
         },
 
-        // sets the given value for the given property on the given object.
+        // Sets the given value for the given property on the given object.
+        // Supports dotted-property notation ('item.value') 
+        // and also array-of-property-names notation (['item', 'value'])
+        // to set properties of properties which are themselves objects -
+        // such as setProperty({item: {value: 'set this'}}, 'item.value', 'new value');
         setProperty : function (object, property, value, silent) {
-            if (!property) return;
+            if (property && object && _(object).isObject()) {
+                var key;
 
-            var parts = property.split('.');
-            _(parts.slice(0, parts.length - 2)).each(function (part) {
-                if (!_(object).isNull() && !_(object).isUndefined()){
-                  var elem = _(object.get).isFunction() ? object.get(part) : object[part];
-                  if (_(elem).isNull() || _(elem).isUndefined()) {
-                      elem = {};
-                      if (_(object.set).isFunction()) {
-                          var attributes = {};
-                          attributes[part] = value;
-                          object.set(attributes, {silent : silent});
-                      } else {
-                          object[part] = value;
-                      }
-                  }
-                  object = elem;
+                if (!_(property).isArray()) {
+                    property = property.split('.');
                 }
-            });
 
-            if (!!object) {
-                property = parts[parts.length - 1];
+                key = property.shift();
+
+                if (property.length > 0) {
+                    var elem = _(_(object.get).isFunction() ? object.get(key) : object[key]);
+                    elem = (elem.isNull() || elem.isUndefined()) ?  {} : (elem.isObject() ? elem.clone() : elem.value());
+                    this.setProperty(elem, property, value, silent);
+                    value = elem;
+                }
+
                 if (_(object.set).isFunction()) {
                     var attributes = {};
-                    attributes[property] = value;
+                    attributes[key] = value;
                     object.set(attributes, {silent : silent});
                 } else {
-                    object[property] = value;
+                    object[key] = value;
                 }
             }
         }

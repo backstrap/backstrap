@@ -4,7 +4,10 @@
  * 
  * @author Kevin Perry perry@princeton.edu
  */
-define("backstrap/dispatcher", ["./core", "jquery", "underscore"], function ($$, $, _) {
+define(
+    ['underscore', 'jquery', './core'],
+    function (_, $, $$)
+{
     var defaults = {
             minInterval: 10,
             maxInterval: 1000,

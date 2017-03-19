@@ -1,5 +1,5 @@
 /*
-    jQuery `input` special event v1.2
+    jQuery "input" special event v1.2
     http://whattheheadsaid.com/projects/input-special-event
 
     (c) 2010-2011 Andy Earnshaw
@@ -7,10 +7,13 @@
     MIT license
     www.opensource.org/licenses/mit-license.php
 
-    modified for require.js context - perry@princeton.edu
+    modified for Backstrap - perry@princeton.edu
 */
-define("backstrap/input_event", ["jquery"], function ($, udf) {
-      var ns = ".inputEvent ",
+define(
+    ['jquery'],
+    function ($, udf)
+    {
+        var ns = '.inputEvent ',
           // A bunch of data strings that we use regularly
           dataBnd = "bound.inputEvent",
           dataVal = "value.inputEvent",
@@ -125,4 +128,5 @@ define("backstrap/input_event", ["jquery"], function ($, udf) {
       $.fn.input = function (handler) {
           return handler ? $(this).bind("txtinput", handler) : this.trigger("txtinput");
       };
-});
+    }
+);

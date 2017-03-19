@@ -4,7 +4,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/views/BasicNavbar", ["../core", "./CollectionView"], function ($$)
+define('backstrap/views/BasicNavbar', ['../core', 'jquery', './CollectionView'], function ($$, $)
 {
     var ItemView = $$.View.extend({
         tagName: 'a',

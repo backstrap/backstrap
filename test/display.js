@@ -1,4 +1,6 @@
-require(['jquery', 'backstrap', 'moment', 'bootstrap', 'mobiscroll'], function($, $$, moment) {
+require(
+['jquery', 'backstrap', 'underscore', 'moment', 'bootstrap'],//, 'mobiscroll'],
+function($, $$, _, moment) {
 
 	var n = 1;
 	
@@ -30,46 +32,46 @@ require(['jquery', 'backstrap', 'moment', 'bootstrap', 'mobiscroll'], function($
         [$$.span('An array '), 'of ', 'text ', document.createTextNode('strings.')]
     ), 'divs');
     
-    var fred = new $$.Model({ when: '2014-11-10T09:10', id: 1, name:'fred' });
-    testObj(new $$.DateTime({
-        model: fred,
-        content: 'when',
-        contentFormat: 'YYYY-MM-DDTHH:mm'
-        //mobiscroll: {
-            // preset: 'datetime', // one of date, time, or datetime.
-            //theme: 'ios7'
-            //onSelect: function () { setTimeout(function () { console.log(fred.get('when')); }, 500); }
-        //}
-    }), 'DateTime');
-
-    var zzz = new $$.DateTime({
-        model: fred,
-        content: 'when',
-        contentFormat: 'YYYY-MM-DDTHH:mm',
-        mobiscroll: {
-	    showLabel: true,
-            preset: 'time',
-        }
-    });
-    testObj(zzz, 'DateTime again (shared data)');
-    // var w = zzz.mobiscroll('getInst').settings.wheels;
-    // w[0][0].values = ['09',10,11,12,'01','02','03','04','05','06','07','08'];
-    // w[0][0].keys = [9,10,11,12,1,2,3,4,5,6,7,8];
-    // zzz.mobiscroll('option', 'wheels', w);
-    //console.log(w);
-
-    testObj(new $$.NumberField({
-        model: new $$.Model({ howmany: 7, id: 1, name:'fred' }),
-        content: 'howmany',
-        mobiscroll: { min: 1, max: 24, step: 2, showLabel: true, invalid: [ 5 ] }
-    }), 'NumberField');
-
-    var mark = new $$.Model({ duration: 'P1DT2H', id: 1, name:'mark' });
-    testObj(new $$.DurationField({
-        model: mark,
-        content: 'duration',
-        mobiscroll: { showLabel: true, wheelset: 'dhi', onSelect: function () { setTimeout(function () { console.log(mark.get('duration')); }, 500); } }
-    }), 'DurationField');
+//    var fred = new $$.Model({ when: '2014-11-10T09:10', id: 1, name:'fred' });
+//    testObj(new $$.DateTime({
+//        model: fred,
+//        content: 'when',
+//        contentFormat: 'YYYY-MM-DDTHH:mm'
+//        //mobiscroll: {
+//            // preset: 'datetime', // one of date, time, or datetime.
+//            //theme: 'ios7'
+//            //onSelect: function () { setTimeout(function () { console.log(fred.get('when')); }, 500); }
+//        //}
+//    }), 'DateTime');
+//
+//    var zzz = new $$.DateTime({
+//        model: fred,
+//        content: 'when',
+//        contentFormat: 'YYYY-MM-DDTHH:mm',
+//        mobiscroll: {
+//	    showLabel: true,
+//            preset: 'time',
+//        }
+//    });
+//    testObj(zzz, 'DateTime again (shared data)');
+//    // var w = zzz.mobiscroll('getInst').settings.wheels;
+//    // w[0][0].values = ['09',10,11,12,'01','02','03','04','05','06','07','08'];
+//    // w[0][0].keys = [9,10,11,12,1,2,3,4,5,6,7,8];
+//    // zzz.mobiscroll('option', 'wheels', w);
+//    //console.log(w);
+//
+//    testObj(new $$.NumberField({
+//        model: new $$.Model({ howmany: 7, id: 1, name:'fred' }),
+//        content: 'howmany',
+//        mobiscroll: { min: 1, max: 24, step: 2, showLabel: true, invalid: [ 5 ] }
+//    }), 'NumberField');
+//
+//    var mark = new $$.Model({ duration: 'P1DT2H', id: 1, name:'mark' });
+//    testObj(new $$.DurationField({
+//        model: mark,
+//        content: 'duration',
+//        mobiscroll: { showLabel: true, wheelset: 'dhi', onSelect: function () { setTimeout(function () { console.log(mark.get('duration')); }, 500); } }
+//    }), 'DurationField');
  
     var kptest1;
     testObj(new $$.List({
@@ -553,6 +555,23 @@ require(['jquery', 'backstrap', 'moment', 'bootstrap', 'mobiscroll'], function($
     )), 'Dropdown Group On a fixed-footer Navbar');
     
     test($$.jumbotron('Hello!'), 'JT');
+
+    var subitemModel = new $$.Model({id: 1, sub: {value: 'First value : 00:00:00', name: 'A Name'}});
+    setInterval(function () {
+        var oldSub = subitemModel.get('sub');
+        var newSub = {value: oldSub.value.substr(0, oldSub.value.length-11) + ' : ' + moment().format('HH:mm:ss')};
+        subitemModel.set('sub', _.extend({}, oldSub, newSub));
+    }, 10000);
+	test(new $$.div(
+        new $$.TextField({
+            model: subitemModel,
+		    content: 'sub.value'
+	    }).render(),
+	    new $$.TextField({
+            model: subitemModel,
+		    content: 'sub.name'
+        }).render()
+	), 'Dotted Property');
 
     test($$.div, ' === END === ');
 });

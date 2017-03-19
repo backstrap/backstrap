@@ -4,7 +4,7 @@
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
-define("backstrap/components/dropdownGroup", ["../core"], function ($$)
+define('backstrap/components/dropdownGroup', ['../core', 'jquery'], function ($$, $)
 {
     return ($$.dropdownGroup = $$.components.dropdownGroup = function (attrs) {
         var offset = 0;
