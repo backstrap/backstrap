@@ -1,6 +1,6 @@
 {
   "name": "backstrap",
-  "version": "2.0.1",
+  "version": "2.1.1",
   "description": "The Backstrap JavaScript library provides a layer of functionality tying together Bootstrap and Backbone.",
   "homepage": "http://backstrap.github.io/backstrap",
   "author": "Kevin Perry <perry@princeton.edu>",
@@ -30,13 +30,19 @@
     "moment-interval": "^0.2.1"
   },
   "devDependencies": {
+    "bootstrap-webpack": "0.0.6",
     "clean-webpack-plugin": "^0.1.16",
     "compression-webpack-plugin": "^0.3.2",
     "css-loader": "^0.27.3",
     "exports-loader": "^0.6.4",
     "extract-text-webpack-plugin": "^2.1.0",
+    "file-loader": "^0.10.1",
     "imports-loader": "^0.7.1",
+    "less": "^2.7.2",
+    "less-loader": "^3.0.0",
     "qunitjs": "^2.2.0",
+    "style-loader": "^0.14.1",
+    "url-loader": "^0.5.8",
     "webpack": "^2.2.1"
   }
 }

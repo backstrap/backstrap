@@ -1,5 +1,5 @@
 require(
-['jquery', 'backstrap', 'underscore', 'moment', 'bootstrap'],//, 'mobiscroll'],
+['jquery', 'backstrap', 'underscore', 'moment', 'bootstrap-webpack'],//, 'mobiscroll'],
 function($, $$, _, moment) {
 
 	var n = 1;
@@ -15,7 +15,7 @@ function($, $$, _, moment) {
     }
 
     // implicit test of $$.css
-    $("head").append($$.css("components/require.css"));
+    $("head").append($$.css("webpack/styles.css"));
 
     // tag factories
 
