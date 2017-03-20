@@ -36,13 +36,16 @@ define("backstrap/mixins/HasModel", ["../core", "underscore"], function ($$, _)
             if(_(this.model).exists() && _(this.model.off).isFunction()) {
                 _(['content', 'labelContent']).each(function(prop) {
                     var key = this.options[prop];
-                    if(_(key).exists()) {
+                    if(_(key).isString()) {
                         if (key.indexOf('.') > 0) {
                             key = key.substr(0, key.indexOf('.'));
                         }
                         key = 'change:' + key;
                         this.model.off(key, callback);
                         this.model.on(key, callback);
+                    } else if (_(key).exists()) {
+                        this.model.off('change', callback);
+                        this.model.on('change', callback);
                     }
                 }, this);
             }
@@ -52,12 +55,14 @@ define("backstrap/mixins/HasModel", ["../core", "underscore"], function ($$, _)
             if(_(this.model).exists() && _(this.model.off).isFunction()) {
                 _(['content', 'labelContent']).each(function(prop) {
                     var key = this.options[prop];
-                    if(_(key).exists()) {
+                    if(_(key).isString()) {
                         if (key.indexOf('.') > 0) {
                             key = key.substr(0, key.indexOf('.'));
                         }
                         key = 'change:' + key;
                         this.model.off(key, callback);
+                    } else if (_(key).exists()) {
+                        this.model.off('change', callback);
                     }
                 }, this);
             }
