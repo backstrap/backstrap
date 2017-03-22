@@ -36,7 +36,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/Composer install.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/Webpack build.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
@@ -47,4 +47,24 @@
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 		<nature>com.dubture.composer.core.composerNature</nature>
 	</natures>
+	<filteredResources>
+		<filter>
+			<id>1489079990363</id>
+			<name></name>
+			<type>26</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-projectRelativePath-matches-true-false-node_modules</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1489079990364</id>
+			<name></name>
+			<type>26</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-projectRelativePath-matches-true-false-test/webpack</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 </projectDescription>
