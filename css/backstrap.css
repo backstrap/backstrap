@@ -84,7 +84,3 @@ div.date_picker_calendar.calendar.calendar-default {
 	margin-top: 3px;
 }
 
-input.mobiscroll[readonly] {
-	background-color: #fff !important;
-    cursor: inherit !important;
-}

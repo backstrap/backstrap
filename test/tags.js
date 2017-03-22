@@ -134,7 +134,7 @@ require(['qunitjs', 'jquery', 'backstrap', 'test/testing'], function(QUnit, $, $
         },
         'button group with buttons'
     );
-    appendTest(
+    testing.appendTest(
         $$.buttonToolbar(
             $$.buttonGroup(
                 $$.button('Button1'),

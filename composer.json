@@ -22,14 +22,12 @@
     "require-dev": {
         "components/bootstrap": "~3.1",
         "components/bootstrap-default": "dev-master",
-        "backstrap/moment-interval": "dev-master",
-        "backstrap/mobiscroll": "dev-master"
+        "luisfarzati/moment-interval": "~0.2"
     },
     "suggest": {
         "components/bootstrap": "~3.1",
         "components/bootstrap-default": "dev-master",
-        "backstrap/moment-interval": "dev-master",
-        "backstrap/mobiscroll": "dev-master"
+        "luisfarzati/moment-interval": "~0.2"
     },
     "extra": {
         "component": {
@@ -118,12 +116,32 @@
     },
     "repositories": [
         {
-            "type": "vcs",
-            "url": "https://github.com/backstrap/mobiscroll"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/backstrap/moment-interval"
+            "type": "package",
+            "package": {
+                "name": "luisfarzati/moment-interval",
+                "type": "component",
+                "version": "0.2.1",
+                "dist": {
+                    "url": "https://github.com/luisfarzati/moment-interval/archive/0.2.1.zip",
+                    "type": "zip"
+                },
+                "require": {
+                    "robloach/component-installer": "*",
+                    "moment/moment": "~2.5"
+                },
+                "extra": {
+                    "component": {
+                        "scripts": [
+                            "src/moment-interval.js"
+                        ],
+                        "shim": {
+                            "deps": [
+                                "moment"
+                            ]
+                        }
+                    }
+                }
+            }
         }
     ]
 }

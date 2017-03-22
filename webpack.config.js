@@ -27,7 +27,6 @@ module.exports = function exports(env)
 
                 // These packages need explicit imports.
                 {test: /bootstrap/, use: 'imports-loader?jQuery=jquery'},
-                {test: /mobiscroll/, use: 'imports-loader?jQuery=jquery'},
                 //{test: /backstrap/, use: 'imports-loader?jquery,underscore,backbone,moment'},
                 // for bootstrap...
                 {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff'},
