@@ -1,5 +1,8 @@
 require(
-['jquery', 'backstrap', 'underscore', 'moment', 'bootstrap-webpack'],
+[
+    'jquery', 'backstrap', 'underscore', 'moment',
+    'style-loader!css-loader!less-loader!bootstrap-webpack/bootstrap-styles.loader!bootstrap-webpack/bootstrap.config.js'
+],
 function($, $$, _, moment) {
 
 	var n = 1;
