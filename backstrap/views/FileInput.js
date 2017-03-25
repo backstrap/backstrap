@@ -98,12 +98,20 @@ define(
             this.input.disabled = !enabled;
         },
 
+        validationFailure: function (message) {
+            alert(message);
+        },
+
         validate: function (file) {
-            return (
-                (!this.options.maxSize || file.size < this.options.maxSize)
-                && (!this.options.typeMatch || file.type.match(this.options.typeMatch))
-                && (!this.options.nameMatch || file.name.match(this.options.nameMatch))
-            );
+            if (this.options.maxSize && file.size > this.options.maxSize) {
+                return 'file size exceeds allowed maximum of ' + file.size + ' bytes';
+            }
+            if (this.options.typeMatch && !file.type.match(this.options.typeMatch)) {
+                return 'file type ' + file.type + ' not allowed';
+            }
+            if (this.options.nameMatch && !file.name.match(this.options.nameMatch)) {
+                return 'file name does not match allowed pattern';
+            }
         },
 
         _updateModel: function () {
@@ -111,7 +119,11 @@ define(
                 var reader = new FileReader();
 
                 _.each(this.input.files, function (file, index) {
-                    if (this.validate(file)) {
+                    var error = this.validate(file);
+
+                    if (error) {
+                        this.validationFailure('Invalid file: ' + file.name + ': ' + error);
+                    } else {
                         var that = this;
 
                         reader.addEventListener('load', function () {
@@ -128,8 +140,6 @@ define(
                         }, false);
 
                         reader.readAsDataURL(file);
-                    } else {
-                        alert('File item ' + index + ': validation failed');
                     }
                 }, this);
             }
