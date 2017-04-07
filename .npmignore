@@ -1,0 +1,9 @@
+vendor
+components
+composer.*
+notes.txt
+test/webpack/
+.buildpath
+.externalToolBuilders
+.project
+.settings/
