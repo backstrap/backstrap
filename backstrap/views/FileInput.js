@@ -1,7 +1,7 @@
 /**
  * A Backbone View that displays a model-bound file input
  * with Bootstrap decoration.
- * 
+ *
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
@@ -14,7 +14,7 @@ define(
 {
     return ($$.FileInput = $$.views.FileInput = $$.View.extend({
         options: {
-            // the value to use for both the name and id attribute 
+            // the value to use for both the name and id attribute
             // of the underlying input element
             name: null,
 
@@ -49,7 +49,7 @@ define(
             }
 
             this.input = $$.input();
-            $(this.input).removeClass('form-control form-control-default').change(this._updateModel);
+            $(this.input).removeClass('form-control').change(this._updateModel);
         },
 
         render: function () {
@@ -57,7 +57,7 @@ define(
                 $(this._parent).detach();
             }
             this.$el.empty();
-    
+
             $(this.input).attr({
                 id: this.options.name,
                 type: 'file',

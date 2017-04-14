@@ -2,20 +2,20 @@
  * A Backbone View that displays a model-bound text area.
  * Largely from Backbone-UI's TextArea class,
  * with Bootstrap decoration.
- * 
+ *
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
 define(
     "backstrap/views/TextArea",
     [
-        "../core", "jquery", "underscore", "../View", 
+        "../core", "jquery", "underscore", "../View",
         "../mixins/HasModel", "../mixins/HasFormLabel", "../mixins/HasError", "../mixins/HasFocus"
     ], function ($$, $, _)
 {
     return ($$.TextArea = $$.views.TextArea = $$.View.extend({
         options: {
-            // id to use on the actual textArea 
+            // id to use on the actual textArea
             textAreaId: null,
 
             // disables the text area
@@ -27,7 +27,7 @@ define(
             onKeyPress: $.noop,
 
             // if given, the text field will limit its character count
-            maxLength: null 
+            maxLength: null
         },
 
         // public accessors
@@ -46,7 +46,10 @@ define(
                 this.$el.addClass(this.options.name);
             }
 
-            this.textArea = $$.textarea({maxLength: this.options.maxLength});
+            this.textArea = $$.textarea({
+                maxLength: this.options.maxLength,
+                className: 'form-control'
+            });
 
             $(this.textArea).keyup(this._optKeyPress).input(this._updateModel);
 
@@ -54,14 +57,13 @@ define(
         },
 
         render: function () {
-            var value = (this.textArea && this.textArea.value.length) > 0 ? 
+            var value = (this.textArea && this.textArea.value.length) > 0 ?
                 this.textArea.value : this.resolveContent();
 
             this.$el.empty();
 
             $(this.textArea).attr({
                 id: this.options.textAreaId,
-                className: 'form-control form-control-default',
                 tabIndex: this.options.tabIndex,
                 placeholder: this.options.placeholder
             }).val(value);
