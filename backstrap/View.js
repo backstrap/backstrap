@@ -12,6 +12,7 @@ define(
         return ($$.View = Backbone.View.extend({
             initialize: function (options) {
                 this.options = this.options ? _({}).extend(this.options, options) : options;
+                this.allSubViews = _([]);
             },
     
             // resolves the appropriate content from the given choices
@@ -43,18 +44,33 @@ define(
             },
             
             appendView: function (view, el) {
-                view.$el.appendTo(el ? el : this.el);
-                if (this.allSubViews) {
-                    this.allSubViews.push(view);
-                } else {
-                    this.allSubViews = _([view]);
-                }
+                view.$el.appendTo(el||this.el);
+                this.allSubViews.push(view);
             },
             
-            render: function () {
-                if (this.allSubViews) {
-                    this.allSubViews.each(function (view) { view.render(); });
+            appendViews: function (views, el) {
+                _(views).each(function (view) {
+                    this.appendView(view, el);
+                });
+            },
+
+            removeView: function (view) {
+                var index = this.allSubViews.indexOf(view);
+                if (index >= 0) {
+                    view.remove();
+                    this.allSubViews.splice(index, 1);
                 }
+            }
+            
+            emptyViews: function () {
+                this.allSubViews.each(function (view) {
+                    view.remove();
+                });
+                this.allSubViews.length = 0;
+            }
+            
+            render: function () {
+                this.allSubViews.invoke('render');
                 return this;
             }
         }));
