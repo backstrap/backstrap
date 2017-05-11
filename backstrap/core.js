@@ -185,12 +185,17 @@ define(
                                 } else {
                                     switch (key) {
                                         case 'style':
-                                            // if we're setting the style attribute, we may need to
-                                            // use the cssText property.
-                                            if (key === 'style' && el.style.setAttribute) {
+                                            // We may need to use the cssText property.
+                                            if (el.style.setAttribute) {
                                                 el.style.setAttribute('cssText', value);
                                             } else {
                                                 el.setAttribute('style', value);
+                                            }
+                                            break;
+
+                                        case 'aria':
+                                            for (var key2 in value) {
+                                                el.setAttribute('aria-' + key2, value[key2]);
                                             }
                                             break;
 

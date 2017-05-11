@@ -125,6 +125,16 @@ there are a few special attributes which undergo further processing.
 For instance, if you pass a "size" or "context" attribute
 it will be converted into a suitable Bootstrap classname.
 See [Bootstrap Attributes](#bootstrap-attributes) below for more details.
+Also, if you include an "aria" attribute with an object as its value,
+this will get translated to a set of
+[ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) attributes.
+For example:
+    
+    $$.div({aria: {label: 'My Label', required: 'true'}})`.
+
+produces
+
+    <div aria-label="My Label" aria-required="true"></div>
 
 Backstrap, like laconic, adds an `appendTo()` convenience method
 to each DOM object it creates.
