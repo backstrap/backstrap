@@ -51,7 +51,7 @@ define(
             appendViews: function (views, el) {
                 _(views).each(function (view) {
                     this.appendView(view, el);
-                });
+                }, this);
             },
 
             removeView: function (view) {
