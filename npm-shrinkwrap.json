@@ -1,6 +1,6 @@
 {
   "name": "backstrap",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "dependencies": {
     "backbone": {
       "version": "1.3.3",
