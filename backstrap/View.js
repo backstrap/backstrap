@@ -60,14 +60,14 @@ define(
                     view.remove();
                     this.allSubViews.splice(index, 1);
                 }
-            }
+            },
             
             emptyViews: function () {
                 this.allSubViews.each(function (view) {
                     view.remove();
                 });
                 this.allSubViews.length = 0;
-            }
+            },
             
             render: function () {
                 this.allSubViews.invoke('render');
