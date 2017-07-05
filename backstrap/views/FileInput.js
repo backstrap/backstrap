@@ -126,7 +126,7 @@ define(
                     } else {
                         var that = this;
 
-                        reader.addEventListener('load', function () {
+                        reader.onload = function () {
                             var value;
 
                             if (that.options.multiple) {
@@ -137,7 +137,7 @@ define(
                             }
 
                             _(that.model).setProperty(that.options.content, value);
-                        }, false);
+                        };
 
                         reader.readAsDataURL(file);
                     }
