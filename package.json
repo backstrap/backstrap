@@ -1,6 +1,6 @@
 {
   "name": "backstrap",
-  "version": "2.2.11",
+  "version": "2.2.12",
   "description": "The Backstrap JavaScript library provides a layer of functionality tying together Bootstrap and Backbone.",
   "homepage": "http://backstrap.github.io/backstrap",
   "author": "Kevin Perry <perry@princeton.edu>",

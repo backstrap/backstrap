@@ -497,6 +497,10 @@ and provides a basic rendering framework. Example:
 	
 Both $$.List and $$.Table extend this component.
 
+#### Container
+
+Creates a Backbone View whose DOM is a `div` decorated with the Bootstrap "container" class.
+
 #### Context
 
 Creates a `span` whose Bootstrap context-color is model-bound.
@@ -513,13 +517,13 @@ Passing `background: true` makes it use the "bg-\*" classes instead of "text-\*"
 You can also pass it a "tagName" attribute to create something other than a `span`.
 The value of "content" defaults to "context".
 
-#### Container
-
-Creates a Backbone View whose DOM is a `div` decorated with the Bootstrap "container" class.
-
 #### DatePicker
 
 Combines a text box input with a [Calendar](#calendar) component.
+
+#### Div
+
+Creates a Backbone View whose DOM is a simple unadorned `div`.
 
 #### Dropdown
 
@@ -540,6 +544,16 @@ For example:
 
 creates a dropdown with a header and three buttons; the last button is below a divider.
 You can also use a "separator" property - "separator" is a synonym for "divider".
+
+#### FileInput
+
+Creates an input with type="file".  
+You can pass various attributes that support file input functionality:
+"name" is used for tboth the name and id of the input;
+"disabled" will disable the input;
+"multiple" will allow multiple file selection;
+"maxSize" limits the allowed size of the file;
+"typeMatch" and "nameMatch" can be used to filter the files available for selection.
 
 #### Glyph
 
@@ -668,6 +682,10 @@ For example:
 
 creates a set of three tabs.
 
+#### Panel
+
+Creates a Backbone View whose DOM is a `div` decorated with the Bootstrap "panel" class.
+
 #### ProgressBar
 
 ProgressBar creates a Bootstrap "progress" div, with model-bound progress bar(s).
@@ -676,10 +694,6 @@ or a BackBone.Collection for (multiple stacked progress bars).
 Model objects may contain context, min, max, labelled, and labelSuffix properties,
 in addition to a content property which should be numeric.
 Min and max default to 0 and 100; labelled defaults to false.
-
-#### Panel
-
-Creates a Backbone View whose DOM is a `div` decorated with the Bootstrap "panel" class.
 
 #### RadioGroup
 
@@ -701,6 +715,18 @@ For example:
 	}).render();
 
 altValueContent defaults to altLabelContent.
+
+#### Select
+
+Creates a Backbone View whose DOM is a `select` tag.
+
+#### Span
+
+Creates a Backbone View whose DOM is a simple unadorned `span`.
+
+#### StaticField
+
+Creates a Backbone View whose DOM is a simple read-only input field.
 
 #### Table
 

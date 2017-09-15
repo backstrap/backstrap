@@ -1,7 +1,7 @@
 /**
  * A Backbone View that displays a model-bound label
  * with Bootstrap decoration.
- * 
+ *
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
@@ -16,7 +16,7 @@ define(
                 context: 'default',
                 formatter: _.identity
             },
-        
+
             tagName: 'label',
 
             initialize: function (options) {

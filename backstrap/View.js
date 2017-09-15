@@ -14,7 +14,7 @@ define(
                 this.options = this.options ? _({}).extend(this.options, options) : options;
                 this.allSubViews = _([]);
             },
-    
+
             // resolves the appropriate content from the given choices
             resolveContent: function (model, content, defaultOption) {
                 defaultOption = (defaultOption === null || _(defaultOption).isUndefined())
@@ -32,22 +32,22 @@ define(
                                 ? _(model).resolveProperty(content)
                                 : content;
             },
-    
+
             mixin: function (objects) {
                 var options = _(this.options).clone();
-    
+
                 _(objects).each(function (object) {
                     $.extend(true, this, object);
                 }, this);
-    
+
                 $.extend(true, this.options, options);
             },
-            
+
             appendView: function (view, el) {
                 view.$el.appendTo(el||this.el);
                 this.allSubViews.push(view);
             },
-            
+
             appendViews: function (views, el) {
                 _(views).each(function (view) {
                     this.appendView(view, el);
@@ -61,14 +61,14 @@ define(
                     this.allSubViews.splice(index, 1);
                 }
             },
-            
+
             emptyViews: function () {
                 this.allSubViews.each(function (view) {
                     view.remove();
                 });
                 this.allSubViews.length = 0;
             },
-            
+
             render: function () {
                 this.allSubViews.invoke('render');
                 return this;

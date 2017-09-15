@@ -12,87 +12,90 @@
  *
  * @author Kevin Perry perry@princeton.edu
  */
-define("backstrap/components/navbar", ["../core", "jquery", "underscore"], function ($$, $, _)
-{
-    return($$.navbar = $$.components.navbar = function (attrs){
-        var el, content, collapser, toggleContent = '';
-        var offset = 1;
-        var brandContent = '';
-        var brandUrl = '#';
-        var className = 'navbar-default';
-        var sr_toggle_text = 'Toggle navigation';
-        var collapserId = _.uniqueId('Bkp');
+define(
+    'backstrap/components/navbar',
+    ['../core', 'jquery', 'underscore'],
+    function ($$, $, _) {
+        return($$.navbar = $$.components.navbar = function (attrs){
+            var el, content, collapser, toggleContent = '';
+            var offset = 1;
+            var brandContent = '';
+            var brandUrl = '#';
+            var className = 'navbar-default';
+            var sr_toggle_text = 'Toggle navigation';
+            var collapserId = _.uniqueId('Bkp');
 
-        if (typeof attrs !== 'object' || attrs.nodeType === 1) {
-            attrs = {};
-            offset = 0;
-        } else {
-            if ('brandContent' in attrs) {
-                brandContent = attrs.brandContent;
-                delete(attrs.brandContent);
-            }
-            if ('brandUrl' in attrs) {
-                brandUrl = attrs.brandUrl;
-                delete(attrs.brandUrl);
-            }
-            if ('inverse' in attrs) {
-                className = attrs.inverse ? 'navbar-inverse' : 'navbar-default';
-                delete(attrs.inverse);
-            }
-            if ('position' in attrs) {
-                if (attrs.position === 'fixed-bottom'
-                    || attrs.position === 'fixed-top'
-                    || attrs.position === 'static-top'
-                ) {
-                    className += ' navbar-' + attrs.position;
-                }
-                delete(attrs.position);
-            }
-            if ('toggleContent' in attrs) {
-                toggleContent = attrs.toggleContent;
-                delete(attrs.toggleContent);
+            if (typeof attrs !== 'object' || attrs.nodeType === 1) {
+                attrs = {};
+                offset = 0;
             } else {
-                toggleContent = $$.span(
-                    $$.span({className: 'icon-bar'}),
-                    $$.span({className: 'icon-bar'}),
-                    $$.span({className: 'icon-bar'})
-                );
+                if ('brandContent' in attrs) {
+                    brandContent = attrs.brandContent;
+                    delete(attrs.brandContent);
+                }
+                if ('brandUrl' in attrs) {
+                    brandUrl = attrs.brandUrl;
+                    delete(attrs.brandUrl);
+                }
+                if ('inverse' in attrs) {
+                    className = attrs.inverse ? 'navbar-inverse' : 'navbar-default';
+                    delete(attrs.inverse);
+                }
+                if ('position' in attrs) {
+                    if (attrs.position === 'fixed-bottom'
+                        || attrs.position === 'fixed-top'
+                        || attrs.position === 'static-top'
+                    ) {
+                        className += ' navbar-' + attrs.position;
+                    }
+                    delete(attrs.position);
+                }
+                if ('toggleContent' in attrs) {
+                    toggleContent = attrs.toggleContent;
+                    delete(attrs.toggleContent);
+                } else {
+                    toggleContent = $$.span(
+                        $$.span({className: 'icon-bar'}),
+                        $$.span({className: 'icon-bar'}),
+                        $$.span({className: 'icon-bar'})
+                    );
+                }
+                if ('sr_toggle_text' in attrs) {
+                    sr_toggle_text = attrs.sr_toggle_text;
+                    delete(attrs.sr_toggle_text);
+                }
             }
-            if ('sr_toggle_text' in attrs) {
-                sr_toggle_text = attrs.sr_toggle_text;
-                delete(attrs.sr_toggle_text);
+            if (!('role' in attrs)) {
+                attrs.role = 'navigation';
             }
-        }
-        if (!('role' in attrs)) {
-            attrs.role = 'navigation';
-        }
 
-        el = $$.nav(attrs);
-        content = Array.prototype.slice.call(arguments, offset);
-        collapser = $$.div({className: 'collapse navbar-collapse', id: collapserId}, content);
+            el = $$.nav(attrs);
+            content = Array.prototype.slice.call(arguments, offset);
+            collapser = $$.div({className: 'collapse navbar-collapse', id: collapserId}, content);
 
-        $(el).addClass('navbar ' + className).append(
-            $$.div({className: 'container container-fluid'},
-                $$.div({className: 'navbar-header'},
-                    $$.button({
-                            type: 'button',
-                            className: 'navbar-toggle collapsed',
-                            'data-toggle': 'collapse',
-                            'data-target': '#' + collapserId
-                        },
-                        $$.span({className: 'sr-only'}, sr_toggle_text),
-                        toggleContent
+            $(el).addClass('navbar ' + className).append(
+                $$.div({className: 'container container-fluid'},
+                    $$.div({className: 'navbar-header'},
+                        $$.button({
+                                type: 'button',
+                                className: 'navbar-toggle collapsed',
+                                'data-toggle': 'collapse',
+                                'data-target': '#' + collapserId
+                            },
+                            $$.span({className: 'sr-only'}, sr_toggle_text),
+                            toggleContent
+                        ),
+                        $$.a({
+                                className: 'navbar-brand',
+                                href: brandUrl
+                            }, brandContent
+                        )
                     ),
-                    $$.a({
-                            className: 'navbar-brand',
-                            href: brandUrl
-                        }, brandContent
-                    )
-                ),
-                collapser
-            )
-        );
+                    collapser
+                )
+            );
 
-        return el;
-    });
-});
+            return el;
+        });
+    }
+);

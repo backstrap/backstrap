@@ -6,7 +6,7 @@
  * If the server provides ETag headers for the pages,
  * then it caches the data and uses jQuery's ifModified
  * support to allow the server to avoid re-sending the data.
- * 
+ *
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */
@@ -15,7 +15,7 @@ define(
     function (_, $$)
     {
         var etagCache = {};
-    
+
         var checkCache = function (data, status, options) {
             var etag = options.xhr.getResponseHeader('ETag');
 
@@ -34,7 +34,7 @@ define(
                 }
             }
         };
-    
+
         return ($$.PagedCollection = $$.Collection.extend({
             options: {
                 // Name of the property in params that acts as the "page start" value.
@@ -52,7 +52,7 @@ define(
                 // Force ifModified=true.
                 refreshOptions: {ifModified: true}
             },
-    
+
             initialize: function (model, options) {
                 $$.Collection.prototype.initialize.apply(this, arguments);
 
@@ -72,15 +72,15 @@ define(
                     }
                 };
             },
-    
+
             firstPage: function (size) {
                 this.setPage(this.base1 ? 1 : 0, size);
             },
-    
+
             nextPage: function (size) {
                 this.setPage(this.params[this.options.end] + 1, size);
             },
-    
+
             previousPage: function (size) {
                 var start;
                 var p = this.params;
@@ -91,7 +91,7 @@ define(
 
                 this.setPage(start, size);
             },
-    
+
             setPage: function (start, size) {
                 var p = this.params;
 

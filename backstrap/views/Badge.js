@@ -2,7 +2,7 @@
  * A model-bound Bootstrap badge object.
  *
  * Use model and content options to set the content of the badge.
- * 
+ *
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
  */

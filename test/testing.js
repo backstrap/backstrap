@@ -4,7 +4,7 @@ function(QUnit, _, $, $$, moment)
 {
     return {
         appendTest: function appendTest(obj, selector, name) {
-            QUnit.test(name, function(assert) {
+            QUnit.test(name, function (assert) {
                 var fixture = $('#qunit-fixture');
 
                 fixture.append(obj);

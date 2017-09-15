@@ -1,7 +1,7 @@
-define(['qunitjs', 'backstrap', 'test/testing'], function(QUnit, $$, testing)
+define(['qunitjs', 'backstrap', 'test/testing'], function (QUnit, $$, testing)
 {
     QUnit.module('components');
-    
+
     testing.appendTest($$.closeIcon(), {
         'button.close': 1,
         'button.close span': 2,
@@ -37,7 +37,7 @@ define(['qunitjs', 'backstrap', 'test/testing'], function(QUnit, $$, testing)
         },
         'grid, thumbnail'
     );
-    
+
     testing.appendTest(
         $$.navbar(
             { brandContent: 'Footer', position: 'fixed-bottom' },

@@ -1,7 +1,7 @@
-require(['qunitjs', 'jquery', 'backstrap', 'test/testing'], function(QUnit, $, $$, testing)
+require(['qunitjs', 'jquery', 'backstrap', 'test/testing'], function (QUnit, $, $$, testing)
 {
     QUnit.module('tags');
-    
+
     QUnit.test('css', function (assert) {
         var selector = 'head link[rel=stylesheet]';
         var count = $(selector).length;
@@ -9,7 +9,7 @@ require(['qunitjs', 'jquery', 'backstrap', 'test/testing'], function(QUnit, $, $
         assert.ok(count > 0);
         assert.equal(count + 1, $(selector).length);
     });
-    
+
     QUnit.test('HTML tags', function (assert) {
         var fixture = $('#qunit-fixture');
         ['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio',
@@ -37,7 +37,7 @@ require(['qunitjs', 'jquery', 'backstrap', 'test/testing'], function(QUnit, $, $
     });
 
     // TODO: menuItem, nav, iframe
-    
+
     QUnit.test('Bootstrap tags', function (assert) {
         var fixture = $('#qunit-fixture');
         var components = {
@@ -95,14 +95,14 @@ require(['qunitjs', 'jquery', 'backstrap', 'test/testing'], function(QUnit, $, $
     testing.appendTest($$.panel('test'), 'div.panel div.panel-body', 'panel');
     testing.appendTest($$.pageHeader('test'), 'div', 'pageHeader');
     testing.appendTest($$.h1('test'), 'h1', 'h1');
-    
+
     testing.appendTest($$.span('content'), 'span', 'span');
     testing.appendTest($$.span({context: 'info'}, 'content'), 'span.text-info', 'span with context');
     testing.appendTest($$.span({context: 'info', bgcontext: 'danger'}, 'content'), 'span.text-info.bg-danger', 'span with background context');
     testing.appendTest($$.alert({context: 'warning'}), 'div.alert.alert-warning', 'alert with context');
-    
+
     testing.appendTest($$.glyph('ok'), 'span.glyphicon-ok', 'glyph');
-    
+
     testing.appendTest($$.jumbotron({bgcontext: 'primary'}, $$.p('content')), 'div.jumbotron.bg-primary p', 'jumbotron with background context');
     testing.appendTest($$.well('content'), 'div.well', 'well');
     testing.appendTest($$.button('Button'), 'button', 'button');
@@ -179,7 +179,7 @@ require(['qunitjs', 'jquery', 'backstrap', 'test/testing'], function(QUnit, $, $
         },
         'link-list with links'
     );
-    
+
     testing.appendTest(
         $$.pagination(
             $$.li($$.a({href: '#1'}, '<<')),

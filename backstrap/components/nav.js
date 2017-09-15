@@ -9,50 +9,53 @@
  *
  * @author Kevin Perry perry@princeton.edu
  */
-define("backstrap/components/nav", ["../core", "jquery"], function ($$, $)
-{
-    return($$.nav = $$.components.nav = function (attrs) {
-        var el;
-        var type = '';
-        var constructor = $$.ul;
+define(
+    'backstrap/components/nav',
+    ['../core', 'jquery'],
+    function ($$, $) {
+        return($$.nav = $$.components.nav = function (attrs) {
+            var el;
+            var type = '';
+            var constructor = $$.ul;
 
-        if (typeof attrs === 'object' && attrs.nodeType !== 1) {
-            if ('type' in attrs) {
-                if (attrs.type === 'tabs' && !('role' in attrs)) {
-                    attrs.role = 'tablist';
+            if (typeof attrs === 'object' && attrs.nodeType !== 1) {
+                if ('type' in attrs) {
+                    if (attrs.type === 'tabs' && !('role' in attrs)) {
+                        attrs.role = 'tablist';
+                    }
+                    if (attrs.type === 'tabs' || attrs.type === 'pills') {
+                        type = ' nav-' + attrs.type;
+                    }
+                    delete(attrs.type);
                 }
-                if (attrs.type === 'tabs' || attrs.type === 'pills') {
-                    type = ' nav-' + attrs.type;
+                if ('justified' in attrs) {
+                    if (attrs.justified) {
+                        type += ' nav-justified';
+                    }
+                    delete(attrs.justified);
                 }
-                delete(attrs.type);
+                if ('stacked' in attrs) {
+                    if (attrs.stacked) {
+                        type += ' nav-stacked';
+                    }
+                    delete(attrs.stacked);
+                }
+                if ('ul' in attrs) {
+                    if (attrs.ul === false) {
+                        constructor = $$.div;
+                    }
+                    delete(attrs.ul);
+                }
             }
-            if ('justified' in attrs) {
-                if (attrs.justified) {
-                    type += ' nav-justified';
-                }
-                delete(attrs.justified);
-            }
-            if ('stacked' in attrs) {
-                if (attrs.stacked) {
-                    type += ' nav-stacked';
-                }
-                delete(attrs.stacked);
-            }
-            if ('ul' in attrs) {
-                if (attrs.ul === false) {
-                    constructor = $$.div;
-                }
-                delete(attrs.ul);
-            }
-        }
 
-        el = constructor.apply($$, arguments);
-        $(el).addClass('nav' + type);
-        el.clearActive = function () {
-            $('> *', this).removeClass('active');
-            return this;
-        };
+            el = constructor.apply($$, arguments);
+            $(el).addClass('nav' + type);
+            el.clearActive = function () {
+                $('> *', this).removeClass('active');
+                return this;
+            };
 
-        return el;
-    });
-});
+            return el;
+        });
+    }
+);
