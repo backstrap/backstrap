@@ -10,6 +10,7 @@ define(
         './views/Checkbox',
         './views/Container',
         './views/Context',
+        './views/Div',
         './views/DropdownGroup',
         './views/Dropdown',
         './views/FileInput',

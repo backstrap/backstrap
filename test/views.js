@@ -1,19 +1,21 @@
-define(['qunitjs', 'underscore', 'jquery', 'backstrap', 'test/testing'], function(QUnit, _, $, $$, testing)
+define(['qunitjs', 'underscore', 'jquery', 'backstrap', 'test/testing'], function (QUnit, _, $, $$, testing)
 {
     QUnit.module('views');
+
+    testing.testObj(new $$.Div({content: 'content'}), 'div', 'Div');
 
     testing.testObj(new $$.Span({content: 'content'}), 'span', 'Span');
 
     testing.testObj(new $$.Badge({content: '1'}), 'span.badge', 'Badge');
 
     testing.testObj(new $$.Label({content: 'content'}), 'label.label', 'Label');
-    
+
     testing.testObj(new $$.Panel({content: 'content'}), 'div.panel', 'Panel');
 
     testing.testObj(new $$.Link({content: 'content'}), 'a.link span', 'Link');
-    
+
     testing.testObj(new $$.Container({content: 'content'}), 'div.container', 'Container');
-    
+
     testing.testObj(new $$.Glyph({content: 'ok'}), 'span.glyphicon-ok', 'Glyph');
 
     testing.testObj(
@@ -23,7 +25,7 @@ define(['qunitjs', 'underscore', 'jquery', 'backstrap', 'test/testing'], functio
     );
 
     testing.testObj(new $$.TextArea({content: 'content'}), 'div.text_area div.textarea_wrapper textarea', 'TextArea');
-    
+
     testing.testObj(
         new $$.Checkbox({
             model: new $$.Model({ value: true, label: 'label' }),
@@ -75,7 +77,7 @@ define(['qunitjs', 'underscore', 'jquery', 'backstrap', 'test/testing'], functio
         },
         'RadioGroup'
     );
-    
+
     testing.testObj(new $$.BasicNavbar({brand: 'brand', model: new $$.Collection([
         { name: 'first', href: '#first', label: 'First' },
         { name: 'second', href: '#second', label: 'Second' },
@@ -91,17 +93,17 @@ define(['qunitjs', 'underscore', 'jquery', 'backstrap', 'test/testing'], functio
     },
     'BasicNavbar');
 
-    QUnit.test('simple properties', function(assert) {
+    QUnit.test('simple properties', function (assert) {
         var fixture = $('#qunit-fixture');
         var changed = {value: 'New value', name: 'New name'};
         var orig = {value: 'First value', name: 'First name'};
         var model = new $$.Model(_(orig).clone());
         var valField = new $$.TextField({
             model: model,
-		    content: 'value'
+            content: 'value'
         }).render();
 
-	    fixture.append(valField.el);
+        fixture.append(valField.el);
 
         assert.equal(valField.$('input').val(), orig.value, 'orig value');
 
@@ -112,17 +114,17 @@ define(['qunitjs', 'underscore', 'jquery', 'backstrap', 'test/testing'], functio
         assert.equal(model.get('value'), 'yet another value', 'field changes model value');
     });
 
-    QUnit.test('simple properties 2', function(assert) {
+    QUnit.test('simple properties 2', function (assert) {
         var fixture = $('#qunit-fixture');
         var changed = {value: 'New value', name: 'New name'};
         var orig = {value: 'First value', name: 'First name'};
         var model = new $$.Model(_(orig).clone());
         var valField = new $$.TextField({
             model: model,
-		    content: 'value'
+            content: 'value'
         }).render();
 
-	    fixture.append(valField.el);
+        fixture.append(valField.el);
         model.set('value', null);
         assert.equal(valField.$('input').val(), '', 'null field value');
 
@@ -131,21 +133,21 @@ define(['qunitjs', 'underscore', 'jquery', 'backstrap', 'test/testing'], functio
         assert.equal(model.get('value'), '', 'empty model value');
     });
 
-    QUnit.test('structured properties', function(assert) {
+    QUnit.test('structured properties', function (assert) {
         var fixture = $('#qunit-fixture');
         var changed = {value: 'New value', name: 'New name'};
         var orig = {value: 'First value', name: 'First name'};
         var model = new $$.Model({id: 1, sub: _(orig).clone()});
         var valField = new $$.TextField({
             model: model,
-		    content: 'sub.value'
-	    }).render();
+            content: 'sub.value'
+        }).render();
         var nameField = new $$.TextField({
             model: model,
-		    content: 'sub.name'
-	    }).render();
+            content: 'sub.name'
+        }).render();
 
-	    fixture.append(valField.el, nameField.el);
+        fixture.append(valField.el, nameField.el);
 
         assert.equal(valField.$('input').val(), orig.value, 'orig value');
         assert.equal(nameField.$('input').val(), orig.name, 'orig name');

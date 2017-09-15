@@ -11,8 +11,8 @@ define(
         return ($$.Div = $$.views.Div = $$.View.extend({
             options: {
                 size: 'default',
-                context: 'default'
-                formatter: _.identity,
+                context: 'default',
+                formatter: _.identity
             },
 
             initialize: function (options) {

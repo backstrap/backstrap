@@ -3,6 +3,7 @@
  *
  * The nav is a $$.ul(), so you should populate it with $$.li()'s.
  * You should provide a type, either "type: 'tabs'" or "type: 'pills'".
+ * If you specify "ul: false", it will use $$.div() instead of $$.ul().
  * You can also specify attributes "justified: true" for justified tabs or pills,
  * and "stacked: true" for stacked pills.
  *
@@ -13,6 +14,7 @@ define("backstrap/components/nav", ["../core", "jquery"], function ($$, $)
     return($$.nav = $$.components.nav = function (attrs) {
         var el;
         var type = '';
+        var constructor = $$.ul;
 
         if (typeof attrs === 'object' && attrs.nodeType !== 1) {
             if ('type' in attrs) {
@@ -36,9 +38,15 @@ define("backstrap/components/nav", ["../core", "jquery"], function ($$, $)
                 }
                 delete(attrs.stacked);
             }
+            if ('ul' in attrs) {
+                if (attrs.ul === false) {
+                    constructor = $$.div;
+                }
+                delete(attrs.ul);
+            }
         }
 
-        el = $$.ul.apply($$, arguments);
+        el = constructor.apply($$, arguments);
         $(el).addClass('nav' + type);
         el.clearActive = function () {
             $('> *', this).removeClass('active');

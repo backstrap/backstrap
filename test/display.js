@@ -5,16 +5,16 @@ require(
 ],
 function($, $$, _, moment) {
 
-	var n = 1;
-	
+    var n = 1;
+
     function test(obj, label) {
-	    $('body').append($$.div({style: 'min-height: 3em; padding-top: 1.5em;'},
-	    		$$.label({context: 'primary'}, '' + (n++) + '. ' + label))
-	    	).append($$.container({style: 'padding: .5em;'}, obj));
+        $('body').append($$.div({style: 'min-height: 3em; padding-top: 1.5em;'},
+                $$.label({context: 'primary'}, '' + (n++) + '. ' + label))
+            ).append($$.container({style: 'padding: .5em;'}, obj));
     }
-    
+
     function testObj(obj, label) {
-	    test(obj.render().el, label);
+        test(obj.render().el, label);
     }
 
     // implicit test of $$.css
@@ -23,7 +23,7 @@ function($, $$, _, moment) {
     // tag factories
 
     test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');
-    
+
     // Test the various types of allowed children.
     var div1 = $$.div();
     $(div1).append('This div was created empty.');
@@ -34,7 +34,7 @@ function($, $$, _, moment) {
         $($$.div('This div was appended as a jQuery obj.')),
         [$$.span('An array '), 'of ', 'text ', document.createTextNode('strings.')]
     ), 'divs');
-    
+
     var kptest1;
     testObj(new $$.List({
         model: (kptest1 = new $$.Collection([
@@ -48,9 +48,9 @@ function($, $$, _, moment) {
             render: function () { this.$el.append($$.div(this.model.get('value'))); return this; }
         })
     }).render(), 'List');
-    
+
     setInterval(function () { kptest1.comparator = (kptest1.comparator === 'index') ? 'value' : 'index'; kptest1.sort(); }, 2000);
-    
+
     test($$.navbar(
         { brandContent: 'KP' },
         $$.navbarGroup(
@@ -63,7 +63,7 @@ function($, $$, _, moment) {
                 $$.menuToggle('Toggleable', '#huh')
             )
     ), 'navbar');
-    
+
     test($$.nav({type: 'tabs'},
         $$.li({className: 'active'}, $$.a({href: '#a'}, 'Tab 1')),
         $$.li($$.a({href: '#b'}, 'Tab 2')),
@@ -83,146 +83,146 @@ function($, $$, _, moment) {
         ],
         sortable: true
     }), 'Table');
-	
-	test($$.container(
-		$$.jumbotron({bgcontext: 'primary'}, $$.p('Some important content in a jumbotron'))
-	), 'jumbotron');
 
-	test($$.glyph('fullscreen'), 'glyph');
-	
-	test($$.alert({context: 'warning'}, "I'm warning you"), 'alert');
+    test($$.container(
+        $$.jumbotron({bgcontext: 'primary'}, $$.p('Some important content in a jumbotron'))
+    ), 'jumbotron');
 
-	test($$.span('Hello World'), 'span');
-	
-	test($$.well('I am in a well'), 'well');
+    test($$.glyph('fullscreen'), 'glyph');
 
-	test($$.span({context: 'info'}, 'Info Hello World'), 'context');
-	
-	test($$.span({context: 'info', bgcontext: 'danger'}, 'Info Hello World - danger background'), 'bgcontext');
+    test($$.alert({context: 'warning'}, "I'm warning you"), 'alert');
 
-	test($$.button('Button'), 'button');
-	
-	test($$.span($$.button({size: 'small'}, 'small'), $$.button({size: 'large'}, 'big')), 'size');
-	
-	test($$.plain.label('HTML label'), 'plain html label');
-	
-	test($$.div(
-			$$.span({context: 'danger'},
-				'Uh-oh! A combo! ',
-				$$.badge({}, '42'),
-				' ',
-				$$.glyph('thumbs-down')
-			),
-			' ',
-			$$.button('OK')
-	), 'context + badge + glyph + button');
+    test($$.span('Hello World'), 'span');
 
-	test($$.breadcrumb(
-			$$.li($$.a({href: '#'}, 'Root')),
-			$$.li($$.a({href: '#folder'}, 'Folder')),
-			$$.li($$.a({href: '#sub'}, 'Sub Folder')),
-			$$.li('Current Item')
-	), 'breadcrumb');
+    test($$.well('I am in a well'), 'well');
 
-	test($$.buttonGroup(
-			$$.button('Button1'),
-			$$.button('Button2'),
-			$$.button('Button3')
-	), 'button group');
+    test($$.span({context: 'info'}, 'Info Hello World'), 'context');
 
-	test($$.buttonToolbar(
-		$$.buttonGroup(
-			$$.button('Button1'),
-			$$.button('Button2')
-		),
-		$$.buttonGroup(
-			$$.button('Button3'),
-			$$.button('Button4')
-		)
-	), 'button toolbar');
+    test($$.span({context: 'info', bgcontext: 'danger'}, 'Info Hello World - danger background'), 'bgcontext');
 
-	test($$.list(
-			$$.listItem('aaaaa'),
-			$$.listItem('bbbbbbbbb'),
-			$$.listItem('ccc ddd eee'),
-			$$.listItem('F')
-	), 'list, list item');
+    test($$.button('Button'), 'button');
 
-	test($$.linkList(
-			$$.linkListItem({href: '#a'}, 'aaaaa'),
-			$$.linkListItem({href: '#b'}, 'bbbbbbbbb'),
-			$$.linkListItem({href: '#c'}, 'ccc ddd eee'),
-			$$.linkListItem({href: '#f'}, 'F')
-	), 'link list, link list item');
+    test($$.span($$.button({size: 'small'}, 'small'), $$.button({size: 'large'}, 'big')), 'size');
 
-	test($$.pagination(
-			$$.li($$.a({href: '#1'}, '<<')),
-			$$.li($$.a({href: '#1'}, '1')),
-			$$.li({class: 'active'}, $$.a({href: '#2'}, '2')),
-			$$.li($$.a({href: '#3'}, '3')),
-			$$.li($$.a({href: '#3'}, '>>'))
-	), 'pagination');
+    test($$.plain.label('HTML label'), 'plain html label');
 
-	test($$.grid({layout: [[
-	    {
-	        xs: 3,
-			content: $$.thumbnail(
-					$$.a($$.img({src: "https://www.princeton.edu/main/images/news/2014/2/alumniday_IndexPage.jpg",
-						style: 'width: 100px;'
-					})),
-					$$.p("This is Carl")
-				)
-	    },
-	    {
-			xs: 3,
-			content: $$.thumbnail(
-						$$.a($$.img({src: "https://www.princeton.edu/main/images/news/2014/2/alumniday_IndexPage.jpg",
-							style: 'width: 100px;'
-						})),
-						$$.p("This is also Carl")
-					)
-	    }
-	    ]]
-	}), 'grid, thumbnail');
+    test($$.div(
+            $$.span({context: 'danger'},
+                'Uh-oh! A combo! ',
+                $$.badge({}, '42'),
+                ' ',
+                $$.glyph('thumbs-down')
+            ),
+            ' ',
+            $$.button('OK')
+    ), 'context + badge + glyph + button');
 
-	test($$.panel(
-		{
-			heading: $$.h1({className: 'panel-title'}, 'A Panel'),
-			footer: $$.span('some footer content')
-		},
-		$$.p('Some panel body content'),
-		$$.p('Another panel body paragraph')
-	), 'panel');
+    test($$.breadcrumb(
+            $$.li($$.a({href: '#'}, 'Root')),
+            $$.li($$.a({href: '#folder'}, 'Folder')),
+            $$.li($$.a({href: '#sub'}, 'Sub Folder')),
+            $$.li('Current Item')
+    ), 'breadcrumb');
 
-	test($$.form(
-		$$.formGroup(
-			$$.plain.label('Name:'),
-			$$.input({type: 'text', name: 'name'})
-		),
-		$$.formGroup(
-			$$.plain.label('Password:'),
-			$$.inputGroup(
-				$$.inputGroupAddon({context: 'danger'}, '*'),
-				$$.input({type: 'text', name: 'password'})
-			)
-		)
-	), 'form, formGroup, input, inputGroup');
+    test($$.buttonGroup(
+            $$.button('Button1'),
+            $$.button('Button2'),
+            $$.button('Button3')
+    ), 'button group');
 
-	test($$.media(
-		{
-			media: $$.img({src: "https://www.princeton.edu/main/images/news/2014/2/alumniday_IndexPage.jpg",
-				className: 'media-object',
-				style: 'width: 100px;'
-			}),
-			pull: 'right'
-		},
-		$$.h4({className: 'media-heading'}, 'a heading'),
-		$$.p('Some content')
-	), 'media');
-	
-	// Object constructors
+    test($$.buttonToolbar(
+        $$.buttonGroup(
+            $$.button('Button1'),
+            $$.button('Button2')
+        ),
+        $$.buttonGroup(
+            $$.button('Button3'),
+            $$.button('Button4')
+        )
+    ), 'button toolbar');
 
-	testObj(new $$.Badge({content: '1'}), 'Badge');
+    test($$.list(
+            $$.listItem('aaaaa'),
+            $$.listItem('bbbbbbbbb'),
+            $$.listItem('ccc ddd eee'),
+            $$.listItem('F')
+    ), 'list, list item');
+
+    test($$.linkList(
+            $$.linkListItem({href: '#a'}, 'aaaaa'),
+            $$.linkListItem({href: '#b'}, 'bbbbbbbbb'),
+            $$.linkListItem({href: '#c'}, 'ccc ddd eee'),
+            $$.linkListItem({href: '#f'}, 'F')
+    ), 'link list, link list item');
+
+    test($$.pagination(
+            $$.li($$.a({href: '#1'}, '<<')),
+            $$.li($$.a({href: '#1'}, '1')),
+            $$.li({class: 'active'}, $$.a({href: '#2'}, '2')),
+            $$.li($$.a({href: '#3'}, '3')),
+            $$.li($$.a({href: '#3'}, '>>'))
+    ), 'pagination');
+
+    test($$.grid({layout: [[
+        {
+            xs: 3,
+            content: $$.thumbnail(
+                    $$.a($$.img({src: "https://www.princeton.edu/main/images/news/2014/2/alumniday_IndexPage.jpg",
+                        style: 'width: 100px;'
+                    })),
+                    $$.p("This is Carl")
+                )
+        },
+        {
+            xs: 3,
+            content: $$.thumbnail(
+                        $$.a($$.img({src: "https://www.princeton.edu/main/images/news/2014/2/alumniday_IndexPage.jpg",
+                            style: 'width: 100px;'
+                        })),
+                        $$.p("This is also Carl")
+                    )
+        }
+        ]]
+    }), 'grid, thumbnail');
+
+    test($$.panel(
+        {
+            heading: $$.h1({className: 'panel-title'}, 'A Panel'),
+            footer: $$.span('some footer content')
+        },
+        $$.p('Some panel body content'),
+        $$.p('Another panel body paragraph')
+    ), 'panel');
+
+    test($$.form(
+        $$.formGroup(
+            $$.plain.label('Name:'),
+            $$.input({type: 'text', name: 'name'})
+        ),
+        $$.formGroup(
+            $$.plain.label('Password:'),
+            $$.inputGroup(
+                $$.inputGroupAddon({context: 'danger'}, '*'),
+                $$.input({type: 'text', name: 'password'})
+            )
+        )
+    ), 'form, formGroup, input, inputGroup');
+
+    test($$.media(
+        {
+            media: $$.img({src: "https://www.princeton.edu/main/images/news/2014/2/alumniday_IndexPage.jpg",
+                className: 'media-object',
+                style: 'width: 100px;'
+            }),
+            pull: 'right'
+        },
+        $$.h4({className: 'media-heading'}, 'a heading'),
+        $$.p('Some content')
+    ), 'media');
+
+    // Object constructors
+
+    testObj(new $$.Badge({content: '1'}), 'Badge');
 
     testObj(new $$.Glyph({content: 'retweet'}), 'Glyph');
 
@@ -231,27 +231,39 @@ function($, $$, _, moment) {
     testObj(new $$.OnOffGlyph({model: {value: true}, content: 'value', onContent: 'remove', onContext: 'info'}), 'OnOffGlyph');
 
     testObj(new $$.Button({size: 'lg', context: 'info', content: 'Hello'}), 'Button');
-    
+
     testObj(new $$.Span({content: 'Hello'}), 'Span');
 
     var subviewtest = new $$.View();
     subviewtest.appendView(new $$.Span({content: 'Hello Kevin'}));
     testObj(subviewtest, 'SubViews');
-	
-	testObj(new $$.BasicNavbar({brand: 'Wow!', model: new $$.Collection([
-		{ name: 'first', href: '#first', label: 'First' },
-		{ name: 'second', href: '#second', label: 'Second' },
-		{ name: 'third', href: '#third', label: 'Third' }
-	])}), 'BasicNavbar');
-	
-	var obj = new $$.Context({content: 'danger'}).render();
-	obj.$el.append(new $$.Glyph({content: 'star'}).render().el);
-	testObj(obj, 'Context + Glyph');
-	
-	obj = new $$.Context({content: 'danger', background: true}).render();
-	obj.$el.append(new $$.Glyph({content: 'star'}).render().el);
-	obj.$el.append(new $$.Badge({content: '33'}).render().el);
-	testObj(obj, 'Context(bg) + Glyph + Badge');
+
+    testObj(new $$.Span({
+        model: new $$.Model({id: 1, value: 'Sample span content'}),
+        content: 'value',
+        formatter: function (s) { return (s + ', formatted!'); }
+    }), 'Span');
+
+    testObj(new $$.BasicNavbar({brand: 'Wow!', model: new $$.Collection([
+        { name: 'first', href: '#first', label: 'First' },
+        { name: 'second', href: '#second', label: 'Second' },
+        { name: 'third', href: '#third', label: 'Third' }
+    ])}), 'BasicNavbar');
+
+    var obj = new $$.Context({content: 'danger'}).render();
+    obj.$el.append(new $$.Glyph({content: 'star'}).render().el);
+    testObj(obj, 'Context + Glyph');
+
+    obj = new $$.Context({content: 'danger', background: true}).render();
+    obj.$el.append(new $$.Glyph({content: 'star'}).render().el);
+    obj.$el.append(new $$.Badge({content: '33'}).render().el);
+    testObj(obj, 'Context(bg) + Glyph + Badge');
+
+    testObj(new $$.Div({
+        model: new $$.Model({id: 1, value: 'Sample div content'}),
+        content: 'value',
+        formatter: function (s) { return s.replace('div', '<div>'); }
+    }), 'Div');
 
     testObj(new $$.Dropdown({align: 'left', context: 'primary',
         type: 'button',
@@ -266,7 +278,7 @@ function($, $$, _, moment) {
     ])}), 'Dropdown');
 
     var dropdown;
-    
+
     testObj(dropdown = new $$.Dropdown({
         type: 'split-button',
         model: new $$.Collection([
@@ -287,92 +299,92 @@ function($, $$, _, moment) {
         })
     }), 'Dropdown2');
 
-	testObj(new $$.NavPills({context: 'primary', model: new $$.Collection([
-		{ name: 'first', href: '#first', label: 'First' },
-		{ name: 'second', href: '#second', label: 'Second' },
-		{ name: 'third', href: '#third', label: 'Third' }
-	])}), 'NavPills');
-	
-	testObj(new $$.NavTabs({model: new $$.Collection([
-		{ name: 'first', href: '#first', label: 'First' },
-		{ name: 'second', href: '#second', label: 'Second' },
-		{ name: 'third', href: '#third', label: 'Third' }
-	])}), 'NavTabs');
+    testObj(new $$.NavPills({context: 'primary', model: new $$.Collection([
+        { name: 'first', href: '#first', label: 'First' },
+        { name: 'second', href: '#second', label: 'Second' },
+        { name: 'third', href: '#third', label: 'Third' }
+    ])}), 'NavPills');
 
-	testObj(new $$.Table({striped: true, bordered: true, hover: true, condensed: true,
-		columns: [
-			{ title: 'Name', content: 'a' },
-			{ title: 'Value', content: 'b' },
-			{ title: 'Detail', content: 'c' }
-		],
-		model: new $$.Collection([
-			{ a: 'abcde', b: 'bcdef', c: 'cdefg' },
-			{ a: 'ab123', b: 'b123', c: '123' },
-			{ a: 'ab234', b: 'b3456', c: '34567' },
-			{ a: 'abcde', b: 'bcdef', c: 'cdefg' },
-			{ a: 'uerhiu', b: 'u78dh3', c: 'starwgd' }
-		])
-	}), 'Table');
-	
-	test($$.form(
-	  new $$.Checkbox({
-		model: new $$.Model({
-			label: 'Use Checkbox?',
-			value: true
-		}),
-		content: 'value',
-		labelContent: 'label'
-	}).render()), 'Checkbox');
+    testObj(new $$.NavTabs({model: new $$.Collection([
+        { name: 'first', href: '#first', label: 'First' },
+        { name: 'second', href: '#second', label: 'Second' },
+        { name: 'third', href: '#third', label: 'Third' }
+    ])}), 'NavTabs');
 
-	testObj(new $$.Calendar({
-		model: new $$.Model({
-			name: 'Christmas', date: new Date(2014, 12, 25)
-		}),
-		content: 'date'
-	}), 'Calendar');
-	
-	testObj(new $$.DatePicker({
-		model: new $$.Model({
-			name: 'Christmas', date: new Date(2014, 12, 31)
-		}),
-		content: 'date'
-	}), 'DatePicker');
-	
-	testObj(new $$.TimePicker({
-		model: new $$.Model({
-			name: 'Christmas', date: new Date(2014, 12, 31, 6, 17)
-		}),
-		content: 'date',
-		interval: 15
-	}), 'TimePicker');
-	
-	testObj(new $$.Link({
-		model: new $$.Model({
-			name: 'Someplace'
-		}),
-		content: 'name',
-		onClick: function () { alert('clicked'); }
-	}), 'Link');
-	
-	testObj(new $$.TextArea({
-		model: new $$.Model({
-			name: 'First M. Last', description: 'lorem ipsum quod erat and all that jazz.'
-		}),
-		content: 'description'
-	}), 'TextArea');
+    testObj(new $$.Table({striped: true, bordered: true, hover: true, condensed: true,
+        columns: [
+            { title: 'Name', content: 'a' },
+            { title: 'Value', content: 'b' },
+            { title: 'Detail', content: 'c' }
+        ],
+        model: new $$.Collection([
+            { a: 'abcde', b: 'bcdef', c: 'cdefg' },
+            { a: 'ab123', b: 'b123', c: '123' },
+            { a: 'ab234', b: 'b3456', c: '34567' },
+            { a: 'abcde', b: 'bcdef', c: 'cdefg' },
+            { a: 'uerhiu', b: 'u78dh3', c: 'starwgd' }
+        ])
+    }), 'Table');
 
-	testObj(new $$.TextField({
-		model: new $$.Model({
-			name: 'First M. Last', description: 'lorem ipsum quod erat and all that jazz.', label: 'Your Name'
-		}),
-		content: 'name',
-		formLabelContent: 'label'
-	}), 'TextField');
+    test($$.form(
+      new $$.Checkbox({
+        model: new $$.Model({
+            label: 'Use Checkbox?',
+            value: true
+        }),
+        content: 'value',
+        labelContent: 'label'
+    }).render()), 'Checkbox');
 
-	testObj(new $$.Label({
-		model: new $$.Model({ descrip: 'lorem ipsum' }),
-		labelContent: 'descrip'
-	}), 'Label');
+    testObj(new $$.Calendar({
+        model: new $$.Model({
+            name: 'Christmas', date: new Date(2014, 12, 25)
+        }),
+        content: 'date'
+    }), 'Calendar');
+
+    testObj(new $$.DatePicker({
+        model: new $$.Model({
+            name: 'Christmas', date: new Date(2014, 12, 31)
+        }),
+        content: 'date'
+    }), 'DatePicker');
+
+    testObj(new $$.TimePicker({
+        model: new $$.Model({
+            name: 'Christmas', date: new Date(2014, 12, 31, 6, 17)
+        }),
+        content: 'date',
+        interval: 15
+    }), 'TimePicker');
+
+    testObj(new $$.Link({
+        model: new $$.Model({
+            name: 'Someplace'
+        }),
+        content: 'name',
+        onClick: function () { alert('clicked'); }
+    }), 'Link');
+
+    testObj(new $$.TextArea({
+        model: new $$.Model({
+            name: 'First M. Last', description: 'lorem ipsum quod erat and all that jazz.'
+        }),
+        content: 'description'
+    }), 'TextArea');
+
+    testObj(new $$.TextField({
+        model: new $$.Model({
+            name: 'First M. Last', description: 'lorem ipsum quod erat and all that jazz.', label: 'Your Name'
+        }),
+        content: 'name',
+        formLabelContent: 'label'
+    }), 'TextField');
+
+    testObj(new $$.Label({
+        model: new $$.Model({ descrip: 'lorem ipsum' }),
+        labelContent: 'descrip'
+    }), 'Label');
 
     testObj(new $$.Menu({
         model: new $$.Model({ value: 'e' }),
@@ -409,7 +421,7 @@ function($, $$, _, moment) {
         altLabelContent: 'name',
         altValueContent: 'value'
     }), 'Select');
-    
+
     testObj(new $$.RadioGroup({
         model: new $$.Model({ value: 'c' }),
         content: 'value',
@@ -515,7 +527,7 @@ function($, $$, _, moment) {
             )
         )
     )), 'Dropdown Group On a fixed-footer Navbar');
-    
+
     test($$.jumbotron('Hello!'), 'JT');
 
     var subitemModel = new $$.Model({id: 1, sub: {value: 'First value : 00:00:00', name: 'A Name'}});
@@ -524,16 +536,16 @@ function($, $$, _, moment) {
         var newSub = {value: oldSub.value.substr(0, oldSub.value.length-11) + ' : ' + moment().format('HH:mm:ss')};
         subitemModel.set('sub', _.extend({}, oldSub, newSub));
     }, 10000);
-	test(new $$.div(
+    test(new $$.div(
         new $$.TextField({
             model: subitemModel,
-		    content: 'sub.value'
-	    }).render(),
-	    new $$.TextField({
+            content: 'sub.value'
+        }).render(),
+        new $$.TextField({
             model: subitemModel,
-		    content: 'sub.name'
+            content: 'sub.name'
         }).render()
-	), 'Dotted Property');
+    ), 'Dotted Property');
 
     test($$.div, ' === END === ');
 });
