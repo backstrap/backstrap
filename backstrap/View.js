@@ -9,6 +9,8 @@ define(
     ['./core', 'jquery', 'underscore', 'backbone'],
     function ($$, $, _, Backbone)
     {
+        var dummyContext = {options: null};
+
         return ($$.View = Backbone.View.extend({
             initialize: function (options) {
                 this.options = this.options ? _({}).extend(this.options, options) : options;
@@ -22,15 +24,18 @@ define(
                 model = _(model).exists() ? model : this.model;
                 content = _(content).exists() ? content : defaultOption;
                 var hasModelProperty = _(model).exists() && _(content).exists();
-                return _(content).isFunction()
-                    ? content(model)
-                    : hasModelProperty && _(model[content]).isFunction()
-                        ? model[content]()
-                        : hasModelProperty && _(_(model).resolveProperty(content)).isFunction()
-                            ? _(model).resolveProperty(content)(model)
-                            : hasModelProperty
-                                ? _(model).resolveProperty(content)
-                                : content;
+                return _(content).isArray() && this !== dummyContext
+                    // Allow only shallow application to arrays.
+                    ? _(content).map(_.bind(this.resolveContent, dummyContext, model))
+                    : _(content).isFunction()
+                        ? content(model)
+                        : hasModelProperty && _(model[content]).isFunction()
+                            ? model[content]()
+                            : hasModelProperty && _(_(model).resolveProperty(content)).isFunction()
+                                ? _(model).resolveProperty(content)(model)
+                                : hasModelProperty
+                                    ? _(model).resolveProperty(content)
+                                    : content;
             },
 
             mixin: function (objects) {

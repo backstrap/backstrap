@@ -45,6 +45,12 @@ define(
                             key = 'change:' + key;
                             this.model.off(key, callback);
                             this.model.on(key, callback);
+                        } else if (_(key).isArray() && _(key).every(function (s) {
+                            return (_.isString(s) && s.match(/^[a-z_.-]+$/));
+                        })) {
+                            key = 'change:' + key.join(' change:');
+                            this.model.off(key, callback);
+                            this.model.on(key, callback);
                         } else if (_(key).exists()) {
                             this.model.off('change', callback);
                             this.model.on('change', callback);
@@ -62,6 +68,11 @@ define(
                                 key = key.substr(0, key.indexOf('.'));
                             }
                             key = 'change:' + key;
+                            this.model.off(key, callback);
+                        } else if (_(key).isArray() && _(key).every(function (s) {
+                            return (_.isString(s) && s.match(/^[a-z_.-]+$/));
+                        })) {
+                            key = 'change:' + key.join(' change:');
                             this.model.off(key, callback);
                         } else if (_(key).exists()) {
                             this.model.off('change', callback);

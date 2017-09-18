@@ -265,6 +265,18 @@ function($, $$, _, moment) {
         formatter: function (s) { return s.replace('div', '<div>'); }
     }), 'Div');
 
+    testObj(new $$.Div({
+        model: new $$.Model({id: 1, x: 'X', y: 'Y'}),
+        content: ['x','y'],
+        formatter: function (content) { return _(content).map(function (s) { return $$.div(s); }); }
+    }), 'Div - multi');
+
+    testObj(new $$.Div({
+        model: new $$.Model({id: 1, x: 'X', y: 'Y'}),
+        content: [function (m) { return m.get('x'); }, function (m) { return m.get('y'); }],
+        formatter: function (content) { return _(content).map(function (s) { return $$.div(s); }); }
+    }), 'Div - multifunc');
+
     testObj(new $$.Dropdown({align: 'left', context: 'primary',
         type: 'button',
         labelContent: 'Things',
