@@ -6,18 +6,18 @@
  */
 define(
     'backstrap/views/Span',
-    ['../core', './ContentView', '../mixins/HasGlyph'],
+    ['../core', './Tag', '../mixins/HasGlyph'],
     function ($$) {
-        return ($$.Span = $$.views.Span = $$.ContentView.extend({
+        return ($$.Span = $$.views.Span = $$.Tag.extend({
             tagName: 'span',
 
             initialize: function (options) {
-                $$.ContentView.prototype.initialize.call(this, options);
+                $$.Tag.prototype.initialize.call(this, options);
                 this.mixin([$$.mixins.HasGlyph]);
             },
 
             render: function () {
-                $$.ContentView.prototype.render.call(this);
+                $$.Tag.prototype.render.call(this);
                 this.wrapWithGlyphs(this.$el.children());
 
                 return this;

@@ -6,9 +6,9 @@
  */
 define(
     'backstrap/views/Div',
-    ['../core', './ContentView'],
+    ['../core', './Tag'],
     function ($$) {
-        return ($$.Div = $$.views.Div = $$.ContentView.extend({
+        return ($$.Div = $$.views.Div = $$.Tag.extend({
             tagName: 'div'
         }));
     }

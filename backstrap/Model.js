@@ -32,6 +32,7 @@ define(
 
                 this.refreshOptions = this.options.refreshOptions;
                 this.params = this.options.params;
+                this.attrModels = {};
 
                 if (this.options.localCache) {
                     this.options.localCache.attach(this);
@@ -71,6 +72,22 @@ define(
                 }, this);
 
                 $.extend(true, this.options, options);
+            },
+
+            getModel: function (name) {
+                var model = this.attrModels[name];
+                
+                if (!model) {
+                    model = this.attrModels[name] = new $$.Model(this.get(name));
+                    model.listenTo(this, 'change:' + name, function (myself, value) {
+                        model.set(value);
+                    });
+                    this.listenTo(model, 'change', function (model) {
+                        this.set(_.clone(model.attributes));
+                    });
+                }
+
+                return model;
             }
         }));
     }

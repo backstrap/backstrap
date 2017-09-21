@@ -219,6 +219,23 @@ define(
                                                 }
                                                 break;
 
+                                            case 'cols':
+                                                // cols may be a single number, array of numbers, or object.
+                                                // Values should be between 1 and 12.
+                                                var n = ['xs','sm','md','lg','xl'];
+                                                if (_.isArray(value)) {
+                                                    for (var i = 0; i < value.length && i < n.length; i += 1) {
+                                                        classlist['col-' + n[i] + '-' + value[i]] = true;
+                                                    }
+                                                } else if (_.isObject(value)) {
+                                                    _.each(n, function (key) {
+                                                        classlist['col-' + key + '-' + value[key]] = true;
+                                                    });
+                                                } else {
+                                                    classlist['col-xs-' + value] = true;
+                                                }
+                                                break;
+
                                             case 'bgcontext':
                                                 classlist['bg-' + value] = true;
                                                 break;

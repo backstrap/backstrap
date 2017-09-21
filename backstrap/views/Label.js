@@ -7,44 +7,36 @@
  */
 define(
     'backstrap/views/Label',
-    ['../core', 'underscore', '../View', '../mixins/HasModel'],
+    ['../core', 'underscore', './ContentView'],
     function ($$, _) {
-        return ($$.Label = $$.views.Label = $$.View.extend({
+        return ($$.Label = $$.views.Label = $$.ContentView.extend({
             options: {
                 emptyContent: '',
-                size: 'default',
-                context: 'default',
-                formatter: _.identity
+                bootstrap: 'label',
+                name: null
             },
 
             tagName: 'label',
 
             initialize: function (options) {
-                $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.mixins.HasModel]);
-                _(this).bindAll('render');
-                this.$el.addClass('label label-' + $$._mapSize(this.options.size));
+                $$.ContentView.prototype.initialize.call(this, options);
 
-                if (this.options.size !== this.options.context) {
-                    this.$el.addClass(' label-' + this.options.context);
-                }
+                this.$el.addClass('label');
 
-                if(this.options.name){
+                if (this.options.name) {
                     this.$el.addClass(this.options.name);
                 }
             },
 
             render: function () {
-                var labelText = this.options.formatter(
-                    this.resolveContent(this.model, this.options.labelContent) || this.options.labelContent
-                );
+                var labelText = this.resolveContent(this.model, this.options.labelContent) || this.options.labelContent;
 
                 // if the label is undefined use the emptyContent option
-                if (labelText === undefined){
+                if (labelText === undefined) {
                     labelText = this.options.emptyContent;
                 }
 
-                this._observeModel(this.render);
+                this._observeModel(_.bind(this.render, this));
                 this.$el.empty();
                 this.el.appendChild(document.createTextNode(labelText));
 

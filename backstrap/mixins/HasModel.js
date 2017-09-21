@@ -48,9 +48,15 @@ define(
                         } else if (_(key).isArray() && _(key).every(function (s) {
                             return (_.isString(s) && s.match(/^[a-z_.-]+$/));
                         })) {
-                            key = 'change:' + key.join(' change:');
-                            this.model.off(key, callback);
-                            this.model.on(key, callback);
+                            if (_.isFunction(callback)) {
+                                key = 'change:' + key.join(' change:');
+                                this.model.off(key, callback);
+                                this.model.on(key, callback);
+                            } else if (_.isArray(callback)) {
+                                key = _.object(_.map(key, function (k) { return 'change:' + k; }), callback);
+                                this.model.off(map);
+                                this.model.on(map);
+                            }
                         } else if (_(key).exists()) {
                             this.model.off('change', callback);
                             this.model.on('change', callback);
@@ -72,8 +78,13 @@ define(
                         } else if (_(key).isArray() && _(key).every(function (s) {
                             return (_.isString(s) && s.match(/^[a-z_.-]+$/));
                         })) {
-                            key = 'change:' + key.join(' change:');
-                            this.model.off(key, callback);
+                            if (_.isFunction(callback)) {
+                                key = 'change:' + key.join(' change:');
+                                this.model.off(key, callback);
+                            } else if (_.isArray(callback)) {
+                                key = _.object(_.map(key, function (k) { return 'change:' + k; }), callback);
+                                this.model.off(map);
+                            }
                         } else if (_(key).exists()) {
                             this.model.off('change', callback);
                         }

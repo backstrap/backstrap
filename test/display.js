@@ -20,6 +20,77 @@ function($, $$, _, moment) {
     // implicit test of $$.css
     $("head").append($$.css("webpack/styles.css"));
 
+    var model1 = new $$.Model({
+        name: 'The Princeton core site',
+        value: 'http://www.princeton.edu/'
+    });
+
+    testObj(new $$.View({
+        tagName: 'a',
+        attributes: {href: 'http://www.princeton.edu'}
+    }).append('The Princeton core site', [' is ', $$.span('awesome'), $($$.span('!'))]), 'example1');
+
+    testObj(new $$.Tag({
+        tagName: 'a',
+        attributes: {href: 'http://www.princeton.edu'},
+        content: 'The Princeton core site',
+        formatter: function (content) { return content.toUpperCase(); }
+    }), 'example2');
+
+    testObj(new $$.Tag({
+        tagName: 'a',
+        attributes: {href: 'http://www.princeton.edu'},
+        model: model1,
+        content: 'name',
+        formatter: function (content) { return content.toUpperCase(); }
+    }), 'example3');
+
+    testObj(new $$.AttributeView({
+        tagName: 'a',
+        attribute: 'href',
+        hrefContent: 'http://www.princeton.edu'
+    }).append(new $$.Span({content: 'The Princeton core site'})), 'example4');
+
+    testObj(new $$.A({
+        hrefContent: 'http://www.princeton.edu'
+    }).append('The Princeton core site'), 'example5');
+
+    testObj(new $$.A({
+        content: $$.strong('The Princeton core site'),
+        hrefContent: 'http://www.princeton.edu'
+    }), 'example6');
+
+    testObj(new $$.A({
+        model: model1,
+        hrefContent: 'value'
+    }).append('The Princeton core site'), 'example7');
+
+    testObj(new $$.A({
+        model: model1,
+        content: 'name',
+        hrefContent: 'value'
+    }), 'example8');
+
+    testObj(new $$.A({
+        model: model1,
+        hrefContent: 'value'
+    }).append(
+        new $$.Span({
+            model: model1,
+            content: 'name',
+            formatter: function (content) { return content.toUpperCase(); }
+        })
+    ), 'example9');
+
+    testObj(new $$.A({
+        hrefContent: 'http://www.princeton.edu',
+        content: new $$.Span({
+            model: model1,
+            content: 'name',
+            formatter: function (content) { return content.toUpperCase(); }
+        }).render().el
+    }), 'example10');
+
     // tag factories
 
     test($$.pageHeader($$.h1('My Test Page')), 'pageHeader');

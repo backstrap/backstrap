@@ -8,31 +8,24 @@
  */
 define(
     'backstrap/views/Link',
-    [
-        '../core', 'underscore', '../View', '../mixins/HasGlyph', '../mixins/HasModel'
-    ], function ($$, _) {
-        return ($$.Link = $$.views.Link = $$.View.extend({
+    ['../core', 'underscore', './ContentView', '../mixins/HasGlyph', '../mixins/HasModel'],
+    function ($$, _) {
+        return ($$.Link = $$.views.Link = $$.ContentView.extend({
             options : {
                 // disables the link (non-clickable)
                 disabled : false,
 
                 // A callback to invoke when the link is clicked
-                onClick : null,
-
-                size: 'default',
-                context: 'default'
+                onClick : null
             },
 
             tagName : 'a',
 
             initialize : function (options) {
-                $$.View.prototype.initialize.call(this, options);
-                this.mixin([$$.mixins.HasModel, $$.mixins.HasGlyph]);
-                _(this).bindAll('render');
-                this.$el.addClass('link text-' + $$._mapSize(this.options.size));
-                if (this.options.size !== this.options.context) {
-                    this.$el.addClass(' text-' + this.options.context);
-                }
+                $$.ContentView.prototype.initialize.call(this, options);
+                this.mixin([$$.mixins.HasGlyph]);
+
+                this.$el.addClass('link');
                 this.$el.bind('click', _(function(e) {
                     return this.options.disabled ? false :
                         (this.options.onClick ? this.options.onClick(e) : true);
@@ -42,7 +35,7 @@ define(
             render : function () {
                 var labelText = this.resolveContent();
 
-                this._observeModel(this.render);
+                this._observeModel(_.bind(this.render, this));
 
                 this.$el.empty();
 

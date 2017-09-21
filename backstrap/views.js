@@ -1,6 +1,8 @@
 define(
     [
         './core',
+        './views/A',
+        './views/AttributeView',
         './views/CollectionView',
         './views/List',
         './views/Badge',
@@ -9,6 +11,7 @@ define(
         './views/Calendar',
         './views/Checkbox',
         './views/Container',
+        './views/ContentView',
         './views/Context',
         './views/Div',
         './views/DropdownGroup',
@@ -16,6 +19,7 @@ define(
         './views/FileInput',
         './views/Glyph',
         './views/Grid',
+        './views/Img',
         './views/Label',
         './views/Link',
         './views/Menu',
@@ -29,6 +33,7 @@ define(
         './views/Select',
         './views/Span',
         './views/Table',
+        './views/Tag',
         './views/TextArea',
         './views/TextField',
         './views/TimePicker',
