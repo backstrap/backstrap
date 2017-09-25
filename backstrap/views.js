@@ -11,6 +11,7 @@ define(
         './views/Checkbox',
         './views/Container',
         './views/Context',
+        './views/CustomView',
         './views/DropdownGroup',
         './views/Dropdown',
         './views/FileInput',
