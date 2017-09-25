@@ -22,13 +22,10 @@ define(
                 content: null
             },
 
-            initDOM: _.noop,
-
             initialize: function (options) {
                 this.options = this.options ? _({}).extend(this.options, options) : options;
                 _.extend(this, _.pick(this.options, 'formatter'));
                 this.allSubViews = _([]);
-                this.initInstanceDOM = _.once(_.bind(this.initDOM, this));
 
                 if (this.options.context) {
                     this.$el.addClass(this.options.bootstrap + '-' + this.options.context);
@@ -131,7 +128,6 @@ define(
             },
 
             render: function () {
-                this.initInstanceDOM();
                 this.allSubViews.invoke('render');
                 return this;
             },
