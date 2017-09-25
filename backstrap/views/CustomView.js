@@ -23,6 +23,7 @@ define(
             render: function () {
                 $$.View.prototype.render.call(this);
                 this.initInstanceDOM();
+                return this;
             }
         }));
     }
