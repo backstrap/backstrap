@@ -7,15 +7,20 @@
  */
 define(
     'backstrap/views/Context',
-    ['../core', 'underscore', './ContentView'],
+    ['../core', 'underscore', '../View'],
     function ($$, _) {
-        return ($$.Context = $$.views.Context = $$.ContentView.extend({
+        return ($$.Context = $$.views.Context = $$.View.extend({
             tagName: 'span',
 
             options: {
                 content: 'context',
                 background: false,
                 contentMap: null
+            },
+
+            initialize: function () {
+                $$.View.prototype.initialize.apply(this, arguments);
+                this.mixin([$$.mixins.HasModel]);
             },
 
             render: function () {

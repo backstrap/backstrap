@@ -12,9 +12,50 @@ define(
         var dummyContext = {options: {}};
 
         return ($$.View = Backbone.View.extend({
+            formatter: null,
+
+            options: {
+                bootstrap: 'text',
+                context: null,
+                size: null,
+                cols: null,
+                content: null
+            },
+
+            initDOM: _.noop,
+
             initialize: function (options) {
                 this.options = this.options ? _({}).extend(this.options, options) : options;
+                _.extend(this, _.pick(this.options, 'formatter'));
                 this.allSubViews = _([]);
+                this.initInstanceDOM = _.once(_.bind(this.initDOM, this));
+
+                if (this.options.context) {
+                    this.$el.addClass(this.options.bootstrap + '-' + this.options.context);
+                }
+
+                if (this.options.size && this.options.size !== this.options.context) {
+                    this.$el.addClass(this.options.bootstrap + '-' + $$._mapSize(this.options.size));
+                }
+
+                if (this.options.cols) {
+                    // cols may be a single number, array of numbers, or object.
+                    // Values should be between 1 and 12.
+                    var n = ['xs','sm','md','lg','xl'];
+                    var value = this.options.cols;
+
+                    if (_.isArray(value)) {
+                        for (var i = 0; i < value.length && i < n.length; i += 1) {
+                            this.$el.addClass('col-' + n[i] + '-' + value[i]);
+                        }
+                    } else if (_.isObject(value)) {
+                        _.each(n, function (key) {
+                            this.$el.addClass('col-' + key + '-' + value[key]);
+                        });
+                    } else if (_.isString(value)) {
+                        this.$el.addClass('col-xs-' + value);
+                    }
+                }
             },
 
             // resolves the appropriate content from the given choices
@@ -23,8 +64,9 @@ define(
                     ? this.options.content : defaultOption;
                 model = _(model).exists() ? model : this.model;
                 content = _(content).exists() ? content : defaultOption;
+
                 var hasModelProperty = _(model).exists() && _(content).exists();
-                return _(content).isArray() && this !== dummyContext
+                var value = _(content).isArray() && this !== dummyContext
                     // Allow only shallow application to arrays.
                     ? _(content).map(_.bind(resolveContent, dummyContext, model))
                     : _(content).isFunction()
@@ -36,6 +78,16 @@ define(
                                 : hasModelProperty
                                     ? _(model).resolveProperty(content)
                                     : content;
+
+                if (_.isFunction(this.formatter)) {
+                    if (_(content).isArray()) {
+                        return this.formatter.apply(null, value);
+                    } else {
+                        return this.formatter.call(null, value);
+                    }
+                } else {
+                    return value;
+                }
             },
 
             mixin: function (objects) {
@@ -79,6 +131,7 @@ define(
             },
 
             render: function () {
+                this.initInstanceDOM();
                 this.allSubViews.invoke('render');
                 return this;
             },

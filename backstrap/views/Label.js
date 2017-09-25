@@ -7,9 +7,9 @@
  */
 define(
     'backstrap/views/Label',
-    ['../core', 'underscore', './ContentView'],
+    ['../core', 'underscore', '../View'],
     function ($$, _) {
-        return ($$.Label = $$.views.Label = $$.ContentView.extend({
+        return ($$.Label = $$.views.Label = $$.View.extend({
             options: {
                 emptyContent: '',
                 bootstrap: 'label',
@@ -19,7 +19,8 @@ define(
             tagName: 'label',
 
             initialize: function (options) {
-                $$.ContentView.prototype.initialize.call(this, options);
+                $$.View.prototype.initialize.call(this, options);
+                this.mixin([$$.mixins.HasModel]);
 
                 this.$el.addClass('label');
 

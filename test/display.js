@@ -45,7 +45,7 @@ function($, $$, _, moment) {
         formatter: function (content) { return content.toUpperCase(); }
     }), 'example3');
 
-    testObj(new $$.AttributeView({
+    testObj(new $$.AttributeTag({
         tagName: 'a',
         attribute: 'href',
         hrefContent: 'http://www.princeton.edu'

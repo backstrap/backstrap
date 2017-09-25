@@ -8,9 +8,9 @@
  */
 define(
     'backstrap/views/Link',
-    ['../core', 'underscore', './ContentView', '../mixins/HasGlyph', '../mixins/HasModel'],
+    ['../core', 'underscore', '../View', '../mixins/HasGlyph', '../mixins/HasModel'],
     function ($$, _) {
-        return ($$.Link = $$.views.Link = $$.ContentView.extend({
+        return ($$.Link = $$.views.Link = $$.View.extend({
             options : {
                 // disables the link (non-clickable)
                 disabled : false,
@@ -22,8 +22,8 @@ define(
             tagName : 'a',
 
             initialize : function (options) {
-                $$.ContentView.prototype.initialize.call(this, options);
-                this.mixin([$$.mixins.HasGlyph]);
+                $$.View.prototype.initialize.call(this, options);
+                this.mixin([$$.mixins.HasModel, $$.mixins.HasGlyph]);
 
                 this.$el.addClass('link');
                 this.$el.bind('click', _(function(e) {

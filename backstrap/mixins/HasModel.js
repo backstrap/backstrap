@@ -35,60 +35,67 @@ define(
             },
 
             _observeModel : function (callback) {
-                if(_(this.model).exists() && _(this.model.off).isFunction()) {
-                    _(['content', 'labelContent']).each(function(prop) {
-                        var key = this.options[prop];
-                        if(_(key).isString()) {
-                            if (key.indexOf('.') > 0) {
-                                key = key.substr(0, key.indexOf('.'));
-                            }
-                            key = 'change:' + key;
-                            this.model.off(key, callback);
-                            this.model.on(key, callback);
-                        } else if (_(key).isArray() && _(key).every(function (s) {
-                            return (_.isString(s) && s.match(/^[a-z_.-]+$/));
-                        })) {
-                            if (_.isFunction(callback)) {
-                                key = 'change:' + key.join(' change:');
-                                this.model.off(key, callback);
-                                this.model.on(key, callback);
-                            } else if (_.isArray(callback)) {
-                                key = _.object(_.map(key, function (k) { return 'change:' + k; }), callback);
-                                this.model.off(map);
-                                this.model.on(map);
-                            }
-                        } else if (_(key).exists()) {
-                            this.model.off('change', callback);
-                            this.model.on('change', callback);
-                        }
-                    }, this);
-                }
+                _(['content', 'labelContent']).each(_.bind(this.observeModel, this, callback));
             },
 
             _unobserveModel : function (callback) {
+                _(['content', 'labelContent']).each(_.bind(this.unobserveModel, this, callback));
+            },
+
+            // TODO listenTo instead of on ???
+            observeModel : function (callback, prop) {
                 if(_(this.model).exists() && _(this.model.off).isFunction()) {
-                    _(['content', 'labelContent']).each(function(prop) {
-                        var key = this.options[prop];
-                        if(_(key).isString()) {
-                            if (key.indexOf('.') > 0) {
-                                key = key.substr(0, key.indexOf('.'));
-                            }
-                            key = 'change:' + key;
-                            this.model.off(key, callback);
-                        } else if (_(key).isArray() && _(key).every(function (s) {
-                            return (_.isString(s) && s.match(/^[a-z_.-]+$/));
-                        })) {
-                            if (_.isFunction(callback)) {
-                                key = 'change:' + key.join(' change:');
-                                this.model.off(key, callback);
-                            } else if (_.isArray(callback)) {
-                                key = _.object(_.map(key, function (k) { return 'change:' + k; }), callback);
-                                this.model.off(map);
-                            }
-                        } else if (_(key).exists()) {
-                            this.model.off('change', callback);
+                    var key = this.options[prop||'content'];
+
+                    if(_(key).isString()) {
+                        if (key.indexOf('.') > 0) {
+                            key = key.substr(0, key.indexOf('.'));
                         }
-                    }, this);
+                        key = 'change:' + key;
+                        this.model.off(key, callback);
+                        this.model.on(key, callback);
+                    } else if (_(key).isArray() && _(key).every(function (s) {
+                        return (_.isString(s) && s.match(/^[a-z_.-]+$/));
+                    })) {
+                        if (_.isFunction(callback)) {
+                            key = 'change:' + key.join(' change:');
+                            this.model.off(key, callback);
+                            this.model.on(key, callback);
+                        } else if (_.isArray(callback)) {
+                            key = _.object(_.map(key, function (k) { return 'change:' + k; }), callback);
+                            this.model.off(map);
+                            this.model.on(map);
+                        }
+                    } else if (_(key).exists()) {
+                        this.model.off('change', callback);
+                        this.model.on('change', callback);
+                    }
+                }
+            },
+
+            unobserveModel : function (callback, prop) {
+                if(_(this.model).exists() && _(this.model.off).isFunction()) {
+                    var key = this.options[prop||'content'];
+
+                    if(_(key).isString()) {
+                        if (key.indexOf('.') > 0) {
+                            key = key.substr(0, key.indexOf('.'));
+                        }
+                        key = 'change:' + key;
+                        this.model.off(key, callback);
+                    } else if (_(key).isArray() && _(key).every(function (s) {
+                        return (_.isString(s) && s.match(/^[a-z_.-]+$/));
+                    })) {
+                        if (_.isFunction(callback)) {
+                            key = 'change:' + key.join(' change:');
+                            this.model.off(key, callback);
+                        } else if (_.isArray(callback)) {
+                            key = _.object(_.map(key, function (k) { return 'change:' + k; }), callback);
+                            this.model.off(map);
+                        }
+                    } else if (_(key).exists()) {
+                        this.model.off('change', callback);
+                    }
                 }
             }
         });
