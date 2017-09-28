@@ -76,7 +76,7 @@ define(
 
             getModel: function (name) {
                 var model = this.attrModels[name];
-                
+
                 if (!model) {
                     model = this.attrModels[name] = new $$.Model(this.get(name));
                     model.listenTo(this, 'change:' + name, function (myself, value) {
@@ -85,6 +85,23 @@ define(
                     this.listenTo(model, 'change', function (model) {
                         this.set(_.clone(model.attributes));
                     });
+                }
+
+                return model;
+            },
+
+            getCollection: function (name, options) {
+                var model = this.attrModels[name];
+
+                if (!model) {
+                    model = this.attrModels[name] = new $$.Collection(this.get(name), options);
+                    model.listenTo(this, 'change:' + name, function (myself, value) {
+                        model.set(value);
+                    });
+                    // TODO How to properly handle changes on the Collection?
+//                    this.listenTo(model, 'add remove change', function (model) {
+//                        this.set(_.clone(model.models));
+//                    });
                 }
 
                 return model;
