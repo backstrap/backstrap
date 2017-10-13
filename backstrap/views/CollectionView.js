@@ -220,7 +220,13 @@ define(
              * to define how an item is put into the DOM.
              */
             placeItem: function (itemElement, model, index) {
-                this.$el.append(itemElement);
+                var siblings = this.$el.children();
+
+                if (siblings.length <= index) {
+                    this.$el.append(itemElement);
+                } else {
+                    siblings.eq(index).before(itemElement);
+                }
             },
 
             /**
