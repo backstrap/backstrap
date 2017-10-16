@@ -31,7 +31,7 @@ define(
                 this.mixin([$$.mixins.HasModel,
                     $$.mixins.HasAlternativeProperty,
                     $$.mixins.HasFormLabel, $$.mixins.HasError]);
-                _(this).bindAll('render');
+                _(this).bindAll('render', 'updateSelection');
 
                 this.$el.addClass('radio_group');
 
@@ -91,9 +91,13 @@ define(
                 }
             },
 
-            updateSelection: function (model, value) {
-                this.selectedItem = this._determineSelectedItem() || this.selectedItem;
-                $group.children().find('> input').attr('checked', false).eq(_(this._collectionArray()),indexOf(this.selectedItem)).attr('checked', true);
+            updateSelection: function () {
+                this.selectedItem = (this._determineSelectedItem() || this.selectedItem);
+                (this.$group.children().find('> input')
+                    .attr('checked', false)
+                    .eq(_.indexOf(this._collectionArray(), this.selectedItem))
+                        .attr('checked', true)
+                );
             },
 
             setEnabled: function (enabled) {
