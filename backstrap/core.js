@@ -31,7 +31,7 @@
  * @license MIT
  **/
 define(
-    ['underscore', 'jquery', 'backbone'],
+    ['underscore', 'jquery', 'backbone', '../css/backstrap.css'],
     function (_, $, Backbone) {
         var noGlobal = true;
 

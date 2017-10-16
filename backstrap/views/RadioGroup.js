@@ -1,7 +1,6 @@
 /**
- * A Backbone View that displays a model-bound radio-button group.
- * Largely from Backbone-UI's RadioGroup class,
- * with Bootstrap decoration.
+ * A Backbone View that displays a model-bound radio-button group
+ * with Bootstrap decoration & CSS3 styling for the radiobox.
  *
  * @author Kevin Perry perry@princeton.edu
  * @license MIT
@@ -11,111 +10,94 @@ define(
     [
         '../core', 'jquery', 'underscore', '../View',
         '../mixins/HasModel', '../mixins/HasAlternativeProperty',
-        '../mixins/HasGlyph', '../mixins/HasFormLabel', '../mixins/HasError'
+        '../mixins/HasFormLabel', '../mixins/HasError'
     ], function ($$, $, _) {
         return ($$.RadioGroup = $$.views.RadioGroup = $$.View.extend({
-
-            options : {
+            options: {
                 // used to group the radio inputs
-                content : 'group',
+                content: 'group',
 
                 // enables / disables the radiogroup
-                disabled : false,
+                disabled: false,
 
                 // A callback to invoke with the selected item whenever the selection changes
-                onChange : $.noop
+                onChange: $.noop
             },
 
-            initialize : function (options) {
+            selectedItem: null,
+
+            initialize: function (options) {
                 $$.View.prototype.initialize.call(this, options);
                 this.mixin([$$.mixins.HasModel,
-                    $$.mixins.HasAlternativeProperty, $$.mixins.HasGlyph,
+                    $$.mixins.HasAlternativeProperty,
                     $$.mixins.HasFormLabel, $$.mixins.HasError]);
                 _(this).bindAll('render');
 
                 this.$el.addClass('radio_group');
-                if(this.options.name){
+
+                if (this.options.name) {
                     this.$el.addClass(this.options.name);
                 }
             },
 
-            // public accessors
-            selectedItem : null,
-
-            render : function () {
+            render: function () {
+                var selectedValue;
 
                 this.$el.empty();
-
-                this._observeModel(this.render);
+                this._observeModel(this.updateSelection);
                 this._observeCollection(this.render);
-
+                this.$group = $($$.div({className: 'radio_group_wrapper'}));
                 this.selectedItem = this._determineSelectedItem() || this.selectedItem;
+                selectedValue = this._valueForItem(this.selectedItem);
 
-                var selectedValue = this._valueForItem(this.selectedItem);
-
-                this.group = $$.div({className : 'radio_group_wrapper'});
-
-                _(this._collectionArray()).each(function(item, idx) {
-
+                _(this._collectionArray()).each(function(item, idx, list) {
+                    var id = _.uniqueId('radio');
                     var val = this._valueForItem(item);
-                    var selected = selectedValue === val;
+                    var selected = (selectedValue === val);
                     var label = this.resolveContent(item, this.options.altLabelContent);
-
-                    var input = $$.plain.input();
-                    $(input).attr({
-                        type : 'radio',
-                        name : this.options.content,
-                        value : val,
-                        checked : selected
+                    var input = $$.plain.input({
+                        id: id,
+                        type: 'radio',
+                        name: this.options.content,
+                        value: val
                     });
 
-                    // setup events for each input in collection
-                    $(input).change(_(this._updateModel).bind(this, item));
-                    $(input).click(_(this._updateModel).bind(this, item));
+                    this.$group.append(
+                        $$.plain.label({'for': id, className: 'radio_input'},
+                            input,
+                            $$.div({className: 'radio_label_wrapper'},
+                                $$.span({className: 'graphic'}, $$.span()),
+                                $$.span(label)
+                            )
+                        )
+                    );
 
-                    // resolve left and right glyphs
-                    var parent = $$.div({className : 'radio_group_wrapper'});
-                    var content = $$.span(label);
-                    var glyphLeftClassName = this.resolveGlyph(item, this.options.altGlyphLeftClassName);
-                    glyphLeftClassName = (glyphLeftClassName && (glyphLeftClassName !== this.options.altGlyphLeftClassName)) ? glyphLeftClassName :
-                        this.resolveGlyph(null, this.options.glyphLeftClassName);
-                    var glyphRightClassName = this.resolveGlyph(item, this.options.altGlyphRightClassName);
-                    glyphRightClassName = (glyphRightClassName && (glyphRightClassName !== this.options.altGlyphRightClassName)) ?
-                        glyphRightClassName : this.resolveGlyph(null, this.options.glyphRightClassName);
-                    this.insertGlyphLayout(glyphLeftClassName, glyphRightClassName, content, parent);
-
-                    // create a new label/input pair and insert into the group
-                    this.group.appendChild(
-                        $$.plain.label({className : _(this._collectionArray()).nameForIndex(idx++) +
-                            ' ' + (idx % 2 === 0 ? 'even' : 'odd')}, input, parent));
-
+                    $(input).attr('checked', selected).on('click change', _.bind(this._updateModel, this, item));
                 }, this);
 
-                this.el.appendChild(this.getFormLabel());
-                this.el.appendChild(this.group);
-
+                this.$el.append(this.getFormLabel(), this.$group);
                 this.setEnabled(!this.options.disabled);
 
                 return this;
             },
 
-            _updateModel : function (item) {
-                // check if item selected actually changed
-                var changed = this.selectedItem !== item;
+            _updateModel: function (item) {
+                var changed = (this.selectedItem !== item);
+
                 this._setSelectedItem(item);
-                // if onChange function exists call it
-                if(_(this.options.onChange).isFunction() && changed) {
+
+                if (changed && _.isFunction(this.options.onChange)) {
                     this.options.onChange(item);
                 }
             },
 
-            // sets the enabled state
-            setEnabled : function (enabled) {
-                if(enabled) {
-                    this.$el.removeClass('disabled');
-                } else {
-                    this.$el.addClass('disabled');
-                }
+            updateSelection: function (model, value) {
+                this.selectedItem = this._determineSelectedItem() || this.selectedItem;
+                $group.children().find('> input').attr('checked', false).eq(_(this._collectionArray()),indexOf(this.selectedItem)).attr('checked', true);
+            },
+
+            setEnabled: function (enabled) {
+                this.$el.toggleClass('disabled', !enabled);
             }
         }));
     }

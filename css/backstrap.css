@@ -67,20 +67,60 @@ div.date_picker_calendar.calendar.calendar-default {
     background: #ffffff;
 }
 
-.radio_group .radio_group_wrapper {
-    display: inline-block;
-}
-
-.radio_group .radio_group_wrapper label {
-    margin-right: 1.3em;
-}
-
-.radio_group .radio_group_wrapper span {
-    margin-left: .3em;
-}
-
 .checkbox input[type="checkbox"],
 .checkbox-inline input[type="checkbox"] {
     margin-top: 3px;
 }
 
+.radio_group .radio_group_wrapper {
+    display: inline-block;
+}
+
+.radio_group .radio_group_wrapper > label {
+    margin-right: 1.3em;
+}
+
+.radio_group .radio_group_wrapper > span {
+    margin-left: .3em;
+}
+
+.radio_group .radio_input > input {
+    width: 2em;
+    margin: 0;
+    padding: 0;
+    font-size: 1em;
+    opacity: 0;
+}
+
+.radio_group .radio_input > .radio_label_wrapper {
+    display: inline-block;
+    margin-left: -2em;
+    line-height: 1.5em;
+}
+
+.radio_group .radio_input > .radio_label_wrapper > span.graphic {
+    box-sizing: content-box;
+    display: inline-block;
+    width: 0.75em;
+    height: 0.75em;
+    margin: 0.25em 0.5em 0.25em 0.25em;
+    border: 0.0625em solid #c0c0c0;
+    border-radius: 0.5em;
+    background-color: #e0e0e0;
+    background-image: linear-gradient(#f8f8f8, #e8e8e8);
+    vertical-align: bottom;
+}
+
+.radio_group .radio_input > input:checked + .radio_label_wrapper > span.graphic {
+    background-image: linear-gradient(#e8e8e8, #f8f8f8);
+}
+
+.radio_group .radio_input > input:checked + .radio_label_wrapper > span.graphic > span {
+    box-sizing: border-box;
+    display: block;
+    width: 0.5em;
+    height: 0.5em;
+    margin: 0.125em;
+    border-radius: 0.25em;
+    background-color: #555555;
+}
