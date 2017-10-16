@@ -94,9 +94,9 @@ define(
             updateSelection: function () {
                 this.selectedItem = (this._determineSelectedItem() || this.selectedItem);
                 (this.$group.children().find('> input')
-                    .attr('checked', false)
+                    .prop('checked', false)
                     .eq(_.indexOf(this._collectionArray(), this.selectedItem))
-                        .attr('checked', true)
+                        .prop('checked', true)
                 );
             },
 
