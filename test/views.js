@@ -69,11 +69,10 @@ define(['qunitjs', 'underscore', 'jquery', 'backstrap', 'test/testing'], functio
             altValueContent: 'value'
         }),
         {
-            'div.radio_group > div.radio_group_wrapper': 1,
-            'div.radio_group div.radio_group_wrapper label.first.odd': 1,
-            'div.radio_group div.radio_group_wrapper label input[type=radio]': 4,
-            'div.radio_group div.radio_group_wrapper label input[checked]': 1,
-            'div.radio_group div.radio_group_wrapper label div.radio_group_wrapper span': 4,
+            'div.radio-group > div.radio-group-content': 1,
+            'div.radio-group div.radio-group-content label input[type=radio]': 4,
+            'div.radio-group div.radio-group-content label input[checked]': 1,
+            'div.radio-group div.radio-group-content label.radio-group-item div.radio-group-display span.radio-group-graphic': 4,
         },
         'RadioGroup'
     );

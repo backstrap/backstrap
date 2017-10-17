@@ -33,7 +33,7 @@ define(
                     $$.mixins.HasFormLabel, $$.mixins.HasError]);
                 _(this).bindAll('render', 'updateSelection');
 
-                this.$el.addClass('radio_group');
+                this.$el.addClass('radio-group');
 
                 if (this.options.name) {
                     this.$el.addClass(this.options.name);
@@ -46,7 +46,7 @@ define(
                 this.$el.empty();
                 this._observeModel(this.updateSelection);
                 this._observeCollection(this.render);
-                this.$group = $($$.div({className: 'radio_group_wrapper'}));
+                this.$group = $($$.div({className: 'radio-group-content'}));
                 this.selectedItem = this._determineSelectedItem() || this.selectedItem;
                 selectedValue = this._valueForItem(this.selectedItem);
 
@@ -63,16 +63,18 @@ define(
                     });
 
                     this.$group.append(
-                        $$.plain.label({'for': id, className: 'radio_input'},
+                        $$.plain.label({'for': id, className: 'radio-group-item'},
                             input,
-                            $$.div({className: 'radio_label_wrapper'},
-                                $$.span({className: 'graphic'}, $$.span()),
-                                $$.span(label)
+                            $$.div({className: 'radio-group-display'},
+                                $$.span({className: 'radio-group-graphic'},
+                                    $$.span({className: 'radio-group-interior'})
+                                ),
+                                $$.span({className: 'radio-group-label'}, label)
                             )
                         )
                     );
 
-                    $(input).attr('checked', selected).on('click change', _.bind(this._updateModel, this, item));
+                    $(input).attr('checked', selected).prop('checked', selected).on('click change', _.bind(this._updateModel, this, item));
                 }, this);
 
                 this.$el.append(this.getFormLabel(), this.$group);
@@ -92,12 +94,14 @@ define(
             },
 
             updateSelection: function () {
-                this.selectedItem = (this._determineSelectedItem() || this.selectedItem);
-                (this.$group.children().find('> input')
-                    .prop('checked', false)
-                    .eq(_.indexOf(this._collectionArray(), this.selectedItem))
-                        .prop('checked', true)
-                );
+                var item = this._determineSelectedItem();
+
+                if (item) {
+                    var value = this._valueForItem(item);
+
+                    this.$group.find('input[value="' + value + '"]').prop('checked', true);
+                    this.selectedItem = item;
+                }
             },
 
             setEnabled: function (enabled) {
