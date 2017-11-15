@@ -103,7 +103,7 @@ define(
 
             validate: function (file) {
                 if (this.options.maxSize && file.size > this.options.maxSize) {
-                    return 'file size exceeds allowed maximum of ' + file.size + ' bytes';
+                    return 'file size exceeds allowed maximum of ' + this.options.maxSize + ' bytes';
                 }
                 if (this.options.typeMatch && !file.type.match(this.options.typeMatch)) {
                     return 'file type ' + file.type + ' not allowed';
@@ -135,7 +135,25 @@ define(
                                     value = this.result;
                                 }
 
-                                _(that.model).setProperty(that.options.content, value);
+                                if (that.options.maxImageDimension) {
+                                    var img = $$.img({src: value, onload: function () {
+                                        if (
+                                            img.naturalWidth > that.options.maxImageDimension
+                                            || img.naturalHeight > that.options.maxImageDimension
+                                        ) {
+                                            that.validationFailure(
+                                                'file dimensions exceed allowed maximum of '
+                                                + that.options.maxImageDimension + ' pixels'
+                                            );
+                                        } else {
+                                            _(that.model).setProperty(that.options.content, value);
+                                        }
+
+                                        delete img;
+                                    }});
+                                } else {
+                                    _(that.model).setProperty(that.options.content, value);
+                                }
                             };
 
                             reader.readAsDataURL(file);
