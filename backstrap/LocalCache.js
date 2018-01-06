@@ -11,14 +11,6 @@ define(
     ['underscore', 'backbone', './core'],
     function (_, Backbone, $$)
     {
-        var extend = function extend(obj, props) {
-            for (var key in props) {
-                obj[key] = props[key];
-            }
-
-            return obj;
-        };
-
         // Our Store is represented by a single JS object in *localStorage*.
         // Create it with a meaningful name.
         $$.LocalCache = function (name, serializer) {
@@ -33,7 +25,7 @@ define(
             }
         };
 
-        extend($$.LocalCache.prototype, {
+        _.extend($$.LocalCache.prototype, {
             serializer: {
                 serialize: function serialize(item) {
                     return JSON.stringify(item);
