@@ -83,7 +83,7 @@ define(
                         model.set(value);
                     });
                     this.listenTo(model, 'change', function (model) {
-                        this.set(_.clone(model.attributes));
+                        this.set(name, _.clone(model.attributes));
                     });
                 }
 
