@@ -7,7 +7,7 @@
  * @license MIT
  */
 define(
-    ['underscore', 'jquery', 'backbone', './core', './dispatcher', './ajaxIfModified'],
+    ['underscore', 'jquery', 'backbone', './core', './dispatcher', './ajaxIfModified', './Model'],
     function (_, $, Backbone, $$)
     {
         // Duplicates Backbone's wrapError() exactly.  Need it in fetch().
@@ -20,6 +20,9 @@ define(
         };
 
         return ($$.Collection = Backbone.Collection.extend({
+            // The default Model class is  a Backstrap Model.
+            model: $$.Model,
+
             options: {
                 // LocalCache object for caching data in localStorage.
                 // To use, declare as "localCache: new LocalCache('collectionName')".
