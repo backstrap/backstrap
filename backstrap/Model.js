@@ -26,10 +26,11 @@ define(
                 params: {}
             },
 
-            initialize: function (options) {
-                this.options = this.options ? _({}).extend(this.options, options) : options;
-                Backbone.Model.prototype.initialize.call(this, options);
+            initialize: function (attrs, options) {
+                options = _.extend({}, this.options, options);
+                Backbone.Model.prototype.initialize.call(this, attrs, options);
 
+                this.options = options;
                 this.refreshOptions = this.options.refreshOptions;
                 this.params = this.options.params;
                 this.attrModels = {};
