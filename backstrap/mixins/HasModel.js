@@ -63,8 +63,8 @@ define(
                             this.model.on(key, callback);
                         } else if (_.isArray(callback)) {
                             key = _.object(_.map(key, function (k) { return 'change:' + k; }), callback);
-                            this.model.off(map);
-                            this.model.on(map);
+                            this.model.off(key);
+                            this.model.on(key);
                         }
                     } else if (_(key).exists()) {
                         this.model.off('change', callback);
@@ -91,7 +91,7 @@ define(
                             this.model.off(key, callback);
                         } else if (_.isArray(callback)) {
                             key = _.object(_.map(key, function (k) { return 'change:' + k; }), callback);
-                            this.model.off(map);
+                            this.model.off(key);
                         }
                     } else if (_(key).exists()) {
                         this.model.off('change', callback);

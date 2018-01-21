@@ -77,6 +77,11 @@ define(
                 return this.serializer.deserialize(this.localStorage().getItem(this.name));
             },
 
+            // Remove the object from localStorage
+            remove: function () {
+                this.localStorage().removeItem(this.name);
+            },
+
             getSync: function getSync() {
                 var localCache = this;
 

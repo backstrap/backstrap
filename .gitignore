@@ -6,3 +6,4 @@ notes.txt
 node_modules
 test/webpack
 .externalToolBuilders
+.idea

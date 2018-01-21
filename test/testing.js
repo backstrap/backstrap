@@ -1,23 +1,25 @@
 define(
-['qunitjs', 'underscore', 'jquery'],
-function(QUnit, _, $, $$, moment)
+['underscore', 'jquery'],
+function(_, $)
 {
     return {
-        appendTest: function appendTest(obj, selector, name) {
-            QUnit.test(name, function (assert) {
-                var fixture = $('#qunit-fixture');
+        appendTest: function appendTest(obj, selector, name, count) {
+            describe(name, function () {
+                it('has appropriate DOM structure', function () {
+                    setFixtures(obj);
 
-                fixture.append(obj);
-
-                if (_.isObject(selector)) {
-                    for (var key in selector) {
-                        assert.equal($(key, fixture).length, selector[key]);
+                    if (_.isObject(selector)) {
+                        for (var key in selector) {
+                            expect($('#jasmine-fixtures ' + key).length).toBe(selector[key]);
+                        }
+                    } else {
+                        expect($('#jasmine-fixtures ' + selector).length)
+                            .toBe(typeof count === 'undefined' ? 1 : count);
                     }
-                } else {
-                    assert.equal($(selector, fixture).length, 1);
-                }
+                });
             });
         },
+
         testObj: function testObj(obj, selector, name) {
             this.appendTest(obj.render().el, selector, name);
         }

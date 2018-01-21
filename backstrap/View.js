@@ -43,13 +43,17 @@ define(
 
                     if (_.isArray(value)) {
                         for (var i = 0; i < value.length && i < n.length; i += 1) {
-                            this.$el.addClass('col-' + n[i] + '-' + value[i]);
+                            if (i === 0 || value[i] !== value[i-1]) {
+                                this.$el.addClass('col-' + n[i] + '-' + value[i]);
+                            }
                         }
                     } else if (_.isObject(value)) {
                         _.each(n, function (key) {
-                            this.$el.addClass('col-' + key + '-' + value[key]);
-                        });
-                    } else if (_.isString(value)) {
+                            if (key in value) {
+                                this.$el.addClass('col-' + key + '-' + value[key]);
+                            }
+                        }, this);
+                    } else {
                         this.$el.addClass('col-xs-' + value);
                     }
                 }
@@ -100,6 +104,7 @@ define(
             appendView: function (view, el) {
                 view.$el.appendTo(el||this.el);
                 this.allSubViews.push(view);
+
                 return this;
             },
 
@@ -107,15 +112,18 @@ define(
                 _(views).each(function (view) {
                     this.appendView(view, el);
                 }, this);
+
                 return this;
             },
 
             removeView: function (view) {
                 var index = this.allSubViews.indexOf(view);
+
                 if (index >= 0) {
                     view.remove();
                     this.allSubViews.splice(index, 1);
                 }
+
                 return this;
             },
 
@@ -123,12 +131,14 @@ define(
                 this.allSubViews.each(function (view) {
                     view.remove();
                 });
-                this.allSubViews.length = 0;
+                this.allSubViews.value().length = 0;
+
                 return this;
             },
 
             render: function () {
                 this.allSubViews.invoke('render');
+
                 return this;
             },
 

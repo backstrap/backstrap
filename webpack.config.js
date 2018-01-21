@@ -1,7 +1,6 @@
 const path               = require('path');
 const webpack            = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const CompressionPlugin  = require('compression-webpack-plugin');
 const ExtractTextPlugin  = require('extract-text-webpack-plugin');
 
 module.exports = function exports(env)
@@ -12,14 +11,14 @@ module.exports = function exports(env)
         context: __dirname,
         entry: {
             display: './test/display.js',
-            qunit:   './test/qunit.js',
+            jasmine: './test/jasmine.js'
         },
         output: {
             path:          outputPath,
             filename:      '[name].js',
             publicPath:    '/bs/webpack/',
             chunkFilename: '[name].js',
-            pathinfo:      true,
+            pathinfo:      true
         },
         module: {
             rules: [
@@ -38,16 +37,20 @@ module.exports = function exports(env)
         resolve: {
             modules: [
                 __dirname,
-                path.resolve(__dirname, 'node_modules'),
+                path.resolve(__dirname, 'node_modules')
             ],
             extensions: ['.js', '.css'],
+            alias: {
+                'jasmine-core': path.resolve(__dirname, 'node_modules/jasmine-core/lib/jasmine-core')
+            }
         },
         plugins: [
             new CleanWebpackPlugin(outputPath, {verbose: false}),
             new webpack.HashedModuleIdsPlugin(),
             new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
             new webpack.IgnorePlugin(/\/locale$/, /^moment/),
-            new ExtractTextPlugin({filename: 'styles.css', allChunks: true}),
-        ],
+            new webpack.ProvidePlugin({jasmineRequire: 'jasmine-core/jasmine'}),
+            new ExtractTextPlugin({filename: 'styles.css', allChunks: true})
+        ]
     };
 };

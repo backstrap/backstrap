@@ -100,7 +100,7 @@ define(
                         model.set(value);
                     });
                     this.listenTo(model, 'update change', function (model) {
-                        this.set(model.models.map(function (m) { return _.clone(m.attributes); }));
+                        this.set(name, model.models.map(function (m) { return _.clone(m.attributes); }));
                     });
                 }
 

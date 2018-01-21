@@ -9,7 +9,7 @@
 define(
     'backstrap/views/TextArea',
     [
-        '../core', 'jquery', 'underscore', '../View',
+        '../core', 'jquery', 'underscore', '../View', '../input_event',
         '../mixins/HasModel', '../mixins/HasFormLabel', '../mixins/HasError', '../mixins/HasFocus'
     ], function ($$, $, _) {
         return ($$.TextArea = $$.views.TextArea = $$.View.extend({

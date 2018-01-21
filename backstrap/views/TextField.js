@@ -9,7 +9,7 @@
 define(
     'backstrap/views/TextField',
     [
-        '../core', 'jquery', 'underscore',
+        '../core', 'jquery', 'underscore', '../input_event',
         '../mixins/HasModel', '../mixins/HasFormLabel', '../mixins/HasGlyph',
         '../mixins/HasError', '../mixins/HasFocus'
     ], function ($$, $, _) {
