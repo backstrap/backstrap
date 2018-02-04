@@ -25,6 +25,7 @@ define(
             initialize: function (options) {
                 this.options = this.options ? _({}).extend(this.options, options) : options;
                 _.extend(this, _.pick(this.options, 'formatter'));
+                this.setInner(this.el);
                 this.allSubViews = _([]);
 
                 if (this.options.context) {
@@ -57,6 +58,10 @@ define(
                         this.$el.addClass('col-xs-' + value);
                     }
                 }
+            },
+
+            setInner(el) {
+                return (this.$inner = $(this.inner = el));
             },
 
             // resolves the appropriate content from the given choices
@@ -102,7 +107,7 @@ define(
             },
 
             appendView: function (view, el) {
-                view.$el.appendTo(el||this.el);
+                view.$el.appendTo(el || this.inner);
                 this.allSubViews.push(view);
 
                 return this;
@@ -152,21 +157,21 @@ define(
                         // If the argument is a DOM element node or text node,
                         // we simply append it.  Don't append other DOM constructs.
                         if (child.nodeType === 1 || child.nodeType === 3) {
-                            this.el.appendChild(child);
+                            this.inner.appendChild(child);
                         }
                     } else if (child.jquery) {
                         // If the argument is a jQuery object, append its elements.
-                        child.appendTo(this.el);
+                        child.appendTo(this.inner);
                     } else if (child instanceof Backbone.View) {
                         // If the argument is a Backbone View, append its root element.
-                        this.el.appendChild(child.el);
+                        this.inner.appendChild(child.el);
                         this.allSubViews.push(child);
                     } else if (
                         (!!(child === '' || (child && child.charCodeAt && child.substr))) ||
                         (!!(child === 0  || (child && child.toExponential && child.toFixed)))
                     ) {
                         // If the argument is a string or number, append it as a new text node.
-                        this.el.appendChild(document.createTextNode(child));
+                        this.inner.appendChild(document.createTextNode(child));
                     } else if (Object.prototype.toString.call(child) === '[object Array]') {
                         // If the argument is an array, we append each element.
                         this.append.apply(this, child);

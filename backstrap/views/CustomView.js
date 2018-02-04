@@ -21,9 +21,8 @@ define(
             },
 
             render: function () {
-                $$.View.prototype.render.call(this);
                 this.initInstanceDOM();
-                return this;
+                return $$.View.prototype.render.call(this);
             }
         }));
     }
