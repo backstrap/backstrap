@@ -60,7 +60,7 @@ define(
                 }
             },
 
-            setInner(el) {
+            setInner: function (el) {
                 return (this.$inner = $(this.inner = el));
             },
 
