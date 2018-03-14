@@ -98,13 +98,11 @@ define(
                     model = this.attrModels[name] = new (collectionClass||$$.Collection)(this.get(name), options);
                     model.listenTo(this, 'change:' + name, function (myself, value, options) {
                         if (!options.internalCollectionUpdate) {
-                            console.log('this-change');
                             model.set(value, {internalCollectionUpdate: true});
                         }
                     });
                     this.listenTo(model, 'update change', function (model, options) {
                         if (!options.internalCollectionUpdate) {
-                            console.log('model-update');
                             this.set(name, model.models.map(function (m) { return _.clone(m.attributes); }), {internalCollectionUpdate: true});
                         }
                     });
