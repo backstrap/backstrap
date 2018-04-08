@@ -44,6 +44,10 @@ define(
                 this.refreshOptions = this.options.refreshOptions;
                 this.params = _.clone(this.options.params);
 
+                if (this.options.url) {
+                    this.url = this.options.url;
+                }
+
                 if (this.options.localCache) {
                     this.options.localCache.attach(this);
                 }
